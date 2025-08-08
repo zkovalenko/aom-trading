@@ -124,21 +124,126 @@
   color: white;
 }
 
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 101;
+}
+
+.mobile-menu-btn span {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+/* Menu Overlay */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  display: none;
+}
+
 @media (max-width: 768px) {
   .header-container {
     padding: 0 1rem;
+    position: relative;
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
   }
   
   .nav-menu {
-    gap: 1rem;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background-color: #2c2c2c;
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+    padding: 80px 2rem 2rem;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease;
+    z-index: 100;
+  }
+  
+  .nav-menu-open {
+    right: 0;
+  }
+  
+  .nav-menu-open ~ .menu-overlay {
+    display: block;
   }
   
   .nav-link {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #404040;
+    display: block;
+  }
+  
+  .nav-link:last-child {
+    border-bottom: none;
+  }
+  
+  .user-menu,
+  .auth-links {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+  
+  .user-menu .nav-link,
+  .auth-links .nav-link {
+    margin: 0;
+  }
+  
+  .logout-btn,
+  .signup-btn {
+    margin: 1rem 0;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .signup-btn {
+    display: block;
+    text-decoration: none;
   }
   
   .logo-text .aom,
   .logo-text .trading {
     font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0 0.5rem;
+  }
+  
+  .nav-menu {
+    width: 100%;
+    right: -100%;
+  }
+  
+  .logo-text .aom,
+  .logo-text .trading {
+    font-size: 1rem;
   }
 }
