@@ -6,9 +6,10 @@
 .hero {
   height: 80vh;
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-              url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23f0f0f0" width="1200" height="800"/><g opacity="0.3"><circle cx="200" cy="200" r="100" fill="%234CAF50"/><circle cx="800" cy="300" r="150" fill="%232E7D32"/><circle cx="1000" cy="600" r="80" fill="%2366BB6A"/></g></svg>');
+              url('../assets/homepage_back.jpg');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,8 +33,8 @@
 }
 
 .hero-content p {
+  margin: 0 auto 40px;
   font-size: 1.5rem;
-  margin-bottom: 2rem;
   max-width: 600px;
 }
 
@@ -96,6 +97,9 @@
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .service-icon {
@@ -134,6 +138,7 @@
   border-radius: 5px;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  margin-top: auto;
 }
 
 .service-button:hover {
