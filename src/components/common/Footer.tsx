@@ -1,0 +1,62 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Footer.css';
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="footer">
+      <div className="footer-container">
+        <div className="footer-logo">
+          <div className="logo-squares">
+            <div className="square"></div>
+            <div className="square"></div>
+            <div className="square"></div>
+            <div className="square"></div>
+            <div className="square"></div>
+            <div className="square"></div>
+            <div className="square"></div>
+            <div className="square"></div>
+            <div className="square"></div>
+          </div>
+          <div className="logo-text">
+            <span className="aom">AOM</span>
+            <span className="trading">TRADING</span>
+          </div>
+        </div>
+        
+        <div className="footer-sections">
+          <div className="footer-section">
+            <h3>Learn To Trade</h3>
+            <ul>
+              <li><Link to="/services">Our Services</Link></li>
+              <li><Link to="/tutoring">1-1 Tutoring</Link></li>
+              <li><Link to="/ninjatrader">NinjaTrader 8</Link></li>
+            </ul>
+          </div>
+          
+          <div className="footer-section">
+            <h3>Contact Us</h3>
+            <ul>
+              <li><Link to="/contact">Email</Link></li>
+              <li><Link to="/faq">FAQ</Link></li>
+              <li><Link to="/terms">Terms of Service</Link></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div className="footer-disclaimer">
+        <p>
+          *Disclaimer: CFTC RULE 4.41 HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE INHERENT LIMITATIONS. 
+          UNLIKE AN ACTUAL PERFORMANCE RECORD, SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, 
+          SINCE THE TRADES HAVE NOT BEEN EXECUTED, THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, 
+          IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY. SIMULATED TRADING PROGRAMS IN GENERAL 
+          ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT. NO REPRESENTATION 
+          IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFIT OR LOSSES SIMILAR TO THOSE SHOWN.
+        </p>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

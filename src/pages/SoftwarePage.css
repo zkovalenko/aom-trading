@@ -1,0 +1,202 @@
+.software-page {
+  padding: 2rem 0;
+  min-height: 80vh;
+}
+
+.software-page h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.software-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background-color: #d4af37;
+  color: white;
+}
+
+.tab:hover {
+  background-color: #d0d0d0;
+}
+
+.tab.active:hover {
+  background-color: #c19b26;
+}
+
+.software-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.pricing-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.pricing-list {
+  list-style: none;
+  padding: 0;
+}
+
+.pricing-list li {
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+.purchase-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.purchase-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.purchase-button:hover {
+  background-color: #2E7D32;
+}
+
+.software-content-box {
+  background-color: #f5f5dc;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+.software-content-box h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-decoration: underline;
+}
+
+.content-text p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.functionality-section {
+  margin: 1.5rem 0;
+}
+
+.functionality-section h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.functionality-section ul {
+  margin-left: 1rem;
+}
+
+.functionality-section li {
+  margin-bottom: 0.3rem;
+  color: #555;
+}
+
+.member-section {
+  border-top: 2px solid #eee;
+  padding-top: 3rem;
+}
+
+.member-downloads {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.download-section {
+  text-align: center;
+}
+
+.download-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.download-button {
+  display: block;
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #2E7D32;
+}
+
+.download-button.secondary {
+  background-color: #6c757d;
+}
+
+.download-button.secondary:hover {
+  background-color: #545b62;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .software-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .member-downloads {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .software-tabs {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .tab {
+    width: 200px;
+  }
+  
+  .software-page h1 {
+    font-size: 2.5rem;
+  }
+}
