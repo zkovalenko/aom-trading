@@ -10,7 +10,7 @@ const LoginPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -39,8 +39,18 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/auth/google`;
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      const success = await loginWithGoogle();
+      if (success) {
+        navigate(from, { replace: true });
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

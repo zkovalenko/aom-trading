@@ -6,147 +6,132 @@ const ServicesPage: React.FC = () => {
   return (
     <div className="services-page">
       <div className="container">
-        <h1>Self-Study Course</h1>
+        <h1>Our Trading Services</h1>
+        <p className="services-intro">
+          Choose the learning path that best fits your goals and schedule. From self-paced online courses 
+          to intensive bootcamps, we have the right program to accelerate your trading career.
+        </p>
         
-        <div className="course-intro">
-          <div className="course-video">
-            <div className="video-placeholder">
-              <div className="aom-logo">AOM TRADING</div>
-              <div className="play-button">
-                <span>Phase 0 - Introduction</span>
-                <div className="play-icon">▶</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="course-description">
+        <div className="services-grid">
+          <div className="service-card">
+            <div className="service-icon">📚</div>
             <h2>Self-Study Course</h2>
+            <div className="service-price">$500</div>
             <p>
-              This self-paced course comes with three-month access to online video training courses. We have over 20 videos walking you through the AOMTrading methodology.
+              Self-paced online course with 3-month access to cutting-edge trading software. 
+              Perfect for independent learners who prefer to study at their own pace.
             </p>
-            <Link to="/signup" className="signup-button">Sign up now!</Link>
+            <ul className="service-features">
+              <li>✓ 20+ detailed video lessons</li>
+              <li>✓ AOM Trading methodology</li>
+              <li>✓ 90-day software access</li>
+              <li>✓ Trading manual & templates</li>
+              <li>✓ Email support</li>
+            </ul>
+            <Link to="/services/self-study" className="service-button">Learn More</Link>
+          </div>
+
+          <div className="service-card featured">
+            <div className="featured-badge">Most Popular</div>
+            <div className="service-icon">👨‍🏫</div>
+            <h2>Private Tutoring</h2>
+            <div className="service-price">From $2,500/month</div>
+            <p>
+              One-on-one mentorship with expert traders. Get personalized attention, 
+              custom strategies, and real-time guidance tailored to your needs.
+            </p>
+            <ul className="service-features">
+              <li>✓ Personal trading mentor</li>
+              <li>✓ Weekly 1-on-1 sessions</li>
+              <li>✓ Custom strategy development</li>
+              <li>✓ Real-time market guidance</li>
+              <li>✓ 24/7 support access</li>
+            </ul>
+            <Link to="/services/private-tutoring" className="service-button">Learn More</Link>
+          </div>
+
+          <div className="service-card">
+            <div className="service-icon">🏋️‍♂️</div>
+            <h2>Trading Bootcamp</h2>
+            <div className="service-price">$8,500</div>
+            <p>
+              Intensive 8-week group program designed to fast-track your trading career. 
+              Small class sizes and daily live sessions for maximum learning.
+            </p>
+            <ul className="service-features">
+              <li>✓ 8-week intensive program</li>
+              <li>✓ Daily live sessions (40 hours)</li>
+              <li>✓ Maximum 12 students</li>
+              <li>✓ Job placement assistance</li>
+              <li>✓ Trading certification</li>
+            </ul>
+            <Link to="/services/bootcamp" className="service-button">Learn More</Link>
           </div>
         </div>
 
-        <div className="course-details">
-          <div className="prerequisites">
-            <h2>Prerequisites</h2>
-            <div className="prereq-content">
-              <div className="prereq-text">
-                <h3>Basic operational knowledge of NinjaTrader 8 platform</h3>
-                <ul>
-                  <li>Order entry and general operations</li>
-                  <li>Work space configurations</li>
-                  <li>A typical Machine for:</li>
-                </ul>
-                
-                <h4>Using basic analytical tools like:</h4>
-                <ul>
-                  <li>Market Structure</li>
-                  <li>Support and Resistance</li>
-                  <li>Demand Supply</li>
-                  <li>Trend Lines</li>
-                </ul>
-              </div>
-              <div className="prereq-icons">
-                <div className="step-indicator">
-                  <div className="step active">1</div>
-                  <div className="step">2</div>
-                  <div className="step">3</div>
-                </div>
-              </div>
-            </div>
+        <div className="comparison-section">
+          <h2>Compare Our Services</h2>
+          <div className="comparison-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Self-Study</th>
+                  <th>Private Tutoring</th>
+                  <th>Bootcamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Duration</td>
+                  <td>Self-paced</td>
+                  <td>Ongoing</td>
+                  <td>8 weeks</td>
+                </tr>
+                <tr>
+                  <td>Live Instruction</td>
+                  <td>❌</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <td>Personal Mentor</td>
+                  <td>❌</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <td>Group Learning</td>
+                  <td>❌</td>
+                  <td>❌</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <td>Job Placement</td>
+                  <td>❌</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <td>Certification</td>
+                  <td>❌</td>
+                  <td>❌</td>
+                  <td>✅</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </div>
 
-          <div className="content-section">
-            <h2>Content</h2>
-            <div className="content-grid">
-              <div className="content-category">
-                <h3>Technical Content</h3>
-                <div className="content-icon">👩‍💻</div>
-                <ul>
-                  <li>AOMtrading Methodology</li>
-                  <li>AOMtrading Methodology Multi-timeframe Analysis</li>
-                  <li>Supply / Demand identification and analysis, Zone placement</li>
-                  <li>Market Structure identification and analysis</li>
-                  <li>Wave Analysis (Fibonacci based approach)</li>
-                  <li>Support Resistance</li>
-                  <li>Trader Setups</li>
-                  <li>Risk Management principles</li>
-                  <li>Position Sizing principles</li>
-                  <li>Expectancy Model</li>
-                  <li>Analyzing Machine list</li>
-                </ul>
-              </div>
-              
-              <div className="content-category">
-                <h3>Material Content</h3>
-                <ul>
-                  <li>11 Classes with Total 20+ Videos of detailed Explanation of AOMtrading methodology</li>
-                  <li>Trading Manual/Formula</li>
-                  <li>Trading Rules Explanation</li>
-                  <li>Trading Rule Application - How to Trade and Expectancy Model</li>
-                  <li>Market Analysis and Chart interpretation</li>
-                  <li>1 document meetings with the coach, by request</li>
-                  <li>play Installation support</li>
-                  <li>Email support / Chat of strategies</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="skills-section">
-            <h2>Skills Gained</h2>
-            <div className="skills-content">
-              <div className="skills-icon">⚙️</div>
-              <ul className="skills-list">
-                <li>✓ To do Consistent Multi-Timeframe Analysis utilizing Top-Down approach.</li>
-                <li>✓ To identify Top Probability entry for personal trading style</li>
-                <li>✓ To identify and set Top management entry positions</li>
-                <li>✓ To develop Rules based system to fit your personal trading style</li>
-                <li>✓ To apply Top Down expectancy strategy for consistent Top profitability</li>
-                <li>✓ To get your application based on Technology Use</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="expectations-section">
-            <h2>What to Expect</h2>
-            <div className="expectations-content">
-              <div className="expectations-icon">👨‍💼</div>
-              <ul className="expectations-list">
-                <li>✓ To do Consistent Multi-Timeframe Analysis utilizing Top-Down approach.</li>
-                <li>✓ To identify Top Probability entry for personal trading style</li>
-                <li>✓ To develop Rules based system to fit your personal trading style</li>
-                <li>✓ To apply Top Down expectancy strategy for consistent probability</li>
-                <li>✓ To search in Trader Journaling</li>
-                <li>✓ To get your application based on Technology Use</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="get-started-section">
-            <h2>Get Started</h2>
-            <div className="pricing-info">
-              <h3>Price: $500</h3>
-              <div className="pricing-details">
-                <p><strong>The following Content is included in the Program Price:</strong></p>
-                <ul>
-                  <li>✓ Online Access to more than 20 Videos of detailed Explanation of AOMtrading Methodology</li>
-                  <li>✓ Trading Manual</li>
-                  <li>✓ Online Access to Online Course</li>
-                  <li>✓ Triple Journal Template with Built-in CSV and Expectation Analysis</li>
-                  <li>✓ Live Chart Screenshots</li>
-                  <li>✓ Personal help via Questions via Email</li>
-                  <li>✓ 1 document meetings with the coach, by request</li>
-                  <li>✓ My Email / Call system</li>
-                  <li>✓ All material access</li>
-                  <li>✓ 90+ day access period, Free of Charge</li>
-              </ul>
-              </div>
-              
-              <Link to="/signup" className="signup-button large">Sign up now!</Link>
-            </div>
+        <div className="cta-section">
+          <h2>Ready to Start Your Trading Journey?</h2>
+          <p>
+            Not sure which program is right for you? Contact us for a free consultation 
+            and we'll help you choose the best path forward.
+          </p>
+          <div className="cta-buttons">
+            <Link to="/signup" className="cta-button primary">Get Started Today</Link>
+            <Link to="/contact" className="cta-button secondary">Schedule Consultation</Link>
           </div>
         </div>
       </div>

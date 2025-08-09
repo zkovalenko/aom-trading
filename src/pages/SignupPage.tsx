@@ -14,7 +14,7 @@ const SignupPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -86,8 +86,18 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  const handleGoogleSignup = () => {
-    window.location.href = `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/auth/google`;
+  const handleGoogleSignup = async () => {
+    setLoading(true);
+    try {
+      const success = await loginWithGoogle();
+      if (success) {
+        navigate(from, { replace: true });
+      }
+    } catch (error) {
+      console.error('Google signup error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

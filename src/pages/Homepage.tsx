@@ -31,12 +31,7 @@ const Homepage: React.FC = () => {
               <p>
                 Software suite has been designed from ground up to support your trading needs from One Time Frame (OTF) analysis:
               </p>
-              <ul>
-                <li><strong>aomWaves:</strong> Builds Fibered Wave analysis</li>
-                <li><strong>aomDZones:</strong> Demand Zone analysis more optimized</li>
-                <li><strong>aomMarket:</strong> Market Structure/Analysis with defined calculation</li>
-                <li>Attachment from the top of the execution-based on the strategy and trading style</li>
-              </ul>
+              
               <Link to="/software" className="service-button">LEARN MORE</Link>
             </div>
 
@@ -59,13 +54,10 @@ const Homepage: React.FC = () => {
               <div className="service-icon">👨‍🏫</div>
               <h3>Tutoring</h3>
               <p>
-                We can provide individual or group Tutoring to supplement any course experience.
+                We provide individual or group Training to supplement any course experience.
               </p>
               <p>
-                We provide individual engagement with you to gain knowledge and understanding about basic fundamentals on trading.
-              </p>
-              <p>
-                For your training an excellent video consulting based approach.
+                You will gain knowledge and understanding about fundamentals of trading.
               </p>
               <Link to="/tutoring" className="service-button">LEARN MORE</Link>
             </div>

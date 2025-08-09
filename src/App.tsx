@@ -7,6 +7,9 @@ import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
 import SoftwarePage from './pages/SoftwarePage';
 import ServicesPage from './pages/ServicesPage';
+import SelfStudyPage from './pages/services/SelfStudyPage';
+import PrivateTutoringPage from './pages/services/PrivateTutoringPage';
+import BootcampPage from './pages/services/BootcampPage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
@@ -44,6 +47,9 @@ function App() {
               <Route path="/" element={<Homepage />} />
               <Route path="/software" element={<SoftwarePage />} />
               <Route path="/services" element={<ServicesPage />} />
+              <Route path="/services/self-study" element={<SelfStudyPage />} />
+              <Route path="/services/private-tutoring" element={<PrivateTutoringPage />} />
+              <Route path="/services/bootcamp" element={<BootcampPage />} />
               <Route path="/learn-to-trade" element={<ServicesPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
