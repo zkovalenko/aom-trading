@@ -1,0 +1,430 @@
+.self-study-page {
+  padding: 2rem 0;
+  min-height: 80vh;
+}
+
+.self-study-page h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+.course-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 4rem;
+  align-items: center;
+}
+
+.course-video {
+  display: flex;
+  justify-content: center;
+}
+
+.video-placeholder {
+  width: 450px;
+  height: 350px;
+  background-color: #333;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.aom-logo {
+  font-size: 1rem;
+  font-weight: bold;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.play-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.play-button span {
+  font-size: 1.2rem;
+}
+
+.play-icon {
+  font-size: 3rem;
+  color: #92E3A9;
+}
+
+.course-description h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.course-description p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.signup-button {
+  display: inline-block;
+  background-color: #92E3A9;
+  color: #333;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.signup-button.white {
+  background-color: #FFF;
+}
+
+.signup-button:hover {
+  background-color: #4CAF50;
+}
+
+.signup-button.large {
+  padding: 1.2rem 3rem;
+  font-size: 1.3rem;
+}
+
+.course-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.expectations-img {
+  background-image: url("../../assets/self-service-expect.png");
+  background-size: contain;
+  min-height: 400px;
+  min-width: 400px;
+  background-repeat: no-repeat;
+}
+
+.prerequisites h2,
+.content-section h2,
+.skills-section h2,
+.expectations-section h2,
+.get-started-section h2 {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  color: #333;
+  border-bottom: 1px solid #ccc;
+}
+
+.prereq-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.prereq-content-right {
+  background-image: url("../../assets/self-service-prereq.png");
+  background-size: contain;
+  min-height: 400px;
+  background-repeat: no-repeat;
+}
+
+.prereq-text h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.prereq-text h4 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.5rem;
+  color: #555;
+}
+
+.prereq-text ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.prereq-text li {
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+.content-category {
+  display: flex;
+  flex-direction: row;
+  gap: 15rem;
+}
+
+.tech-content-img {
+  background-image: url("../../assets/tech-content.png");
+  background-size: contain;
+  min-width: 400px;
+  background-repeat: no-repeat;
+}
+
+.content-category h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.content-category ul {
+  list-style: none;
+  padding: 0;
+}
+
+.content-category li {
+  padding: 0.5rem 0;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+.skills-content,
+.expectations-content {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 15rem;
+  align-items: start;
+}
+
+.skills-img {
+  background-image: url("../../assets/self-service-skills.png");
+  background-size: contain;
+  min-height: 400px;
+  min-width: 400px;
+  background-repeat: no-repeat;
+}
+
+.skills-list,
+.expectations-list {
+  list-style: none;
+  padding: 0;
+}
+
+.skills-list li,
+.expectations-list li {
+  padding: 0.5rem 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.get-started-section {
+  background-color: #92E3A9;
+  padding: 3rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.pricing-info h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 3rem;
+}
+
+.pricing-details p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.pricing-details ul {
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  list-style: none;
+}
+
+.pricing-details li {
+  padding: 0.5rem 0;
+  color: #666;
+}
+
+.purchase-button {
+  display: inline-block;
+  background-color: #92E3A9;
+  color: #333;
+  padding: 1.2rem 3rem;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.purchase-button:hover {
+  background-color: #4CAF50;
+}
+
+.access-granted {
+  background-color: #e8f5e8;
+  border: 1px solid #92E3A9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.access-badge {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.paid-content-section {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-top: 4rem;
+  border: 2px solid #92E3A9;
+}
+
+.paid-content-section h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+}
+
+.paid-content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.content-module {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border: 1px solid #e9ecef;
+}
+
+.content-module h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.content-module p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.content-link {
+  display: inline-block;
+  background-color: #92E3A9;
+  color: #333;
+  padding: 0.8rem 1.5rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.content-link:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.support-section {
+  background-color: #333;
+  color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.support-section h3 {
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.support-section p {
+  margin-bottom: 1.5rem;
+  color: #ccc;
+}
+
+.support-link {
+  display: inline-block;
+  background-color: #92E3A9;
+  color: #333;
+  padding: 0.8rem 2rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.support-link:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-intro {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .video-placeholder {
+    width: 100%;
+    max-width: 400px;
+    height: 200px;
+  }
+  
+  .prereq-content,
+  .content-grid,
+  .skills-content,
+  .expectations-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .self-study-page h1 {
+    font-size: 2.5rem;
+  }
+  
+  .course-description h2 {
+    font-size: 2rem;
+  }
+  
+  .paid-content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .content-module {
+    padding: 1.5rem;
+  }
+  
+  .paid-content-section {
+    padding: 2rem 1rem;
+  }
+}

@@ -1,0 +1,297 @@
+.services-page {
+  padding: 2rem 0;
+  min-height: 80vh;
+}
+
+.services-page h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.services-intro {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  line-height: 1.6;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+  margin-bottom: 5rem;
+}
+
+.service-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.service-card.featured {
+  border: 3px solid #92E3A9;
+  transform: scale(1.05);
+}
+
+.service-card.featured:hover {
+  transform: scale(1.05) translateY(-5px);
+}
+
+.featured-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #92E3A9, #4CAF50);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(146, 227, 169, 0.3);
+}
+
+.service-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.service-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.service-price {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #92E3A9;
+  margin-bottom: 1.5rem;
+}
+
+.service-card p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.service-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.service-features li {
+  padding: 0.5rem 0;
+  color: #666;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.service-features li:last-child {
+  border-bottom: none;
+}
+
+.service-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #92E3A9, #4CAF50);
+  color: white;
+  padding: 1rem 2.5rem;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(146, 227, 169, 0.3);
+}
+
+.service-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(146, 227, 169, 0.4);
+}
+
+.comparison-section {
+  margin-bottom: 5rem;
+}
+
+.comparison-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+.comparison-table {
+  overflow-x: auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.comparison-table th {
+  background: linear-gradient(135deg, #92E3A9, #4CAF50);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.comparison-table th:first-child {
+  border-radius: 15px 0 0 0;
+}
+
+.comparison-table th:last-child {
+  border-radius: 0 15px 0 0;
+}
+
+.comparison-table td {
+  padding: 1rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  color: #666;
+}
+
+.comparison-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 15px;
+}
+
+.comparison-table tbody tr:last-child td:last-child {
+  border-radius: 0 0 15px 0;
+}
+
+.comparison-table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.cta-section {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 4rem 3rem;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 1.2rem 3rem;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.cta-button.primary {
+  background: linear-gradient(135deg, #92E3A9, #4CAF50);
+  color: white;
+  box-shadow: 0 4px 15px rgba(146, 227, 169, 0.3);
+}
+
+.cta-button.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(146, 227, 169, 0.4);
+}
+
+.cta-button.secondary {
+  background: white;
+  color: #333;
+  border: 2px solid #92E3A9;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button.secondary:hover {
+  background: #92E3A9;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(146, 227, 169, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .services-page h1 {
+    font-size: 2.5rem;
+  }
+  
+  .services-intro {
+    font-size: 1rem;
+    margin-bottom: 3rem;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .service-card.featured {
+    transform: none;
+  }
+  
+  .service-card.featured:hover {
+    transform: translateY(-5px);
+  }
+  
+  .service-card {
+    padding: 2rem;
+  }
+  
+  .comparison-section h2,
+  .cta-section h2 {
+    font-size: 2rem;
+  }
+  
+  .cta-section {
+    padding: 3rem 2rem;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
