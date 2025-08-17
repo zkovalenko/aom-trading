@@ -24,3 +24,20 @@ yarn-error.log*
 
 # environment variables
 .env
+backend/.env
+website/.env
+
+# Large video files
+website/public/videos/
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Compiled output
+dist/
+build/
