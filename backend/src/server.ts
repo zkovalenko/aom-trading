@@ -14,9 +14,13 @@ import authRoutes from './routes/auth';
 import paymentRoutes from './routes/payments';
 import courseRoutes from './routes/courses';
 
-// Load environment variables based on NODE_ENV
-const env = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${env}` });
+// Load environment variables
+// In production, Render provides env vars directly
+// In development, load from .env.development
+if (process.env.NODE_ENV !== 'production') {
+  const env = process.env.NODE_ENV || 'development';
+  dotenv.config({ path: `.env.${env}` });
+}
 
 const app = express();
 const PORT = process.env.PORT || 5001;
