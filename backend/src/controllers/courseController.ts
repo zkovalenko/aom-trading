@@ -108,7 +108,7 @@ export const getAllCourses = async (req: Request, res: Response): Promise<void> 
     );
 
     // If user is authenticated, check which courses they have access to
-    let userCourseAccess = [];
+    let userCourseAccess: any[] = [];
     if (req.user) {
       const currentUser = req.user as any;
       const userAccessResult = await pool.query(
@@ -119,7 +119,7 @@ export const getAllCourses = async (req: Request, res: Response): Promise<void> 
     }
 
     const coursesWithAccess = coursesResult.rows.map(course => {
-      const accessInfo = userCourseAccess.find(access => access.course_id === course.id);
+      const accessInfo = userCourseAccess.find((access: any) => access.course_id === course.id);
       return {
         id: course.id,
         name: course.name,
@@ -178,7 +178,7 @@ export const getCourseById = async (req: Request, res: Response): Promise<void> 
 
     // Check user access if authenticated
     let hasAccess = false;
-    let userCourseInfo = null;
+    let userCourseInfo: any = null;
 
     if (req.user) {
       const currentUser = req.user as any;
