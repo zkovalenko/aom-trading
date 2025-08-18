@@ -21,6 +21,7 @@ interface AuthContextType {
   logout: () => void;
   loading: boolean;
   refreshProfile: () => Promise<void>;
+  setAuthToken: (token: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,7 +37,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
-  // Listen for storage changes (useful for OAuth callback)
+  const updateToken = (newToken: string | null) => {
+    setToken(newToken);
+    if (newToken) {
+      localStorage.setItem('token', newToken);
+    } else {
+      localStorage.removeItem('token');
+    }
+  };
+
+  // Listen for storage changes and check token periodically
   useEffect(() => {
     const handleStorageChange = () => {
       const newToken = localStorage.getItem('token');
@@ -45,8 +55,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     };
 
+    // Check for token changes periodically
+    const interval = setInterval(() => {
+      const currentToken = localStorage.getItem('token');
+      if (currentToken !== token) {
+        setToken(currentToken);
+      }
+    }, 1000);
+
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
   }, [token]);
 
   // Setup axios interceptor for auth token
@@ -111,7 +132,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await axios.post('/auth/login', { email, password });
-      
+
       if (response.data.success) {
         const { token: newToken, user: userData } = response.data;
         setToken(newToken);
@@ -161,6 +182,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       // Redirect to backend Google OAuth flow
       window.location.href = `${API_BASE_URL}/auth/google`;
+      console.log("~~logged in")
       return true; // Will redirect, so return true
     } catch (error: any) {
       const message = error.message || 'Google sign-in failed';
@@ -170,10 +192,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = () => {
-    setToken(null);
+    updateToken(null);
     setUser(null);
-    localStorage.removeItem('token');
     toast.success('Logged out successfully');
+  };
+
+  const setAuthToken = async (newToken: string) => {
+    updateToken(newToken);
+    try {
+      const response = await axios.get('/auth/profile', {
+        headers: { Authorization: `Bearer ${newToken}` }
+      });
+      if (response.data.success) {
+        setUser(response.data.data.user);
+        console.log('User profile loaded successfully:', response.data.data.user);
+      } else {
+        console.error('Profile response not successful:', response.data);
+      }
+    } catch (error) {
+      console.error('Failed to load profile after token set:', error);
+      updateToken(null);
+      setUser(null);
+    }
   };
 
   const value = {
@@ -184,7 +224,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     loginWithGoogle,
     logout,
     loading,
-    refreshProfile
+    refreshProfile,
+    setAuthToken
   };
 
   return (

@@ -43,6 +43,7 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     try {
       const success = await loginWithGoogle();
+      console.log("~~google login success:", success);
       if (success) {
         navigate(from, { replace: true });
       }

@@ -5,8 +5,8 @@ import './Header.css';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
+  console.log("~~user",  user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };

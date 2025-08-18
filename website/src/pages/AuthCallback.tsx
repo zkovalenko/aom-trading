@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const AuthCallback: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { refreshProfile } = useAuth();
+  const { setAuthToken } = useAuth();
   const [processing, setProcessing] = useState(true);
 
   useEffect(() => {
@@ -22,14 +22,14 @@ const AuthCallback: React.FC = () => {
         }
 
         if (token) {
-          // Store the token
-          localStorage.setItem('token', token);
+          // Set token and refresh profile through AuthContext
+          await setAuthToken(token);
 
           // Get redirect parameter, default to /services
           const redirectTo = searchParams.get('redirect') || '/services';
 
-          // Trigger a page reload to let AuthContext pick up the new token
-          window.location.href = redirectTo;
+          // Navigate to the redirect URL
+          navigate(redirectTo);
         } else {
           toast.error('No authentication token received');
           navigate('/login');
@@ -44,7 +44,7 @@ const AuthCallback: React.FC = () => {
     };
 
     handleCallback();
-  }, [searchParams, navigate, refreshProfile]);
+  }, [searchParams, navigate, setAuthToken]);
 
   if (processing) {
     return (
