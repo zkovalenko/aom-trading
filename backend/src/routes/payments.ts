@@ -12,10 +12,10 @@ const router = express.Router();
 // Stripe webhook (must be before express.json() middleware)
 router.post('/stripe-webhook', handleStripeWebhook);
 
-// Create payment intent for course purchase
+// Create payment intent for product purchase
 router.post('/create-intent', authenticateToken, createPaymentIntent);
 
-// Confirm payment and grant course access
+// Confirm payment
 router.post('/confirm', authenticateToken, confirmPayment);
 
 // Get user's payment history
@@ -57,7 +57,7 @@ router.get('/status/:paymentIntentId', authenticateToken, async (req, res) => {
       data: {
         payment: {
           id: payment.id,
-          courseId: payment.course_id,
+          productId: payment.product_id,
           paymentIntentId: payment.stripe_payment_intent_id,
           amount: payment.amount,
           currency: payment.currency,

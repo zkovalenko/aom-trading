@@ -96,15 +96,6 @@
   gap: 4rem;
 }
 
-.what-included h2,
-.program-structure h2,
-.benefits-section h2,
-.pricing-section h2 {
-  font-size: 2.2rem;
-  margin-bottom: 2rem;
-  color: #333;
-  border-bottom: 1px solid #ccc;
-}
 
 .included-content {
   display: grid;
@@ -185,11 +176,6 @@
   font-size: 1.1rem;
 }
 
-.pricing-section {
-  background-color: #f8f9fa;
-  padding: 3rem;
-  border-radius: 10px;
-}
 
 .pricing-info h3 {
   font-size: 2rem;

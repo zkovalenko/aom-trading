@@ -14,7 +14,7 @@ import './PaymentForm.css';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key');
 
 interface PaymentFormProps {
-  productType: 'course' | 'software' | 'tutoring';
+  productType: 'tutoring';
   productId: string;
   amount: number;
   productName: string;

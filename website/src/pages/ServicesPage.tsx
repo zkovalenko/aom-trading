@@ -1,153 +1,217 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
+import SubscriptionForm from '../components/SubscriptionForm';
 import './ServicesPage.css';
 
+interface Product {
+  id: string;
+  product_template_id: string;
+  name: string;
+  description: string;
+  subscription_types: {
+    monthly: number;
+    annual: number;
+  };
+}
+
 const ServicesPage: React.FC = () => {
+  const { user } = useAuth();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedType, setSelectedType] = useState<'monthly' | 'annual'>('annual');
+  const [billingType, setBillingType] = useState<'monthly' | 'annual'>('annual');
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const response = await axios.get('/subscriptions/products');
+        if (response.data.success) {
+          setProducts(response.data.data.products);
+        }
+      } catch (error) {
+        console.error('Failed to load products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  const handleSubscribe = (product: Product) => {
+    if (!user) {
+      // Redirect to login
+      window.location.href = '/login';
+      return;
+    }
+    setSelectedProduct(product);
+    setSelectedType(billingType);
+  };
+
+  const handleSubscriptionSuccess = () => {
+    setSelectedProduct(null);
+    // Could redirect to a success page or show a success message
+  };
+
+  const handleSubscriptionCancel = () => {
+    setSelectedProduct(null);
+  };
+
+  if (selectedProduct) {
+    return (
+      <div className="services-page">
+        <div className="container">
+          <SubscriptionForm
+            product={selectedProduct}
+            subscriptionType={selectedType}
+            onSuccess={handleSubscriptionSuccess}
+            onCancel={handleSubscriptionCancel}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="services-page">
+        <div className="container">
+          <div className="loading">Loading subscription plans...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="services-page">
       <div className="container">
-        <h1>Our Trading Services</h1>
-        <p className="services-intro">
-          Choose the learning path that best fits your goals and schedule. From self-paced online courses 
-          to intensive bootcamps, we have the right program to accelerate your trading career.
-        </p>
+        <h1 className="pt-10">Trade with confidence</h1>
         
-        <div className="services-grid">
-          <div className="service-card featured">
-            <div className="featured-badge">Most Popular</div>
-            <h2>Self-Study Course</h2>
-            <div className="service-price">$375</div>
-            <p>
-              Self-paced online course with 3-month access to cutting-edge trading software. 
-              Perfect for independent learners who prefer to study at their own pace.
-            </p>
-            <ul className="service-features">
-              <li>✓ 10+ detailed video lessons</li>
-              <li>✓ AOM Trading methodology</li>
-              <li>✓ 90-day software access</li>
-              <li>✓ Trading manual & templates</li>
-              <li>✓ 24/7 support access</li>
-            </ul>
-            <Link to="/services/self-study" className="service-button">Learn More</Link>
-          </div>
-
-          <div className="service-card">
-            <div className="service-icon"></div>
-            <h2>AOM Trading Software</h2>
-            <div className="service-price">$1,500</div>
-            <p>
-              Our patented AOM Trading software completes out AOM Trading methodolgy.  
-              We recommend starting with either Private Tutoring or Self-Study course before getting the software. 
-            </p>
-            <ul className="service-features">
-              <li>✓ Bullish/bearish waves</li>
-              <li>✓ Demand/Supply zones</li>
-              <li>✓ Automated order placement </li>
-              <li>✓ Preconfigured AOM strategy</li>
-              <li>✓ 24/7 support access</li>
-            </ul>
-            <Link to="/services/software" className="service-button">Learn More</Link>
-          </div>
-
-          <div className="service-card">
-            <h2>Private Tutoring</h2>
-            <div className="service-price">From $2,500/month</div>
-            <p>
-              One-on-one mentorship with expert traders. Get personalized attention, 
-              custom strategies, and real-time guidance tailored to your needs.
-            </p>
-            <ul className="service-features">
-              <li>✓ Personal trading mentor</li>
-              <li>✓ Weekly 1-on-1 sessions</li>
-              <li>✓ Custom strategy development</li>
-              <li>✓ Real-time market guidance</li>
-              <li>✓ 24/7 support access</li>
-            </ul>
-            <Link to="/services/private-tutoring" className="service-button">Learn More</Link>
-          </div>
-
-          <div className="service-card">
-            <h2>Trading Bootcamp</h2>
-            <div className="service-price">FREE</div>
-            <p>
-              Intensive 4-week group program designed to refresh your trading. 
-              Small class sizes and daily live sessions for maximum learning.
-              Must complete Self-Study before signing up
-            </p>
-            <ul className="service-features">
-              <li>✓ 4-week intensive program</li>
-              <li>✓ Daily live sessions (40 hours)</li>
-              <li>✓ Maximum 10 students</li>
-              <li>✓ Software Walkthrough</li>
-            </ul>
-            <Link to="/services/bootcamp" className="service-button">Learn More</Link>
+        <div className="content-section">
+          <div className="content-left content-image">&nbsp;</div>
+          
+          <div className="content-right">
+              {/* <h3>Expertise Simplified</h3> */}
+              <p>
+                Years of market research, real-time data analysis, and tested strategies distilled into a practical way to learn and trade with confidence.
+              </p>
+            
+              {/* <h3>Powerful Tools & Live Learning</h3> */}
+              <p>
+                Access our patented trading software and live trading rooms to learn in real time, ask questions, and see strategies in action.
+              </p>
+            
+              {/* <h3>For Every Trader</h3> */}
+              <p>
+                Whether you're just starting out or looking to sharpen your edge, our advanced tools and expert-backed methodology help you trade stocks, futures, forex, and more.
+              </p>
           </div>
         </div>
 
-        <div className="comparison-section">
-          <h2>Compare Our Services</h2>
-          <div className="comparison-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Feature</th>
-                  <th>Self-Study</th>
-                  <th>Private Tutoring</th>
-                  <th>Bootcamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Duration</td>
-                  <td>Self-paced</td>
-                  <td>Ongoing</td>
-                  <td>8 weeks</td>
-                </tr>
-                <tr>
-                  <td>Live Instruction</td>
-                  <td>❌</td>
-                  <td>✅</td>
-                  <td>✅</td>
-                </tr>
-                <tr>
-                  <td>Personal Mentor</td>
-                  <td>❌</td>
-                  <td>✅</td>
-                  <td>✅</td>
-                </tr>
-                <tr>
-                  <td>Group Learning</td>
-                  <td>❌</td>
-                  <td>❌</td>
-                  <td>✅</td>
-                </tr>
-                <tr>
-                  <td>Job Placement</td>
-                  <td>❌</td>
-                  <td>✅</td>
-                  <td>✅</td>
-                </tr>
-                <tr>
-                  <td>Certification</td>
-                  <td>❌</td>
-                  <td>❌</td>
-                  <td>✅</td>
-                </tr>
-              </tbody>
-            </table>
+        <div className="subscription-features">
+          <h2>Choose Your Subscription</h2>
+
+          <div className="billing-toggle">
+            <span className={billingType === 'monthly' ? 'active' : ''}>Monthly</span>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={billingType === 'annual'}
+                onChange={(e) => setBillingType(e.target.checked ? 'annual' : 'monthly')}
+              />
+              <span className="slider"></span>
+            </label>
+            <span className={billingType === 'annual' ? 'active' : ''}>
+              Annual 
+              <span className="save-badge">Save up to $72!</span>
+            </span>
+          </div>
+          
+          <div className="services-grid">
+            {products.map((product, index) => (
+              <div key={product.id} className="service-card">
+                <h3>{product.name}</h3>
+               
+                {product.name.includes('Basic') && 
+                    <div className="feature-item-description">
+                      <p>Spot high probability trades for intraday and swing trading</p>
+                      <p>State of the art trading software and analytics</p>
+                      <p>Access to our live trading rooms</p>
+                      <p></p>
+                    </div>
+                }
+                {product.name.includes('Premium') && 
+                    <div className="feature-item-description">
+                      <p>Spot high probability trades for intraday and swing trading</p>
+                      <p>State of the art trading software and analytics</p>
+                      <p>Access to our live trading rooms</p>
+                      <p><strong>Semi-automated trading</strong> with our trusted trading software</p>
+                    </div>
+                }
+               
+                <div className="pricing-section">
+                  <div className="current-price">
+                    <span className="amount">
+                      ${(product.subscription_types[billingType] / 100).toFixed(0)}
+                    </span>
+                    <span className="period">/{billingType === 'monthly' ? 'month' : 'year'}</span>
+                  </div>
+                  {billingType === 'annual' && (
+                    <div className="monthly-equivalent">
+                      ${((product.subscription_types.annual / 12) / 100).toFixed(0)}/month when billed annually
+                    </div>
+                  )}
+                </div>
+
+                <button 
+                  className="service-button"
+                  onClick={() => handleSubscribe(product)}
+                >
+                  GET STARTED
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="subscription-features">
+            <h2>What's Included</h2>
+            <div className="features-grid">
+              <div className="feature-item">
+                <h3>Expert Mentorship</h3>
+                <p>Learn from experienced traders with proven track records</p>
+              </div>
+              <div className="feature-item">
+                <h3>Trading Methodology</h3>
+                <p>Access to our comprehensive AOM Trading strategy</p>
+              </div>
+              <div className="feature-item">
+                <h3>Ongoing Support</h3>
+                <p>24/7 access to our community and support resources</p>
+              </div>
+              <div className="feature-item">
+                <h3>Flexible Billing</h3>
+                <p>Choose monthly or annual billing with automatic renewal</p>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="cta-section">
-          <h2>Ready to Start Your Trading Journey?</h2>
+          <h2>Ready to Start Trading?</h2>
           <p>
-            Not sure which program is right for you? Contact us for a free consultation 
-            and we'll help you choose the best path forward.
+            Join thousands of traders who have improved their results with our proven methodology. 
+            <br />
+            <br />
           </p>
-          <div className="cta-buttons">
-            <Link to="/signup" className="cta-button primary">Get Started Today</Link>
-            <Link to="/contact" className="cta-button secondary">Schedule Consultation</Link>
-          </div>
+          {!user && (
+            <div className="auth-buttons">
+              <Link to="/signup" className="cta-button primary">Create Account</Link>
+              <Link to="/login" className="cta-button secondary">Sign In</Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ import passport from './config/passport';
 // Import routes
 import authRoutes from './routes/auth';
 import paymentRoutes from './routes/payments';
-import courseRoutes from './routes/courses';
+import subscriptionRoutes from './routes/subscriptions';
 
 // Load environment variables
 // In production, Render provides env vars directly
@@ -68,7 +68,7 @@ app.use(passport.session());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/courses', courseRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

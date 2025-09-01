@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import stripe from '../config/stripe';
 import pool from '../config/database';
 
-const SELF_STUDY_COURSE_ID = 'df44da9d-48ad-4fa9-989d-0b2b7029ee2d';
-const COURSE_PRICE = 50000; // $500 in cents
-const ACCESS_DAYS = 90;
+const PRODUCT_PRICE = 50000; // $500 in cents
 
 export const createPaymentIntent = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -16,46 +14,28 @@ export const createPaymentIntent = async (req: Request, res: Response): Promise<
       return;
     }
 
-    const { productId, courseId } = req.body;
-    const actualCourseId = courseId || productId;
+    const { productId } = req.body;
 
-    // Validate course ID (currently only supporting self-study course)
-    if (actualCourseId !== SELF_STUDY_COURSE_ID) {
+    if (!productId) {
       res.status(400).json({
         success: false,
-        message: 'Invalid course ID'
+        message: 'Product ID is required'
       });
       return;
     }
 
-    // Check if user already has access to this course
     const currentUser = req.user as any;
-    const existingAccessResult = await pool.query(
-      'SELECT id, expires_at FROM user_courses WHERE user_id = $1 AND course_id = $2 AND expires_at > CURRENT_TIMESTAMP',
-      [currentUser.id, courseId]
-    );
-
-    if (existingAccessResult.rows.length > 0) {
-      res.status(400).json({
-        success: false,
-        message: 'You already have active access to this course',
-        data: {
-          expiresAt: existingAccessResult.rows[0].expires_at
-        }
-      });
-      return;
-    }
 
     // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: COURSE_PRICE,
+      amount: PRODUCT_PRICE,
       currency: 'usd',
       metadata: {
         userId: currentUser.id,
-        courseId: actualCourseId,
+        productId: productId,
         userEmail: currentUser.email
       },
-      description: 'AOM Trading Self-Study Course Access'
+      description: 'AOM Trading Product Purchase'
     });
 
     res.json({
@@ -63,7 +43,7 @@ export const createPaymentIntent = async (req: Request, res: Response): Promise<
       data: {
         clientSecret: paymentIntent.client_secret,
         paymentIntentId: paymentIntent.id,
-        amount: COURSE_PRICE,
+        amount: PRODUCT_PRICE,
         currency: 'usd'
       }
     });
@@ -117,46 +97,21 @@ export const confirmPayment = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const courseId = paymentIntent.metadata.courseId;
+    const productId = paymentIntent.metadata.productId;
 
-    // Begin database transaction
-    const client = await pool.connect();
-    
-    try {
-      await client.query('BEGIN');
+    // Record payment in database
+    const paymentResult = await pool.query(
+      'INSERT INTO payments (user_id, product_id, stripe_payment_intent_id, amount, currency, status, created_at) VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP) RETURNING *',
+      [currentUser.id, productId, paymentIntentId, paymentIntent.amount, paymentIntent.currency, 'completed']
+    );
 
-      // Record payment in database
-      const paymentResult = await client.query(
-        'INSERT INTO payments (user_id, course_id, stripe_payment_intent_id, amount, currency, status, created_at) VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP) RETURNING *',
-        [currentUser.id, courseId, paymentIntentId, paymentIntent.amount, paymentIntent.currency, 'completed']
-      );
-
-      // Calculate expiry date
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + ACCESS_DAYS);
-
-      // Grant course access
-      const userCourseResult = await client.query(
-        'INSERT INTO user_courses (user_id, course_id, purchased_at, expires_at) VALUES ($1, $2, CURRENT_TIMESTAMP, $3) ON CONFLICT (user_id, course_id) DO UPDATE SET purchased_at = CURRENT_TIMESTAMP, expires_at = $3 RETURNING *',
-        [currentUser.id, courseId, expiresAt]
-      );
-
-      await client.query('COMMIT');
-
-      res.json({
-        success: true,
-        message: 'Payment confirmed and course access granted',
-        data: {
-          payment: paymentResult.rows[0],
-          courseAccess: userCourseResult.rows[0]
-        }
-      });
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
+    res.json({
+      success: true,
+      message: 'Payment confirmed successfully',
+      data: {
+        payment: paymentResult.rows[0]
+      }
+    });
   } catch (error) {
     console.error('Confirm payment error:', error);
     res.status(500).json({
@@ -180,16 +135,13 @@ export const getPaymentHistory = async (req: Request, res: Response): Promise<vo
     const paymentsResult = await pool.query(
       `SELECT 
         p.id,
-        p.course_id,
+        p.product_id,
         p.stripe_payment_intent_id,
         p.amount,
         p.currency,
         p.status,
-        p.created_at,
-        c.name as course_name,
-        c.description as course_description
+        p.created_at
       FROM payments p
-      LEFT JOIN courses c ON p.course_id = c.id
       WHERE p.user_id = $1
       ORDER BY p.created_at DESC`,
       [currentUser.id]

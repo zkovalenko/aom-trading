@@ -10,7 +10,7 @@ const Homepage: React.FC = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1>Learn Professionally Developed Trading Strategies</h1>
-            <p>Master the art of options trading with our comprehensive courses and tools</p>
+            <p>Master the art of options trading with our comprehensive training and tools</p>
             <Link to="/learn-to-trade" className="cta-button">Start Learning</Link>
           </div>
         </div>
@@ -25,21 +25,12 @@ const Homepage: React.FC = () => {
           </p>
           
           <div className="services-grid">
-            <div className="service-card">
-              <div className="service-icon">💻</div>
-              <h3>Software</h3>
-              <p>
-                Software suite has been designed from ground up to support your trading needs from One Time Frame (OTF) analysis:
-              </p>
-              
-              <Link to="/software" className="service-button">LEARN MORE</Link>
-            </div>
 
             <div className="service-card">
               <div className="service-icon">🎓</div>
               <h3>Services</h3>
               <p>
-                <strong>Self-Study Course:</strong> Learn the AOMTrading methodology. From the intro course.
+                <strong>Self-Study Program:</strong> Learn the AOMTrading methodology with our comprehensive training materials.
               </p>
               <p>
                 Access the AOMTrading methodology.
@@ -54,7 +45,7 @@ const Homepage: React.FC = () => {
               <div className="service-icon">👨‍🏫</div>
               <h3>Tutoring</h3>
               <p>
-                We provide individual or group Training to supplement any course experience.
+                We provide individual or group Training to supplement your learning experience.
               </p>
               <p>
                 You will gain knowledge and understanding about fundamentals of trading.
@@ -73,7 +64,7 @@ const Homepage: React.FC = () => {
               <h2>Become a Consistent Trader</h2>
               <h3>Your AOMTrading Ways</h3>
               <p>
-                Our software helps reduce emotional reaction. Our NinjaTrader extensions and user interface present custom indicators/algo based on AOMTrading methodology.
+                Our methodology helps reduce emotional reaction and provides systematic approach to trading using proven strategies.
               </p>
               <p>
                 You will have the flexibility to select the time-frames and set your alert assistance to progress quickly. There is automation in the learning process to assist on chart reading to find winning fast and also to grow.

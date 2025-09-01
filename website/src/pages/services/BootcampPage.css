@@ -101,16 +101,6 @@
   gap: 4rem;
 }
 
-.program-overview h2,
-.curriculum h2,
-.bootcamp-features h2,
-.schedule-section h2,
-.pricing-section h2 {
-  font-size: 2.2rem;
-  margin-bottom: 2rem;
-  color: #333;
-  border-bottom: 1px solid #ccc;
-}
 
 .overview-content {
   display: grid;
@@ -284,13 +274,6 @@
   border-radius: 15px;
   font-size: 0.9rem;
   font-weight: bold;
-}
-
-.pricing-section {
-  background: linear-gradient(135deg, #92E3A9 0%, #4CAF50 100%);
-  padding: 3rem;
-  border-radius: 15px;
-  text-align: center;
 }
 
 .pricing-info h3 {

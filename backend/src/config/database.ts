@@ -2,8 +2,12 @@ import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
 // Load environment variables
-const env = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${env}` });
+// In production, Render provides env vars directly
+// In development, load from .env.development
+if (process.env.NODE_ENV !== 'production') {
+  const env = process.env.NODE_ENV || 'development';
+  dotenv.config({ path: `.env.${env}` });
+}
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,

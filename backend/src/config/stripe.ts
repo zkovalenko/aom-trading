@@ -2,8 +2,12 @@ import Stripe from 'stripe';
 import dotenv from 'dotenv';
 
 // Load environment variables
-const env = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${env}` });
+// In production, Render provides env vars directly
+// In development, load from .env.development
+if (process.env.NODE_ENV !== 'production') {
+  const env = process.env.NODE_ENV || 'development';
+  dotenv.config({ path: `.env.${env}` });
+}
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY is required');

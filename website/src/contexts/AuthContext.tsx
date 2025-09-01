@@ -8,8 +8,6 @@ interface User {
   firstName: string;
   lastName: string;
   isEmailVerified: boolean;
-  courses?: any[];
-  softwareLicenses?: any[];
 }
 
 interface AuthContextType {
