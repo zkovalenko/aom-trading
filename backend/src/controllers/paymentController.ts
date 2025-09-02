@@ -67,6 +67,7 @@ export const confirmPayment = async (req: Request, res: Response): Promise<void>
     }
 
     const { paymentIntentId } = req.body;
+    console.log("~~~~paymentIntent received", paymentIntentId);
 
     if (!paymentIntentId) {
       res.status(400).json({
@@ -78,7 +79,8 @@ export const confirmPayment = async (req: Request, res: Response): Promise<void>
 
     // Retrieve payment intent from Stripe
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-
+    console.log("~~~~paymentIntent retrieved", paymentIntent);
+    
     if (paymentIntent.status !== 'succeeded') {
       res.status(400).json({
         success: false,

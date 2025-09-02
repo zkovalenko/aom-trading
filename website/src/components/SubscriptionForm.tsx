@@ -6,9 +6,8 @@ import {
   useStripe,
   useElements
 } from '@stripe/react-stripe-js';
-import axios from 'axios';
 import toast from 'react-hot-toast';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth, apiCall } from '../contexts/AuthContext';
 import './SubscriptionForm.css';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key');
@@ -39,7 +38,7 @@ const CheckoutForm: React.FC<SubscriptionFormProps> = ({
 }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,17 +59,23 @@ const CheckoutForm: React.FC<SubscriptionFormProps> = ({
 
     try {
       // Create subscription payment intent
-      const { data } = await axios.post('/subscriptions/create', {
-        productId: product.id,
-        subscriptionType: subscriptionType
-      });
+      const response = await apiCall('/subscriptions/create', {
+        method: 'POST',
+        body: JSON.stringify({
+          productId: product.id,
+          subscriptionType: subscriptionType
+        })
+      }, token);
 
-      if (!data.success) {
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
         throw new Error(data.message || 'Failed to create subscription');
       }
 
       const { clientSecret, paymentIntentId } = data.data;
-
+      console.log("~~~~paymentIntentId", paymentIntentId);
+      
       // Confirm payment with Stripe
       const cardElement = elements.getElement(CardElement);
       if (!cardElement) {
@@ -100,20 +105,25 @@ const CheckoutForm: React.FC<SubscriptionFormProps> = ({
           ? paymentIntent.payment_method 
           : paymentIntent.payment_method?.id;
           
-        const confirmResponse = await axios.post('/subscriptions/confirm', {
-          paymentIntentId: paymentIntentId,
-          ccToken: paymentMethodId
-        });
+        const confirmResponse = await apiCall('/subscriptions/confirm', {
+          method: 'POST',
+          body: JSON.stringify({
+            paymentIntentId: paymentIntentId,
+            ccToken: paymentMethodId
+          })
+        }, token);
 
-        if (confirmResponse.data.success) {
+        const confirmData = await confirmResponse.json();
+
+        if (confirmResponse.ok && confirmData.success) {
           toast.success('Subscription created successfully!');
           onSuccess?.();
         } else {
-          throw new Error(confirmResponse.data.message || 'Failed to confirm subscription');
+          throw new Error(confirmData.message || 'Failed to confirm subscription');
         }
       }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || 'An error occurred during payment';
+      const errorMessage = err.message || 'An error occurred during payment';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {

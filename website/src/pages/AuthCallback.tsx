@@ -26,7 +26,16 @@ const AuthCallback: React.FC = () => {
           await setAuthToken(token);
 
           // Get redirect parameter, default to /services
-          const redirectTo = searchParams.get('redirect') || '/services';
+          let redirectTo = searchParams.get('redirect') || '/services';
+          
+          // Handle subscription redirect parameters
+          const subscriptionRedirect = searchParams.get('subscriptionRedirect');
+          const productId = searchParams.get('product');
+          const subscriptionType = searchParams.get('type');
+          
+          if ((subscriptionRedirect === 'subscribe' || subscriptionRedirect === 'subscribe-direct') && productId && subscriptionType) {
+            redirectTo = `/services?redirect=${subscriptionRedirect}&product=${productId}&type=${subscriptionType}`;
+          }
 
           // Navigate to the redirect URL
           navigate(redirectTo);

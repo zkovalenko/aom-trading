@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 
 interface User {
@@ -24,11 +23,34 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+// Helper function for authenticated API calls
+export const apiCall = async (url: string, options: RequestInit = {}, token?: string | null): Promise<Response> => {
+  const headers = new Headers(options.headers);
+  
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+  
+  if (!headers.has('Content-Type') && options.method !== 'GET') {
+    headers.set('Content-Type', 'application/json');
+  }
 
-// Setup axios defaults
-axios.defaults.baseURL = API_BASE_URL;
-axios.defaults.withCredentials = true;
+  // Use relative URLs - React dev server will proxy to backend
+  const apiUrl = url.startsWith('/api') ? url : `/api${url}`;
+  const response = await fetch(apiUrl, {
+    ...options,
+    headers
+  });
+
+  // Handle 401 errors globally
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+    toast.error('Session expired. Please login again.');
+    window.location.href = '/login';
+  }
+
+  return response;
+};
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -68,33 +90,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
   }, [token]);
 
-  // Setup axios interceptor for auth token
-  useEffect(() => {
-    const interceptor = axios.interceptors.request.use((config) => {
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
-
-    return () => axios.interceptors.request.eject(interceptor);
-  }, [token]);
-
-  // Setup response interceptor for handling auth errors
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          logout();
-          toast.error('Session expired. Please login again.');
-        }
-        return Promise.reject(error);
-      }
-    );
-
-    return () => axios.interceptors.response.eject(interceptor);
-  }, []);
 
   // Load user profile on app start
   useEffect(() => {
@@ -117,9 +112,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!token) return;
 
     try {
-      const response = await axios.get('/auth/profile');
-      if (response.data.success) {
-        setUser(response.data.user);
+      const response = await apiCall('/auth/profile', { method: 'GET' }, token);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setUser(data.data.user);
+        }
+      } else {
+        throw new Error('Failed to fetch profile');
       }
     } catch (error) {
       console.error('Failed to refresh profile:', error);
@@ -129,21 +129,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await axios.post('/auth/login', { email, password });
+      const response = await apiCall('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      });
 
-      if (response.data.success) {
-        const { token: newToken, user: userData } = response.data;
-        setToken(newToken);
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        const { token: newToken, user: userData } = data.data;
+        updateToken(newToken);
         setUser(userData);
-        localStorage.setItem('token', newToken);
         toast.success('Login successful!');
         return true;
       }
       
-      toast.error(response.data.message || 'Login failed');
+      toast.error(data.message || 'Login failed');
       return false;
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Login failed';
+      const message = error.message || 'Login failed';
       toast.error(message);
       return false;
     }
@@ -151,26 +155,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (email: string, password: string, firstName: string, lastName: string): Promise<boolean> => {
     try {
-      const response = await axios.post('/auth/register', {
-        email,
-        password,
-        firstName,
-        lastName
+      const response = await apiCall('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+          firstName,
+          lastName
+        })
       });
       
-      if (response.data.success) {
-        const { token: newToken, user: userData } = response.data;
-        setToken(newToken);
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        const { token: newToken, user: userData } = data.data;
+        updateToken(newToken);
         setUser(userData);
-        localStorage.setItem('token', newToken);
         toast.success('Registration successful!');
         return true;
       }
       
-      toast.error(response.data.message || 'Registration failed');
+      toast.error(data.message || 'Registration failed');
       return false;
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Registration failed';
+      const message = error.message || 'Registration failed';
       toast.error(message);
       return false;
     }
@@ -178,8 +186,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const loginWithGoogle = async (): Promise<boolean> => {
     try {
+      // Check for subscription redirect parameters and store them
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirect = urlParams.get('redirect');
+      const productId = urlParams.get('product');
+      const subscriptionType = urlParams.get('type');
+      
+      let googleAuthUrl = `${window.location.origin.replace(':3000', ':5001')}/api/auth/google`;
+      
+      // If we have subscription parameters, pass them to the Google auth flow
+      if ((redirect === 'subscribe' || redirect === 'subscribe-direct') && productId && subscriptionType) {
+        googleAuthUrl += `?redirect=${redirect}&product=${productId}&type=${subscriptionType}`;
+      }
+      
       // Redirect to backend Google OAuth flow
-      window.location.href = `${API_BASE_URL}/auth/google`;
+      window.location.href = googleAuthUrl;
       console.log("~~logged in")
       return true; // Will redirect, so return true
     } catch (error: any) {
@@ -198,14 +219,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const setAuthToken = async (newToken: string) => {
     updateToken(newToken);
     try {
-      const response = await axios.get('/auth/profile', {
-        headers: { Authorization: `Bearer ${newToken}` }
-      });
-      if (response.data.success) {
-        setUser(response.data.data.user);
-        console.log('User profile loaded successfully:', response.data.data.user);
-      } else {
-        console.error('Profile response not successful:', response.data);
+      const response = await apiCall('/auth/profile', { method: 'GET' }, newToken);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setUser(data.data.user);
+          console.log('User profile loaded successfully:', data.data.user);
+        } else {
+          console.error('Profile response not successful:', data);
+        }
       }
     } catch (error) {
       console.error('Failed to load profile after token set:', error);

@@ -18,7 +18,7 @@ const SignupPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as any)?.from?.pathname || '/dashboard';
+  const from = (location.state as any)?.from?.pathname || '/services';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

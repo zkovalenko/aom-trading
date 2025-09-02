@@ -30,12 +30,12 @@ const generateToken = (user: User): string => {
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
-    if (!email || !password || !name) {
+    if (!email || !password || !firstName || !lastName) {
       res.status(400).json({
         success: false,
-        message: 'Email, password, and name are required'
+        message: 'Email, password, first name, and last name are required'
       });
       return;
     }
@@ -60,8 +60,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     // Create user
     const newUserResult = await pool.query(
-      'INSERT INTO users (email, name, password_hash, created_at, updated_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING id, email, name, created_at, updated_at',
-      [email.toLowerCase(), name, passwordHash]
+      'INSERT INTO users (email, first_name, last_name, password, created_at, updated_at) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING id, email, first_name, last_name, created_at, updated_at',
+      [email.toLowerCase(), firstName, lastName, passwordHash]
     );
 
     const newUser = newUserResult.rows[0];
@@ -74,7 +74,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         user: {
           id: newUser.id,
           email: newUser.email,
-          name: newUser.name,
+          first_name: newUser.first_name,
+          last_name: newUser.last_name,
           created_at: newUser.created_at,
           updated_at: newUser.updated_at
         },
@@ -104,7 +105,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     // Get user from database
     const userResult = await pool.query(
-      'SELECT id, email, first_name, last_name, password_hash, google_id, created_at, updated_at FROM users WHERE email = $1',
+      'SELECT id, email, first_name, last_name, password, google_id, created_at, updated_at FROM users WHERE email = $1',
       [email.toLowerCase()]
     );
 
@@ -119,7 +120,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const foundUser = userResult.rows[0];
 
     // Check if user has a password (not just Google OAuth)
-    if (!foundUser.password_hash) {
+    if (!foundUser.password) {
       res.status(401).json({
         success: false,
         message: 'Please login with Google'
@@ -128,7 +129,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Verify password
-    const passwordValid = await bcrypt.compare(password, foundUser.password_hash);
+    const passwordValid = await bcrypt.compare(password, foundUser.password);
     
     if (!passwordValid) {
       res.status(401).json({
@@ -147,7 +148,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         user: {
           id: foundUser.id,
           email: foundUser.email,
-          name: foundUser.name,
+          first_name: foundUser.first_name,
+          last_name: foundUser.last_name,
           created_at: foundUser.created_at,
           updated_at: foundUser.updated_at
         },
@@ -196,7 +198,8 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
         user: {
           id: userRecord.id,
           email: userRecord.email,
-          name: userRecord.name,
+          first_name: userRecord.first_name,
+          last_name: userRecord.last_name,
           google_id: userRecord.google_id,
           created_at: userRecord.created_at,
           updated_at: userRecord.updated_at

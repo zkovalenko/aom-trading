@@ -15,6 +15,20 @@ router.get('/profile', authenticateToken, getProfile);
 
 // Google OAuth routes
 router.get('/google', 
+  (req, res, next) => {
+    // Store subscription redirect parameters in session
+    const { redirect, product, type } = req.query;
+    console.log('Google OAuth - received params:', { redirect, product, type });
+    if ((redirect === 'subscribe' || redirect === 'subscribe-direct') && product && type) {
+      (req.session as any).subscriptionRedirect = {
+        redirect,
+        product,
+        type
+      };
+      console.log('Google OAuth - stored in session:', (req.session as any).subscriptionRedirect);
+    }
+    next();
+  },
   passport.authenticate('google', { 
     scope: ['profile', 'email'] 
   })
@@ -31,9 +45,20 @@ router.get('/google/callback',
       { expiresIn: '7d' }
     );
     
-    // Successful authentication, redirect to services page with token
+    // Check for subscription redirect parameters from session
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    res.redirect(`${frontendUrl}/auth/callback?token=${token}&redirect=/services`);
+    let redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services`;
+    
+    if ((req.session as any).subscriptionRedirect) {
+      const { redirect, product, type } = (req.session as any).subscriptionRedirect;
+      console.log('Google OAuth callback - using stored params:', { redirect, product, type });
+      redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services&subscriptionRedirect=${redirect}&product=${product}&type=${type}`;
+      console.log('Google OAuth callback - redirect URL:', redirectUrl);
+      // Clear the session data
+      delete (req.session as any).subscriptionRedirect;
+    }
+    
+    res.redirect(redirectUrl);
   }
 );
 

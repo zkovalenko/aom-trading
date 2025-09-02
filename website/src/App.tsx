@@ -7,6 +7,9 @@ import Footer from './components/common/Footer';
 import Homepage from './pages/Homepage';
 import ServicesPage from './pages/ServicesPage';
 import PrivateTutoringPage from './pages/services/PrivateTutoringPage';
+import MySubscriptions from './pages/MySubscriptions';
+import StudyCourse from './pages/StudyCourse';
+import Software from './pages/Software';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import AuthCallback from './pages/AuthCallback';
@@ -44,6 +47,9 @@ function App() {
               <Route path="/services" element={<ServicesPage />} />
               <Route path="/services/private-tutoring" element={<PrivateTutoringPage />} />
               <Route path="/learn-to-trade" element={<ServicesPage />} />
+              <Route path="/my-subscriptions" element={<MySubscriptions />} />
+              <Route path="/my-subscriptions/study-course" element={<StudyCourse />} />
+              <Route path="/my-subscriptions/software" element={<Software />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/contact" element={<div className="page-placeholder">Contact Page Coming Soon</div>} />

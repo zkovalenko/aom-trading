@@ -68,7 +68,9 @@ passport.deserializeUser(async (id: string, done) => {
     if (result.rows.length > 0) {
       done(null, result.rows[0]);
     } else {
-      done(new Error('User not found'), false);
+      // User not found in database (e.g., after clearing users table)
+      // This is not an error - just return null to indicate no authenticated user
+      done(null, null);
     }
   } catch (error) {
     console.error('Passport deserialize error:', error);

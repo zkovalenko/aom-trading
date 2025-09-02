@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth, apiCall } from '../../contexts/AuthContext';
 import './Header.css';
 
 const Header: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth();
   console.log("~~user",  user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -14,6 +15,34 @@ const Header: React.FC = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  useEffect(() => {
+    const checkSubscriptions = async () => {
+      if (!user || !token) {
+        setHasActiveSubscription(false);
+        return;
+      }
+      
+      try {
+        const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            const subscriptions = data.data.subscriptions || [];
+            const hasActive = subscriptions.some((sub: any) => 
+              sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial'
+            );
+            setHasActiveSubscription(hasActive);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to check subscriptions:', error);
+        setHasActiveSubscription(false);
+      }
+    };
+
+    checkSubscriptions();
+  }, [user, token]);
 
   return (
     <header className="header">
@@ -48,9 +77,11 @@ const Header: React.FC = () => {
           
           {user ? (
             <div className="user-menu">
-              <Link to="/dashboard" className="nav-link" onClick={closeMenu}>
-                Dashboard
-              </Link>
+              {hasActiveSubscription && (
+                <Link to="/my-subscriptions" className="nav-link" onClick={closeMenu}>
+                  My Subscriptions
+                </Link>
+              )}
               <button onClick={() => { logout(); closeMenu(); }} className="logout-btn">
                 Logout
               </button>

@@ -14,7 +14,20 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as any)?.from?.pathname || '/dashboard';
+  // Handle subscription redirect or default redirect
+  const urlParams = new URLSearchParams(location.search);
+  const redirect = urlParams.get('redirect');
+  const productId = urlParams.get('product');
+  const subscriptionType = urlParams.get('type');
+  
+  let redirectPath = '/services';
+  if ((redirect === 'subscribe' || redirect === 'subscribe-direct') && productId && subscriptionType) {
+    redirectPath = `/services?redirect=${redirect}&product=${productId}&type=${subscriptionType}`;
+  } else if ((location.state as any)?.from?.pathname) {
+    redirectPath = (location.state as any).from.pathname;
+  }
+  
+  const from = redirectPath;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

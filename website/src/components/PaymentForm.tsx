@@ -6,7 +6,6 @@ import {
   useStripe,
   useElements
 } from '@stripe/react-stripe-js';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import './PaymentForm.css';
@@ -48,13 +47,21 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
 
     try {
       // Create payment intent
-      const { data } = await axios.post('/payments/create-intent', {
-        productType,
-        productId,
-        amount
+      const response = await fetch('/payments/create-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productType,
+          productId,
+          amount
+        })
       });
 
-      if (!data.success) {
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
         throw new Error(data.message || 'Failed to create payment');
       }
 
@@ -82,9 +89,20 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
         toast.error(error.message || 'Payment failed');
       } else if (paymentIntent.status === 'succeeded') {
         // Confirm payment with backend
-        await axios.post('/payments/confirm', {
-          paymentIntentId: paymentIntent.id
+        const confirmResponse = await fetch('/payments/confirm', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            paymentIntentId: paymentIntent.id
+          })
         });
+
+        if (!confirmResponse.ok) {
+          const errorData = await confirmResponse.json();
+          throw new Error(errorData.message || 'Payment confirmation failed');
+        }
 
         toast.success(`Payment successful! Access granted to ${productName}`);
         
