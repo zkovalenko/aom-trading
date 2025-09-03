@@ -295,3 +295,178 @@
     margin: 0 1rem;
   }
 }
+
+/* Methodology Disclaimer Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  padding: 2rem 2rem 0;
+  border-bottom: 2px solid #444193;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.modal-header h2 {
+  color: #444193;
+  margin: 0 0 1rem 0;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.disclaimer-sections {
+  margin-bottom: 2rem;
+  font-size: small;
+  margin-bottom: 2rem;
+}
+
+.disclaimer-agreement {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.disclaimer-agreement p {
+  margin: 0;
+  color: #856404;
+  font-size: 1rem;
+}
+
+.modal-actions {
+  padding: 0 2rem 2rem;
+  text-align: center;
+}
+
+.modal-btn {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+}
+
+.modal-btn.primary {
+  background: #444193;
+  color: white;
+}
+
+.modal-btn.primary:hover {
+  background: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(68, 65, 147, 0.3);
+}
+
+.modal-btn.secondary {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.modal-btn.secondary:hover {
+  background: #e9ecef;
+  color: #495057;
+  transform: translateY(-1px);
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .modal-content {
+    max-height: 95vh;
+  }
+  
+  .modal-header {
+    padding: 1.5rem 1.5rem 0;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .disclaimer-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .disclaimer-section {
+    padding: 0.8rem;
+  }
+  
+  .disclaimer-section h4 {
+    font-size: 1rem;
+  }
+  
+  .disclaimer-agreement {
+    padding: 1rem;
+  }
+  
+  .modal-actions {
+    padding: 0 1.5rem 1.5rem;
+  }
+  
+  .modal-btn {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+    min-width: auto;
+  }
+}

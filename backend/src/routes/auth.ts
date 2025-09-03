@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from '../config/passport';
 import jwt from 'jsonwebtoken';
-import { register, login, getProfile } from '../controllers/authController';
+import { register, login, getProfile, updateMethodologyDisclaimer } from '../controllers/authController';
 import { authenticateToken } from '../middleware/auth';
 
 const router = express.Router();
@@ -12,6 +12,9 @@ router.post('/login', login);
 
 // Get user profile (protected route)
 router.get('/profile', authenticateToken, getProfile);
+
+// Update methodology disclaimer status (protected route)
+router.post('/methodology-disclaimer', authenticateToken, updateMethodologyDisclaimer);
 
 // Google OAuth routes
 router.get('/google', 

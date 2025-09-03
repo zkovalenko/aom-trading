@@ -67,6 +67,37 @@ const StudyCourse: React.FC = () => {
                 <button className="start-lesson-btn">Start Lesson</button>
               </div>
             </div>
+            <div className="lesson-grid">
+              <div className="lesson-card">
+                <h3>Introduction to Trading</h3>
+                <p>Learn the fundamentals of trading, market structure, and basic terminology.</p>
+                <div className="lesson-meta">
+                  <span className="duration">45 min</span>
+                  <span className="difficulty">Beginner</span>
+                </div>
+                <button className="start-lesson-btn">Start Lesson</button>
+              </div>
+              
+              <div className="lesson-card">
+                <h3>Market Types & Hours</h3>
+                <p>Understanding different markets, trading sessions, and optimal trading times.</p>
+                <div className="lesson-meta">
+                  <span className="duration">30 min</span>
+                  <span className="difficulty">Beginner</span>
+                </div>
+                <button className="start-lesson-btn">Start Lesson</button>
+              </div>
+              
+              <div className="lesson-card">
+                <h3>Order Types</h3>
+                <p>Master different order types: market, limit, stop-loss, and advanced orders.</p>
+                <div className="lesson-meta">
+                  <span className="duration">35 min</span>
+                  <span className="difficulty">Beginner</span>
+                </div>
+                <button className="start-lesson-btn">Start Lesson</button>
+              </div>
+            </div>
           </section>
 
           <section id="analysis" className="course-section">
@@ -97,41 +128,6 @@ const StudyCourse: React.FC = () => {
                 <p>Master the art of identifying key levels and trading around them.</p>
                 <div className="lesson-meta">
                   <span className="duration">40 min</span>
-                  <span className="difficulty">Intermediate</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-            </div>
-          </section>
-
-          <section id="strategies" className="course-section">
-            <h2>Trading Strategies</h2>
-            <div className="lesson-grid">
-              <div className="lesson-card">
-                <h3>Momentum Trading</h3>
-                <p>Learn to identify and trade momentum moves in trending markets.</p>
-                <div className="lesson-meta">
-                  <span className="duration">55 min</span>
-                  <span className="difficulty">Advanced</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-              
-              <div className="lesson-card">
-                <h3>Scalping Techniques</h3>
-                <p>Master short-term trading strategies for quick profits.</p>
-                <div className="lesson-meta">
-                  <span className="duration">45 min</span>
-                  <span className="difficulty">Advanced</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-              
-              <div className="lesson-card">
-                <h3>Swing Trading</h3>
-                <p>Learn to hold positions for days or weeks to capture larger moves.</p>
-                <div className="lesson-meta">
-                  <span className="duration">50 min</span>
                   <span className="difficulty">Intermediate</span>
                 </div>
                 <button className="start-lesson-btn">Start Lesson</button>

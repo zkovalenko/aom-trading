@@ -32,6 +32,7 @@ const MySubscriptions: React.FC = () => {
   const { user, token } = useAuth();
   const [userSubscriptions, setUserSubscriptions] = useState<UserSubscription[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showMethodologyModal, setShowMethodologyModal] = useState(false);
 
   useEffect(() => {
     const loadUserSubscriptions = async () => {
@@ -55,6 +56,28 @@ const MySubscriptions: React.FC = () => {
     loadUserSubscriptions();
   }, [user]);
 
+  useEffect(() => {
+    const checkMethodologyDisclaimer = async () => {
+      if (!user || !token) return;
+      
+      try {
+        const response = await apiCall('/auth/profile', { method: 'GET' }, token);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data.user) {
+            if (!data.data.user.methodology_disclaimer_viewed) {
+              setShowMethodologyModal(true);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to check methodology disclaimer status:', error);
+      }
+    };
+
+    checkMethodologyDisclaimer();
+  }, [user, token]);
+
   // Helper function to check if user has active subscription
   const hasActiveSubscription = () => {
     return userSubscriptions.some(sub => sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial');
@@ -64,6 +87,54 @@ const MySubscriptions: React.FC = () => {
   const getActiveSubscription = () => {
     return userSubscriptions.find(sub => sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial');
   };
+
+  // Handle methodology disclaimer acknowledgment (only when user agrees)
+  const handleMethodologyDisclaimerAcknowledge = async () => {
+    if (!token) {
+      console.log('No token available');
+      return;
+    }
+    
+    console.log('Acknowledging methodology disclaimer...');
+    try {
+      const response = await apiCall('/auth/methodology-disclaimer', { 
+        method: 'POST' 
+      }, token);
+      
+      console.log('API response:', response.ok, response.status);
+      if (response.ok) {
+        console.log('Successfully acknowledged disclaimer, closing modal');
+        setShowMethodologyModal(false);
+      } else {
+        console.error('API call failed with status:', response.status);
+        // Close modal anyway for better UX
+        setShowMethodologyModal(false);
+      }
+    } catch (error) {
+      console.error('Failed to update methodology disclaimer status:', error);
+      // Close modal anyway for better UX
+      setShowMethodologyModal(false);
+    }
+  };
+
+  // Handle methodology disclaimer dismiss (close without updating database)
+  const handleMethodologyDisclaimerDismiss = () => {
+    setShowMethodologyModal(false);
+  };
+
+  // Handle escape key press
+  useEffect(() => {
+    const handleEscapePress = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showMethodologyModal) {
+        handleMethodologyDisclaimerDismiss();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapePress);
+    return () => {
+      document.removeEventListener('keydown', handleEscapePress);
+    };
+  }, [showMethodologyModal]);
 
   if (loading) {
     return (
@@ -105,7 +176,8 @@ console.log("~~~activeSubscription", activeSubscription)
     <div className="my-subscriptions-page">
       <div className="container">
         <div className="subscription-status-section">
-          <h2>Current Subscription Status</h2>
+          <h2>Your Subscription</h2>
+          <span>{user.email}</span>
           <div className="subscription-details">
             <div className="subscription-detail-item">
               <span className="detail-label">Auto-renewal:</span>
@@ -185,6 +257,55 @@ console.log("~~~activeSubscription", activeSubscription)
             )}
           </div>
         </div>
+
+        {/* Methodology Disclaimer Modal */}
+        {showMethodologyModal && (
+          <div className="modal-overlay" onClick={handleMethodologyDisclaimerDismiss}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Trading Methodology Disclaimer</h2>
+                <button 
+                  className="modal-close-btn"
+                  onClick={handleMethodologyDisclaimerDismiss}
+                  aria-label="Close modal"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="disclaimer-content">
+                  <div className="disclaimer-sections">
+                  CFTC RULE 4.41 HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE INHERENT LIMITATIONS. UNLIKE AN ACTUAL PERFORMANCE RECORD, 
+                  SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, SINCE THE TRADES HAVE NOT BEEN EXECUTED, 
+                  THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY. 
+                  SIMULATED TRADING PROGRAMS IN GENERAL ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT. 
+                  NO REPRESENTATION IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFIT OR LOSSES SIMILAR TO THOSE SHOWN.
+
+                  <p>Trading contains substantial risk and is not for every investor. An investor could potentially lose all or more than the initial investment. 
+                    Risk capital is money that can be lost without jeopardizing one’s financial security or lifestyle. 
+                    Only risk capital should be used for trading and only those with sufficient risk capital should consider trading. 
+                    Past performance is not necessarily indicative of future results. All Software provided or purchased is strictly for educational purposes only. 
+                    Any presentation (live or recorded) is for educational purposes only and the opinions expressed are those of the presenter only. 
+                    Testimonials may not be representative of the experience of other clients or customers and is not a guarantee of future performance or success.
+                  </p>
+                  </div>
+                  
+                  <div className="disclaimer-agreement">
+                    <p><strong>By proceeding, you acknowledge that you have read, understood, and agree to these terms.</strong></p>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button 
+                  className="modal-btn primary" 
+                  onClick={handleMethodologyDisclaimerAcknowledge}
+                >
+                  I Understand and Agree
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

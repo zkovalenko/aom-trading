@@ -44,7 +44,8 @@ export const apiCall = async (url: string, options: RequestInit = {}, token?: st
 
   // Handle 401 errors globally
   if (response.status === 401) {
-    localStorage.removeItem('token');
+    console.log('401 Unauthorized - clearing auth state');
+    localStorage.clear(); // Clear all localStorage data
     toast.error('Session expired. Please login again.');
     window.location.href = '/login';
   }
@@ -54,10 +55,15 @@ export const apiCall = async (url: string, options: RequestInit = {}, token?: st
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(() => {
+    const storedToken = localStorage.getItem('token');
+    console.log('Initial token from localStorage:', storedToken ? 'Token exists' : 'No token');
+    return storedToken;
+  });
   const [loading, setLoading] = useState(true);
 
   const updateToken = (newToken: string | null) => {
+    console.log('Updating token:', newToken ? 'New token set' : 'Token cleared');
     setToken(newToken);
     if (newToken) {
       localStorage.setItem('token', newToken);
@@ -116,6 +122,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
+          console.log('Profile loaded for user:', data.data.user.email);
           setUser(data.data.user);
         }
       } else {
@@ -123,12 +130,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     } catch (error) {
       console.error('Failed to refresh profile:', error);
+      // If token is malformed, clear it
+      if (error instanceof Error && error.message.includes('malformed')) {
+        console.log('Malformed token detected, clearing auth state');
+        logout();
+      }
       throw error;
     }
   };
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
+      // First, clear any existing session/cookies
+      try {
+        await apiCall('/auth/logout', { method: 'POST' });
+      } catch (error) {
+        console.log('No existing session to clear');
+      }
+      
+      // Clear cookies manually
+      document.cookie.split(";").forEach((c) => {
+        const eqPos = c.indexOf("=");
+        const name = eqPos > -1 ? c.substr(0, eqPos) : c;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=." + window.location.hostname;
+      });
+      
       const response = await apiCall('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password })
@@ -138,9 +165,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (response.ok && data.success) {
         const { token: newToken, user: userData } = data.data;
+        console.log('Login successful for user:', userData.email);
+        // Clear any previous state
+        localStorage.clear();
         updateToken(newToken);
         setUser(userData);
         toast.success('Login successful!');
+        
+        // Force page reload to clear any cached session state
+        setTimeout(() => {
+          window.location.href = '/services';
+        }, 1000);
+        
         return true;
       }
       
@@ -210,10 +246,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    console.log('Logging out - clearing all auth state');
+    
+    try {
+      // Call backend logout endpoint to clear session
+      await apiCall('/auth/logout', { method: 'POST' }, token);
+    } catch (error) {
+      console.error('Backend logout failed:', error);
+    }
+    
     updateToken(null);
     setUser(null);
+    localStorage.clear(); // Clear all localStorage data
+    
+    // Also clear all cookies manually
+    document.cookie.split(";").forEach((c) => {
+      const eqPos = c.indexOf("=");
+      const name = eqPos > -1 ? c.substr(0, eqPos) : c;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=." + window.location.hostname;
+    });
+    
     toast.success('Logged out successfully');
+    
+    // Redirect to login screen
+    window.location.href = '/login';
   };
 
   const setAuthToken = async (newToken: string) => {

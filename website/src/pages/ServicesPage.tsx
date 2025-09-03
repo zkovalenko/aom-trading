@@ -304,13 +304,13 @@ const ServicesPage: React.FC = () => {
               <div className="protected-feature-item">
                 <h3>Educational Materials</h3>
                 <p>Access comprehensive trading guides, market analysis reports, and strategy documentation.</p>
-                <button className="feature-access-button">Access Materials</button>
+                <Link to="/my-subscriptions/study-course" className="feature-access-button">Access Materials</Link>
               </div>
               
               <div className="protected-feature-item">
                 <h3>Trading Software</h3>
                 <p>Download and access our proprietary trading software with real-time market data and analysis tools.</p>
-                <button className="feature-access-button">Download Software</button>
+                <Link to="/my-subscriptions/software" className="feature-access-button">Download Software</Link>
               </div>
               
               <div className="protected-feature-item">

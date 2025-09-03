@@ -178,7 +178,7 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
     // Get updated user data from database
     const currentUser = req.user as any; // Type assertion for Express User
     const userResult = await pool.query(
-      'SELECT id, email, first_name, last_name, google_id, created_at, updated_at FROM users WHERE id = $1',
+      'SELECT id, email, first_name, last_name, google_id, created_at, updated_at, methodology_disclaimer_viewed, methodology_disclaimer_viewed_date FROM users WHERE id = $1',
       [currentUser.id]
     );
 
@@ -202,7 +202,9 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
           last_name: userRecord.last_name,
           google_id: userRecord.google_id,
           created_at: userRecord.created_at,
-          updated_at: userRecord.updated_at
+          updated_at: userRecord.updated_at,
+          methodology_disclaimer_viewed: userRecord.methodology_disclaimer_viewed,
+          methodology_disclaimer_viewed_date: userRecord.methodology_disclaimer_viewed_date
         }
       }
     });
@@ -211,6 +213,37 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({
       success: false,
       message: 'Failed to get profile'
+    });
+  }
+};
+
+export const updateMethodologyDisclaimer = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'Not authenticated'
+      });
+      return;
+    }
+
+    const currentUser = req.user as any;
+    
+    // Update methodology disclaimer viewed status
+    await pool.query(
+      'UPDATE users SET methodology_disclaimer_viewed = TRUE, methodology_disclaimer_viewed_date = CURRENT_TIMESTAMP WHERE id = $1',
+      [currentUser.id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Methodology disclaimer status updated successfully'
+    });
+  } catch (error) {
+    console.error('Update methodology disclaimer error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update methodology disclaimer status'
     });
   }
 };
