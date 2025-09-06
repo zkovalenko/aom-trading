@@ -12,15 +12,35 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config({ path: `.env.${env}` });
 }
 
+// Debug environment variables
+console.log('🔍 Passport Config Debug:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('GOOGLE_CLIENT_ID exists:', !!process.env.GOOGLE_CLIENT_ID);
+console.log('GOOGLE_CLIENT_SECRET exists:', !!process.env.GOOGLE_CLIENT_SECRET);
+console.log('BACKEND_URL:', process.env.BACKEND_URL);
+
+// Validate required environment variables
+if (!process.env.GOOGLE_CLIENT_ID) {
+  throw new Error('GOOGLE_CLIENT_ID environment variable is required');
+}
+if (!process.env.GOOGLE_CLIENT_SECRET) {
+  throw new Error('GOOGLE_CLIENT_SECRET environment variable is required');
+}
+
+const isProduction = process.env.NODE_ENV === 'production';
+const callbackURL = isProduction 
+  ? `${process.env.BACKEND_URL || 'https://aom-trading.onrender.com'}/api/auth/google/callback`
+  : '/api/auth/google/callback';
+
+console.log('🔗 OAuth Callback URL:', callbackURL);
+
 // Google OAuth Strategy
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: process.env.NODE_ENV === 'production' 
-        ? `${process.env.BACKEND_URL || 'https://aom-trading.onrender.com'}/api/auth/google/callback`
-        : '/api/auth/google/callback',
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: callbackURL,
     } as StrategyOptions,
     async (accessToken: string, refreshToken: string, profile: Profile, done: Function) => {
       try {
