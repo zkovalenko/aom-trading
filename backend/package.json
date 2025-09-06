@@ -5,7 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "build": "tsc",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:backend": "tsc",
+    "build:frontend": "cd ../website && npm install && npm run build && cp -r build ../backend/dist/public",
     "start": "node dist/server.js",
     "test": "jest"
   },
