@@ -255,9 +255,84 @@ JSON-driven course structure in `/website/src/config/trading-course.json`:
 4. **Testing**: Manual testing in development environment
 5. **Deployment**: Build and deploy to production
 
+## 🔐 Google OAuth Hosting Management
+
+### **Google Cloud Console Setup**
+1. **Go to Google Cloud Console**: https://console.cloud.google.com/
+2. **Select/Create Project**: Choose existing project or create new one
+3. **Enable APIs**: Navigate to "APIs & Services" → "Library" → Enable "Google+ API"
+4. **Create OAuth Credentials**: 
+   - Go to "APIs & Services" → "Credentials"
+   - Click "Create Credentials" → "OAuth 2.0 Client IDs"
+   - Choose "Web application"
+
+### **OAuth Configuration**
+**Development Setup:**
+```
+Application type: Web application
+Name: AOM Trading (Development)
+Authorized JavaScript origins: 
+  - http://localhost:3000
+  - http://localhost:5001
+Authorized redirect URIs:
+  - http://localhost:5001/api/auth/google/callback
+```
+
+**Production Setup:**
+```
+Application type: Web application  
+Name: AOM Trading (Production)
+Authorized JavaScript origins:
+  - https://your-frontend-domain.com
+  - https://your-backend-domain.onrender.com
+Authorized redirect URIs:
+  - https://your-backend-domain.onrender.com/api/auth/google/callback
+```
+
+### **Environment Variables Setup**
+**Development (.env.development):**
+```env
+GOOGLE_CLIENT_ID=your_dev_client_id.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_dev_client_secret
+FRONTEND_URL=http://localhost:3000
+```
+
+**Production (Render Environment Variables):**
+```env
+GOOGLE_CLIENT_ID=your_prod_client_id.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_prod_client_secret  
+FRONTEND_URL=https://your-frontend-domain.com
+```
+
+### **Common Issues & Troubleshooting**
+
+**"No routes matched location /api/auth/google":**
+- ✅ Verify backend server is running and deployed
+- ✅ Check that route is properly registered in server.ts
+- ✅ Confirm CORS configuration allows frontend domain
+- ✅ Ensure OAuth redirect URI matches exactly (case-sensitive)
+
+**"redirect_uri_mismatch" Error:**
+- ✅ Update Google OAuth authorized redirect URIs to match deployment URL
+- ✅ Format: `https://your-backend-domain.onrender.com/api/auth/google/callback`
+- ✅ No trailing slashes, exact match required
+
+**OAuth Button Not Working:**
+- ✅ Check browser console for JavaScript errors
+- ✅ Verify Google Client ID is correctly set in environment variables
+- ✅ Ensure frontend can reach backend API endpoints
+
+### **Deployment Checklist**
+1. **Google Console**: Update authorized origins and redirect URIs for production domain
+2. **Environment Variables**: Set production GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET on hosting platform
+3. **Frontend URL**: Update FRONTEND_URL environment variable to production domain
+4. **CORS**: Verify backend CORS configuration includes production frontend domain
+5. **HTTPS**: Ensure all URLs use HTTPS in production (Google OAuth requires HTTPS)
+
 ## 📞 Support & Contact
 
 - **Technical Issues**: Check server logs and environment variables
 - **Course Content**: Update JSON configuration files
 - **Payment Issues**: Verify Stripe webhook endpoints
 - **Authentication Problems**: Clear localStorage and session cookies
+- **Google OAuth Issues**: Verify redirect URIs and client credentials in Google Cloud Console

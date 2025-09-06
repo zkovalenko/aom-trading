@@ -18,7 +18,9 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: process.env.NODE_ENV === 'production' 
+        ? `${process.env.BACKEND_URL || 'https://aom-trading.onrender.com'}/api/auth/google/callback`
+        : '/api/auth/google/callback',
     } as StrategyOptions,
     async (accessToken: string, refreshToken: string, profile: Profile, done: Function) => {
       try {
