@@ -1,0 +1,563 @@
+{
+  "courseId": "trading-fundamentals",
+  "name": "AOM Trading Fundamentals Course",
+  "description": "Comprehensive trading education covering all essential aspects of trading",
+  "version": "1.0.0",
+  "chapters": [
+    {
+      "chapterId": "trading-basics",
+      "name": "Fundamentls of trading",
+      "description": "Fundamental concepts reading the market",
+      "order": 0,
+      "lessons": [
+        {
+          "lessonId": "introduction-to-trading",
+          "name": "The Top-Down approach to reading the market",
+          "description": "Fundamental concepts reading the market",
+          "order": 0,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-basics/introduction-to-trading.md",
+          "estimatedMinutes": 15
+        },
+        {
+          "lessonId": "market-participants",
+          "name": "Market Participants",
+          "description": "Understanding different types of traders and investors",
+          "order": 1,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-basics/market-participants.md",
+          "estimatedMinutes": 20
+        },
+        {
+          "lessonId": "trading-platforms",
+          "name": "Trading Platforms and Tools",
+          "description": "Essential tools and platforms for trading",
+          "order": 2,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-basics/trading-platforms.md",
+          "estimatedMinutes": 25
+        }
+      ],
+      "quizzes": [
+        {
+          "quizId": "trading-basics-quiz-1",
+          "name": "Trading Basics Quiz 1",
+          "description": "Test your knowledge of basic trading concepts",
+          "order": 0,
+          "passingScore": 70,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "tb-q1",
+              "text": "What is the primary purpose of financial markets?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "tb-q1-a",
+                  "text": "To facilitate price discovery and capital allocation",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "tb-q1-b",
+                  "text": "To generate profits for banks only",
+                  "isCorrect": false,
+                  "order": 1
+                },
+                {
+                  "optionId": "tb-q1-c",
+                  "text": "To create market volatility",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "quizId": "trading-basics-quiz-2",
+          "name": "Trading Basics Quiz 2",
+          "description": "Advanced concepts in trading fundamentals",
+          "order": 1,
+          "passingScore": 75,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "tb2-q1",
+              "text": "Which type of order guarantees execution but not price?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "tb2-q1-a",
+                  "text": "Limit order",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "tb2-q1-b",
+                  "text": "Market order",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "tb2-q1-c",
+                  "text": "Stop order",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": "technical-analysis",
+      "name": "Technical Analysis",
+      "description": "Chart patterns, indicators, and technical analysis techniques",
+      "order": 1,
+      "lessons": [
+        {
+          "lessonId": "reading-charts",
+          "name": "Reading Charts",
+          "description": "Understanding candlesticks, bar charts, and line charts",
+          "order": 0,
+          "contentType": "text",
+          "contentPath": "/lessons/technical-analysis/reading-charts.md",
+          "estimatedMinutes": 30
+        },
+        {
+          "lessonId": "support-resistance",
+          "name": "Support and Resistance",
+          "description": "Identifying key price levels",
+          "order": 1,
+          "contentType": "text",
+          "contentPath": "/lessons/technical-analysis/support-resistance.md",
+          "estimatedMinutes": 25
+        },
+        {
+          "lessonId": "technical-indicators",
+          "name": "Technical Indicators",
+          "description": "Moving averages, RSI, MACD, and other indicators",
+          "order": 2,
+          "contentType": "text",
+          "contentPath": "/lessons/technical-analysis/technical-indicators.md",
+          "estimatedMinutes": 35
+        }
+      ],
+      "quizzes": [
+        {
+          "quizId": "technical-analysis-quiz-1",
+          "name": "Technical Analysis Quiz 1",
+          "description": "Chart reading and basic technical analysis",
+          "order": 0,
+          "passingScore": 70,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "ta-q1",
+              "text": "What does a long upper shadow on a candlestick typically indicate?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ta-q1-a",
+                  "text": "Strong buying pressure",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "ta-q1-b",
+                  "text": "Sellers rejected higher prices",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ta-q1-c",
+                  "text": "No significant price movement",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "quizId": "technical-analysis-quiz-2",
+          "name": "Technical Analysis Quiz 2",
+          "description": "Advanced technical indicators and patterns",
+          "order": 1,
+          "passingScore": 75,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "ta2-q1",
+              "text": "What does RSI measure?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ta2-q1-a",
+                  "text": "Price momentum and overbought/oversold conditions",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ta2-q1-b",
+                  "text": "Volume trends",
+                  "isCorrect": false,
+                  "order": 1
+                },
+                {
+                  "optionId": "ta2-q1-c",
+                  "text": "Market sentiment only",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": "trading-strategies",
+      "name": "Trading Strategies",
+      "description": "Proven trading strategies and methodologies",
+      "order": 2,
+      "lessons": [
+        {
+          "lessonId": "trend-following",
+          "name": "Trend Following Strategies",
+          "description": "Strategies that capitalize on market trends",
+          "order": 0,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-strategies/trend-following.md",
+          "estimatedMinutes": 40
+        },
+        {
+          "lessonId": "range-trading",
+          "name": "Range Trading Strategies",
+          "description": "Trading in sideways markets",
+          "order": 1,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-strategies/range-trading.md",
+          "estimatedMinutes": 35
+        },
+        {
+          "lessonId": "breakout-strategies",
+          "name": "Breakout Strategies",
+          "description": "Capturing momentum from price breakouts",
+          "order": 2,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-strategies/breakout-strategies.md",
+          "estimatedMinutes": 30
+        }
+      ],
+      "quizzes": [
+        {
+          "quizId": "trading-strategies-quiz-1",
+          "name": "Trading Strategies Quiz 1",
+          "description": "Understanding different trading strategies",
+          "order": 0,
+          "passingScore": 70,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "ts-q1",
+              "text": "What is the main goal of trend following strategies?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ts-q1-a",
+                  "text": "To catch market reversals",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "ts-q1-b",
+                  "text": "To ride existing market trends for profits",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ts-q1-c",
+                  "text": "To trade against the trend",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "quizId": "trading-strategies-quiz-2",
+          "name": "Trading Strategies Quiz 2",
+          "description": "Strategy implementation and optimization",
+          "order": 1,
+          "passingScore": 75,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "ts2-q1",
+              "text": "When is range trading most effective?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ts2-q1-a",
+                  "text": "During strong trending markets",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "ts2-q1-b",
+                  "text": "In sideways or consolidating markets",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ts2-q1-c",
+                  "text": "Only during market crashes",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": "risk-management",
+      "name": "Risk Management",
+      "description": "Managing risk and protecting your capital",
+      "order": 3,
+      "lessons": [
+        {
+          "lessonId": "position-sizing",
+          "name": "Position Sizing",
+          "description": "How much to risk on each trade",
+          "order": 0,
+          "contentType": "text",
+          "contentPath": "/lessons/risk-management/position-sizing.md",
+          "estimatedMinutes": 30
+        },
+        {
+          "lessonId": "stop-loss-orders",
+          "name": "Stop Loss Orders",
+          "description": "Using stop losses to limit losses",
+          "order": 1,
+          "contentType": "text",
+          "contentPath": "/lessons/risk-management/stop-loss-orders.md",
+          "estimatedMinutes": 25
+        },
+        {
+          "lessonId": "portfolio-management",
+          "name": "Portfolio Management",
+          "description": "Managing multiple positions and overall risk",
+          "order": 2,
+          "contentType": "text",
+          "contentPath": "/lessons/risk-management/portfolio-management.md",
+          "estimatedMinutes": 35
+        }
+      ],
+      "quizzes": [
+        {
+          "quizId": "risk-management-quiz-1",
+          "name": "Risk Management Quiz 1",
+          "description": "Basic risk management principles",
+          "order": 0,
+          "passingScore": 70,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "rm-q1",
+              "text": "What is the recommended maximum risk per trade for most traders?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "rm-q1-a",
+                  "text": "1-2% of account balance",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "rm-q1-b",
+                  "text": "10-15% of account balance",
+                  "isCorrect": false,
+                  "order": 1
+                },
+                {
+                  "optionId": "rm-q1-c",
+                  "text": "25% or more of account balance",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "quizId": "risk-management-quiz-2",
+          "name": "Risk Management Quiz 2",
+          "description": "Advanced risk management techniques",
+          "order": 1,
+          "passingScore": 75,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "rm2-q1",
+              "text": "What is the primary purpose of a stop loss order?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "rm2-q1-a",
+                  "text": "To guarantee profits",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "rm2-q1-b",
+                  "text": "To limit potential losses on a trade",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "rm2-q1-c",
+                  "text": "To increase position size",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": "trading-psychology",
+      "name": "Trading Psychology",
+      "description": "Mental aspects and psychological challenges of trading",
+      "order": 4,
+      "lessons": [
+        {
+          "lessonId": "emotional-control",
+          "name": "Emotional Control",
+          "description": "Managing fear and greed in trading",
+          "order": 0,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-psychology/emotional-control.md",
+          "estimatedMinutes": 25
+        },
+        {
+          "lessonId": "trading-discipline",
+          "name": "Trading Discipline",
+          "description": "Sticking to your trading plan",
+          "order": 1,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-psychology/trading-discipline.md",
+          "estimatedMinutes": 30
+        },
+        {
+          "lessonId": "handling-losses",
+          "name": "Handling Losses",
+          "description": "Dealing with losing trades and drawdowns",
+          "order": 2,
+          "contentType": "text",
+          "contentPath": "/lessons/trading-psychology/handling-losses.md",
+          "estimatedMinutes": 20
+        }
+      ],
+      "quizzes": [
+        {
+          "quizId": "trading-psychology-quiz-1",
+          "name": "Trading Psychology Quiz 1",
+          "description": "Understanding trading psychology",
+          "order": 0,
+          "passingScore": 70,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "tp-q1",
+              "text": "What are the two primary emotions that negatively affect trading decisions?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "tp-q1-a",
+                  "text": "Fear and greed",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "tp-q1-b",
+                  "text": "Hope and despair",
+                  "isCorrect": false,
+                  "order": 1
+                },
+                {
+                  "optionId": "tp-q1-c",
+                  "text": "Anger and sadness",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "quizId": "trading-psychology-quiz-2",
+          "name": "Trading Psychology Quiz 2",
+          "description": "Mastering emotional control",
+          "order": 1,
+          "passingScore": 75,
+          "maxAttempts": 3,
+          "questions": [
+            {
+              "questionId": "tp2-q1",
+              "text": "What is the best way to handle a series of losing trades?",
+              "type": "multiple-choice",
+              "order": 0,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "tp2-q1-a",
+                  "text": "Increase position sizes to recover losses quickly",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "tp2-q1-b",
+                  "text": "Take a break and review your trading plan objectively",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "tp2-q1-c",
+                  "text": "Abandon your trading strategy immediately",
+                  "isCorrect": false,
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { CourseService } from '../services/courseService';
+import { Course, CourseChapter } from '../types/course';
 import './StudyCourse.css';
 
 const StudyCourse: React.FC = () => {
   const { user } = useAuth();
+  const [course, setCourse] = useState<Course | null>(null);
+  const [activeChapter, setActiveChapter] = useState<string>('');
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
+  const [completedQuizzes, setCompletedQuizzes] = useState<string[]>([]);
+
+  useEffect(() => {
+    const courseService = CourseService.getInstance();
+    const courseData = courseService.getCourse();
+    setCourse(courseData);
+    
+    if (courseData.chapters.length > 0) {
+      setActiveChapter(courseData.chapters[0].chapterId);
+    }
+
+    // TODO: Load user progress from API
+    // For now, using mock data
+    setCompletedLessons([]);
+    setCompletedQuizzes([]);
+  }, []);
 
   if (!user) {
     return (
@@ -15,148 +37,160 @@ const StudyCourse: React.FC = () => {
     );
   }
 
+  if (!course) {
+    return (
+      <div className="study-course-page">
+        <div className="container">
+          <div className="loading">Loading course content...</div>
+        </div>
+      </div>
+    );
+  }
+
+  const courseService = CourseService.getInstance();
+  const overallProgress = courseService.getCourseProgress(completedLessons, completedQuizzes);
+  const activeChapterData = course.chapters.find(ch => ch.chapterId === activeChapter);
+
   return (
     <div className="study-course-page">
       <div className="container">
         <div className="study-course-header">
-          <h1>Educational Materials</h1>
-          <p className="course-subtitle">Comprehensive trading guides and educational resources</p>
+          <h1>{course.name}</h1>
+          <p className="course-subtitle">{course.description}</p>
         </div>
 
         <div className="course-navigation">
           <nav className="course-nav">
-            <a href="#basics" className="nav-item active">Trading Basics</a>
-            <a href="#analysis" className="nav-item">Technical Analysis</a>
-            <a href="#strategies" className="nav-item">Trading Strategies</a>
-            <a href="#risk-management" className="nav-item">Risk Management</a>
-            <a href="#psychology" className="nav-item">Trading Psychology</a>
+            {course.chapters.map(chapter => {
+              const chapterProgress = courseService.getChapterProgress(
+                chapter.chapterId, 
+                completedLessons, 
+                completedQuizzes
+              );
+              
+              return (
+                <button
+                  key={chapter.chapterId}
+                  className={`nav-item ${activeChapter === chapter.chapterId ? 'active' : ''}`}
+                  onClick={() => setActiveChapter(chapter.chapterId)}
+                >
+                  {chapter.name}
+                  {chapterProgress.completed && <span className="completion-badge">✓</span>}
+                </button>
+              );
+            })}
           </nav>
         </div>
 
-        <div className="course-content">
-          <section id="basics" className="course-section">
-            <h2>Trading Basics</h2>
-            <div className="lesson-grid">
-              <div className="lesson-card">
-                <h3>Introduction to Trading</h3>
-                <p>Learn the fundamentals of trading, market structure, and basic terminology.</p>
-                <div className="lesson-meta">
-                  <span className="duration">45 min</span>
-                  <span className="difficulty">Beginner</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
+        {activeChapterData && (
+          <div className="course-content">
+            <section className="course-section">
+              <div className="section-header">
+                <h2>{activeChapterData.name}</h2>
+                <p className="section-description">{activeChapterData.description}</p>
               </div>
-              
-              <div className="lesson-card">
-                <h3>Market Types & Hours</h3>
-                <p>Understanding different markets, trading sessions, and optimal trading times.</p>
-                <div className="lesson-meta">
-                  <span className="duration">30 min</span>
-                  <span className="difficulty">Beginner</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-              
-              <div className="lesson-card">
-                <h3>Order Types</h3>
-                <p>Master different order types: market, limit, stop-loss, and advanced orders.</p>
-                <div className="lesson-meta">
-                  <span className="duration">35 min</span>
-                  <span className="difficulty">Beginner</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-            </div>
-            <div className="lesson-grid">
-              <div className="lesson-card">
-                <h3>Introduction to Trading</h3>
-                <p>Learn the fundamentals of trading, market structure, and basic terminology.</p>
-                <div className="lesson-meta">
-                  <span className="duration">45 min</span>
-                  <span className="difficulty">Beginner</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-              
-              <div className="lesson-card">
-                <h3>Market Types & Hours</h3>
-                <p>Understanding different markets, trading sessions, and optimal trading times.</p>
-                <div className="lesson-meta">
-                  <span className="duration">30 min</span>
-                  <span className="difficulty">Beginner</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-              
-              <div className="lesson-card">
-                <h3>Order Types</h3>
-                <p>Master different order types: market, limit, stop-loss, and advanced orders.</p>
-                <div className="lesson-meta">
-                  <span className="duration">35 min</span>
-                  <span className="difficulty">Beginner</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-            </div>
-          </section>
 
-          <section id="analysis" className="course-section">
-            <h2>Technical Analysis</h2>
-            <div className="lesson-grid">
-              <div className="lesson-card">
-                <h3>Chart Patterns</h3>
-                <p>Identify and trade common chart patterns like triangles, flags, and head & shoulders.</p>
-                <div className="lesson-meta">
-                  <span className="duration">60 min</span>
-                  <span className="difficulty">Intermediate</span>
+              <h3>Lessons</h3>
+              <div className="content-section">
+                <div className="lesson-grid">
+                  {activeChapterData.lessons
+                    .sort((a, b) => a.order - b.order)
+                    .map(lesson => {
+                      const isCompleted = completedLessons.includes(lesson.lessonId);
+                      
+                      return (
+                        <div key={lesson.lessonId} className={`lesson-card ${isCompleted ? 'completed' : ''}`}>
+                          <div className="lesson-header">
+                            <h4>{lesson.name}</h4>
+                            {isCompleted && <span className="completion-badge">✓ Done</span>}
+                          </div>
+                          <p>{lesson.description}</p>
+                          <div className="lesson-meta">
+                            {lesson.estimatedMinutes && (
+                              <span className="duration">{lesson.estimatedMinutes} min</span>
+                            )}
+                            <span className="content-type">{lesson.contentType}</span>
+                          </div>
+                          <Link 
+                            to={`/my-subscriptions/study-course/${activeChapterData.chapterId}/lesson/${lesson.lessonId}`}
+                            className="start-lesson-btn"
+                          >
+                            {isCompleted ? 'Review Lesson' : 'Start Lesson'}
+                          </Link>
+                        </div>
+                      );
+                    })}
                 </div>
-                <button className="start-lesson-btn">Start Lesson</button>
               </div>
-              
-              <div className="lesson-card">
-                <h3>Technical Indicators</h3>
-                <p>Learn to use RSI, MACD, Moving Averages, and other popular indicators.</p>
-                <div className="lesson-meta">
-                  <span className="duration">50 min</span>
-                  <span className="difficulty">Intermediate</span>
+
+              <h3>Quizzes</h3>
+              <div className="content-section">
+                <div className="quiz-grid">
+                  {activeChapterData.quizzes
+                    .sort((a, b) => a.order - b.order)
+                    .map(quiz => {
+                      const isCompleted = completedQuizzes.includes(quiz.quizId);
+                      
+                      return (
+                        <div key={quiz.quizId} className={`quiz-card ${isCompleted ? 'completed' : ''}`}>
+                          <div className="quiz-header">
+                            <h4>{quiz.name}</h4>
+                            {isCompleted && <span className="completion-badge">✓ Done</span>}
+                          </div>
+                          <p>{quiz.description}</p>
+                          <div className="quiz-meta">
+                            <span className="questions">{quiz.questions.length} questions</span>
+                            <span className="passing-score">{quiz.passingScore || 70}% to pass</span>
+                            <span className="attempts">{quiz.maxAttempts || 3} attempts</span>
+                          </div>
+                          <Link 
+                            to={`/my-subscriptions/study-course/${activeChapterData.chapterId}/quiz/${quiz.quizId}`}
+                            className="start-quiz-btn"
+                          >
+                            {isCompleted ? 'Retake Quiz' : 'Start Quiz'}
+                          </Link>
+                        </div>
+                      );
+                    })}
                 </div>
-                <button className="start-lesson-btn">Start Lesson</button>
               </div>
-              
-              <div className="lesson-card">
-                <h3>Support & Resistance</h3>
-                <p>Master the art of identifying key levels and trading around them.</p>
-                <div className="lesson-meta">
-                  <span className="duration">40 min</span>
-                  <span className="difficulty">Intermediate</span>
-                </div>
-                <button className="start-lesson-btn">Start Lesson</button>
-              </div>
-            </div>
-          </section>
-        </div>
+            </section>
+          </div>
+        )}
 
         <div className="course-progress">
           <div className="progress-header">
             <h3>Your Progress</h3>
             <div className="overall-progress">
-              <span>12% Complete</span>
+              <span>{Math.round(overallProgress)}% Complete</span>
               <div className="progress-bar">
-                <div className="progress-fill" style={{width: '12%'}}></div>
+                <div className="progress-fill" style={{width: `${overallProgress}%`}}></div>
               </div>
             </div>
           </div>
           
           <div className="recent-activity">
             <h4>Recent Activity</h4>
-            <div className="activity-item">
-              <span className="activity-date">Today</span>
-              <span className="activity-text">Completed "Introduction to Trading"</span>
-            </div>
-            <div className="activity-item">
-              <span className="activity-date">Yesterday</span>
-              <span className="activity-text">Started "Market Types & Hours"</span>
-            </div>
+            {completedLessons.length === 0 && completedQuizzes.length === 0 ? (
+              <div className="activity-item">
+                <span className="activity-text">No completed activities yet. Start your first lesson!</span>
+              </div>
+            ) : (
+              <>
+                {completedLessons.slice(0, 2).map(lessonId => (
+                  <div key={lessonId} className="activity-item">
+                    <span className="activity-date">Recent</span>
+                    <span className="activity-text">Completed lesson: {lessonId}</span>
+                  </div>
+                ))}
+                {completedQuizzes.slice(0, 2).map(quizId => (
+                  <div key={quizId} className="activity-item">
+                    <span className="activity-date">Recent</span>
+                    <span className="activity-text">Completed quiz: {quizId}</span>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>

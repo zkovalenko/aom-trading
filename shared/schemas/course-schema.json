@@ -1,0 +1,240 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aom-trading.com/schemas/course-config.json",
+  "title": "Course Configuration Schema",
+  "description": "Schema for defining course structure with chapters, lessons, and quizzes",
+  "type": "object",
+  "properties": {
+    "courseId": {
+      "type": "string",
+      "description": "Unique identifier for the course",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name of the course",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "description": "Course description"
+    },
+    "version": {
+      "type": "string",
+      "description": "Course content version for tracking changes",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "chapters": {
+      "type": "array",
+      "description": "List of chapters in the course",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/chapter"
+      }
+    }
+  },
+  "required": ["courseId", "name", "version", "chapters"],
+  "additionalProperties": false,
+  "$defs": {
+    "chapter": {
+      "type": "object",
+      "properties": {
+        "chapterId": {
+          "type": "string",
+          "description": "Unique identifier for the chapter",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the chapter",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Chapter description"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order of the chapter",
+          "minimum": 0
+        },
+        "lessons": {
+          "type": "array",
+          "description": "List of lessons in the chapter",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/lesson"
+          }
+        },
+        "quizzes": {
+          "type": "array",
+          "description": "List of quizzes in the chapter",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/quiz"
+          }
+        }
+      },
+      "required": ["chapterId", "name", "order", "lessons", "quizzes"],
+      "additionalProperties": false
+    },
+    "lesson": {
+      "type": "object",
+      "properties": {
+        "lessonId": {
+          "type": "string",
+          "description": "Unique identifier for the lesson",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the lesson",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Lesson description"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order of the lesson",
+          "minimum": 0
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Type of lesson content",
+          "enum": ["text", "video", "interactive", "document"]
+        },
+        "contentPath": {
+          "type": "string",
+          "description": "Path to lesson content file or component"
+        },
+        "estimatedMinutes": {
+          "type": "integer",
+          "description": "Estimated completion time in minutes",
+          "minimum": 0
+        }
+      },
+      "required": ["lessonId", "name", "order", "contentType"],
+      "additionalProperties": false
+    },
+    "quiz": {
+      "type": "object",
+      "properties": {
+        "quizId": {
+          "type": "string",
+          "description": "Unique identifier for the quiz",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the quiz",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Quiz description"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order of the quiz",
+          "minimum": 0
+        },
+        "passingScore": {
+          "type": "integer",
+          "description": "Minimum score percentage to pass",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 70
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "description": "Maximum number of attempts allowed",
+          "minimum": 1,
+          "default": 3
+        },
+        "questions": {
+          "type": "array",
+          "description": "List of quiz questions",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/question"
+          }
+        }
+      },
+      "required": ["quizId", "name", "order", "questions"],
+      "additionalProperties": false
+    },
+    "question": {
+      "type": "object",
+      "properties": {
+        "questionId": {
+          "type": "string",
+          "description": "Unique identifier for the question",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "text": {
+          "type": "string",
+          "description": "Question text",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of question",
+          "enum": ["multiple-choice", "true-false", "short-answer"]
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order of the question",
+          "minimum": 0
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points awarded for correct answer",
+          "minimum": 1,
+          "default": 1
+        },
+        "options": {
+          "type": "array",
+          "description": "Answer options (for multiple-choice and true-false)",
+          "items": {
+            "$ref": "#/$defs/option"
+          }
+        },
+        "correctAnswer": {
+          "type": "string",
+          "description": "Correct answer (for short-answer questions)"
+        }
+      },
+      "required": ["questionId", "text", "type", "order"],
+      "additionalProperties": false
+    },
+    "option": {
+      "type": "object",
+      "properties": {
+        "optionId": {
+          "type": "string",
+          "description": "Unique identifier for the option",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "text": {
+          "type": "string",
+          "description": "Option text",
+          "minLength": 1
+        },
+        "isCorrect": {
+          "type": "boolean",
+          "description": "Whether this option is correct",
+          "default": false
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order of the option",
+          "minimum": 0
+        }
+      },
+      "required": ["optionId", "text", "order"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -9,6 +9,8 @@ import ServicesPage from './pages/ServicesPage';
 import PrivateTutoringPage from './pages/services/PrivateTutoringPage';
 import MySubscriptions from './pages/MySubscriptions';
 import StudyCourse from './pages/StudyCourse';
+import LessonPage from './pages/LessonPage';
+import QuizPage from './pages/QuizPage';
 import Software from './pages/Software';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
@@ -49,6 +51,8 @@ function App() {
               <Route path="/learn-to-trade" element={<ServicesPage />} />
               <Route path="/my-subscriptions" element={<MySubscriptions />} />
               <Route path="/my-subscriptions/study-course" element={<StudyCourse />} />
+              <Route path="/my-subscriptions/study-course/:chapterId/lesson/:lessonId" element={<LessonPage />} />
+              <Route path="/my-subscriptions/study-course/:chapterId/quiz/:quizId" element={<QuizPage />} />
               <Route path="/my-subscriptions/software" element={<Software />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
