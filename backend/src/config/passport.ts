@@ -26,7 +26,7 @@ export function initializePassport() {
   const isProduction = process.env.NODE_ENV === 'production';
   const callbackURL = isProduction 
     ? `${process.env.BACKEND_URL || 'https://aom-trading.onrender.com'}/api/auth/google/callback`
-    : '/api/auth/google/callback';
+    : 'http://localhost:5001/api/auth/google/callback';
 
   console.log('🔗 OAuth Callback URL:', callbackURL);
 

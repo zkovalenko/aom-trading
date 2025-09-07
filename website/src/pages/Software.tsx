@@ -41,7 +41,7 @@ const Software: React.FC = () => {
             <div className="software-actions">
               <button className="download-btn primary">Download for Windows</button>
               <button className="download-btn secondary">Download for Mac</button>
-              <a href="#" className="version-info">Version 2.4.1 • Updated Dec 2024</a>
+              <span className="version-info">Version 2.4.1 • Updated Dec 2024</span>
             </div>
           </div>
 
@@ -61,7 +61,7 @@ const Software: React.FC = () => {
             </div>
             <div className="software-actions">
               <button className="download-btn primary">Download Scanner</button>
-              <a href="#" className="version-info">Version 1.8.3 • Updated Nov 2024</a>
+              <span className="version-info">Version 1.8.3 • Updated Nov 2024</span>
             </div>
           </div>
 
@@ -81,7 +81,7 @@ const Software: React.FC = () => {
             </div>
             <div className="software-actions">
               <button className="download-btn primary">Download Analyzer</button>
-              <a href="#" className="version-info">Version 1.2.5 • Updated Dec 2024</a>
+              <span className="version-info">Version 1.2.5 • Updated Dec 2024</span>
             </div>
           </div>
 
@@ -101,7 +101,7 @@ const Software: React.FC = () => {
             </div>
             <div className="software-actions">
               <button className="download-btn primary">Download Builder</button>
-              <a href="#" className="version-info">Version 3.1.2 • Updated Dec 2024</a>
+              <span className="version-info">Version 3.1.2 • Updated Dec 2024</span>
             </div>
           </div>
         </div>

@@ -37,6 +37,11 @@ const AuthCallback: React.FC = () => {
           // Get redirect parameter, default to /learn-to-trade
           let redirectTo = searchParams.get('redirect') || '/learn-to-trade';
           
+          // Handle legacy /services redirect (convert to /learn-to-trade)
+          if (redirectTo === '/services') {
+            redirectTo = '/learn-to-trade';
+          }
+          
           // Handle subscription redirect parameters
           const subscriptionRedirect = searchParams.get('subscriptionRedirect');
           const productId = searchParams.get('product');

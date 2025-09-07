@@ -35,7 +35,6 @@ const ServicesPage: React.FC = () => {
   const [selectedType, setSelectedType] = useState<'monthly' | 'annual'>('annual');
   const [billingType, setBillingType] = useState<'monthly' | 'annual'>('annual');
   const [userSubscriptions, setUserSubscriptions] = useState<UserSubscription[]>([]);
-  const [subscriptionsLoading, setSubscriptionsLoading] = useState(false);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -73,8 +72,8 @@ const ServicesPage: React.FC = () => {
       const product = products.find(p => p.id === productId);
       if (product) {
         setSelectedProduct(product);
-        setSelectedType(type as 'monthly' | 'annual' || 'annual');
-        setBillingType(type as 'monthly' | 'annual' || 'annual');
+        setSelectedType((type as 'monthly' | 'annual') || 'annual');
+        setBillingType((type as 'monthly' | 'annual') || 'annual');
         // Clear URL parameters
         window.history.replaceState({}, document.title, window.location.pathname);
         
@@ -92,18 +91,21 @@ const ServicesPage: React.FC = () => {
     const loadUserSubscriptions = async () => {
       if (!user) return;
       
-      setSubscriptionsLoading(true);
       try {
-        handleSubscriptionSuccess(); 
+        const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setUserSubscriptions(data.data.subscriptions);
+          }
+        }
       } catch (error) {
         console.error('Failed to load user subscriptions:', error);
-      } finally {
-        setSubscriptionsLoading(false);
       }
     };
 
     loadUserSubscriptions();
-  }, [user]);
+  }, [user, token]);
 
   const handleSubscribe = (product: Product) => {
     if (!user) {
@@ -330,7 +332,7 @@ const ServicesPage: React.FC = () => {
           </div>
         )}
 
-        {!user || !hasActiveSubscription() && (
+        {(!user || !hasActiveSubscription()) && (
         <div className="cta-section">
           <h2>Ready to Start Trading?</h2>
           <p>

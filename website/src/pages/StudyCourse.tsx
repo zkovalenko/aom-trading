@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { CourseService } from '../services/courseService';
-import { Course, CourseChapter } from '../types/course';
+import { Course } from '../types/course';
 import './StudyCourse.css';
 
 const StudyCourse: React.FC = () => {

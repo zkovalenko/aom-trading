@@ -55,14 +55,11 @@ const LoginPage: React.FC = () => {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const success = await loginWithGoogle();
-      console.log("~~google login success:", success);
-      if (success) {
-        navigate(from, { replace: true });
-      }
+      await loginWithGoogle();
+      // Note: loginWithGoogle redirects to Google OAuth, so execution stops here
+      // The user will return via the AuthCallback component after OAuth completion
     } catch (error) {
       console.error('Google login error:', error);
-    } finally {
       setLoading(false);
     }
   };

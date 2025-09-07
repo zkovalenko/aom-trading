@@ -246,10 +246,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       // Use correct backend URL for Google OAuth redirect
       const isDevelopment = window.location.hostname === 'localhost';
+      console.log('🔍 Current origin:', window.location.origin);
+      console.log('🔍 Is development:', isDevelopment);
+      
       const backendUrl = isDevelopment 
-        ? window.location.origin.replace(':3000', ':5001') // localhost:5001 for dev
+        ? window.location.origin.replace(':3001', ':5001') // localhost:5001 for dev (frontend is on 3001)
         : window.location.origin; // Same domain in production
       
+      console.log('🔍 Backend URL:', backendUrl);
       let googleAuthUrl = `${backendUrl}/api/auth/google`;
       console.log('🔗 Google OAuth URL:', googleAuthUrl);
       
