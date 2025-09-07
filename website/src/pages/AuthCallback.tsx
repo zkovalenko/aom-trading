@@ -39,6 +39,7 @@ const AuthCallback: React.FC = () => {
           
           // Handle legacy /services redirect (convert to /learn-to-trade)
           if (redirectTo === '/services') {
+            console.log("~~ we still redirect to services")
             redirectTo = '/learn-to-trade';
           }
           

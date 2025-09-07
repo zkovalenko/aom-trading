@@ -29,18 +29,55 @@ async function initializeDatabase() {
     console.log('📊 Executing schema...');
     await pool.query(schema);
     
+    // Insert default products (only if they don't exist)
+    console.log('📦 Adding default products...');
+    
+    // Check if products already exist
+    const existingProducts = await pool.query('SELECT COUNT(*) as count FROM products');
+    
+    if (existingProducts.rows[0].count === '0') {
+      await pool.query(`
+        INSERT INTO products (product_template_id, name, description, subscription_types, product_license_template, is_active) 
+        VALUES 
+        (
+          'basic-trading-plan',
+          'Basic Trading Plan',
+          'Essential trading tools and live trading room access',
+          '{"monthly": 6000, "annual": 64800}',
+          '{"monthly": "LT001", "annual": "LT002"}',
+          true
+        ),
+        (
+          'premium-trading-plan',
+          'Premium Trading Plan',
+          'Advanced trading tools, live rooms, and semi-automated trading',
+          '{"monthly": 7000, "annual": 74800}',
+          '{"monthly": "LT003", "annual": "LT004"}',
+          true
+        )
+      `);
+      console.log('✅ Products added successfully');
+    } else {
+      console.log('📦 Products already exist, skipping insertion');
+    }
+    
     console.log('✅ Database initialized successfully!');
     
-    // Test connection by counting tables
-    const result = await pool.query(`
+    // Test connection by counting tables and products
+    const tablesResult = await pool.query(`
       SELECT table_name 
       FROM information_schema.tables 
       WHERE table_schema = 'public' 
       AND table_type = 'BASE TABLE'
     `);
     
-    console.log(`📋 Created ${result.rows.length} tables:`);
-    result.rows.forEach(row => console.log(`  - ${row.table_name}`));
+    const productsResult = await pool.query('SELECT name FROM products WHERE is_active = true');
+    
+    console.log(`📋 Created ${tablesResult.rows.length} tables:`);
+    tablesResult.rows.forEach(row => console.log(`  - ${row.table_name}`));
+    
+    console.log(`📦 Added ${productsResult.rows.length} products:`);
+    productsResult.rows.forEach(row => console.log(`  - ${row.name}`));
     
   } catch (error) {
     console.error('❌ Database initialization failed:', error);
