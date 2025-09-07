@@ -68,6 +68,7 @@ router.get('/google/callback',
       
       const user = req.user as any;
       console.log('✅ User authenticated:', { id: user.id, email: user.email });
+      console.log('🔍 Full user object:', user);
       
       // Ensure environment variables are loaded
       loadEnvironmentVariables();
@@ -80,7 +81,7 @@ router.get('/google/callback',
       
       // Generate JWT token for the authenticated user
       const token = jwt.sign(
-        { id: user.id, email: user.email },
+        { userId: user.id, email: user.email },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
