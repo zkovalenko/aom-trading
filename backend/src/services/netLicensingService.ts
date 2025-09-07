@@ -12,19 +12,21 @@ interface NetLicensingLicenseResponse {
 }
 
 export class NetLicensingService {
-  private apiKey: string;
-  private productId: string;
+  private apiKey: string | null = null;
+  private productId: string | null = null;
   private baseUrl = 'https://go.netlicensing.io/core/v2/rest';
 
-  constructor() {
-    // Load environment variables
-    loadEnvironmentVariables();
-    
-    this.apiKey = process.env.NET_LICENCE_API_KEY!;
-    this.productId = process.env.NET_LICENCE_PRODUCT_ID!;
-    
+  private initializeIfNeeded() {
     if (!this.apiKey || !this.productId) {
-      throw new Error('NetLicensing API key or Product ID not configured');
+      // Load environment variables
+      loadEnvironmentVariables();
+      
+      this.apiKey = process.env.NET_LICENCE_API_KEY!;
+      this.productId = process.env.NET_LICENCE_PRODUCT_ID!;
+      
+      if (!this.apiKey || !this.productId) {
+        throw new Error('NetLicensing API key or Product ID not configured');
+      }
     }
   }
 
@@ -35,8 +37,9 @@ export class NetLicensingService {
    */
   async createLicensee(userEmail: string): Promise<string> {
     try {
+      this.initializeIfNeeded();
       const formData = new URLSearchParams({
-        productNumber: this.productId,
+        productNumber: this.productId!,
         name: userEmail,
       });
       console.log("~!~formData", formData);
@@ -47,7 +50,7 @@ export class NetLicensingService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Basic ${Buffer.from(`apiKey:${this.apiKey}`).toString('base64')}`
+          'Authorization': `Basic ${Buffer.from(`apiKey:${this.apiKey!}`).toString('base64')}`
         },
         body: formData
       });
@@ -84,8 +87,9 @@ export class NetLicensingService {
    */
   async createLicense(licenseeNumber: string, licenseTemplateNumber: string): Promise<string> {
     try {
+      this.initializeIfNeeded();
       const formData = new URLSearchParams({
-        productNumber: this.productId,
+        productNumber: this.productId!,
         licenseTemplateNumber: licenseTemplateNumber,
         licenseeNumber: licenseeNumber,
         active: 'true'
@@ -95,7 +99,7 @@ console.log("~~~productID", this.productId)
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Basic ${Buffer.from(`apiKey:${this.apiKey}`).toString('base64')}`
+          'Authorization': `Basic ${Buffer.from(`apiKey:${this.apiKey!}`).toString('base64')}`
         },
         body: formData
       });
