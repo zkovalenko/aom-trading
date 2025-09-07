@@ -39,8 +39,8 @@ const ServicesPage: React.FC = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        console.log('Loading products..., user:', user);
-        const response = await apiCall('/subscriptions/products', { method: 'GET' });
+        console.log('Loading products..., user:', user, 'token:', token ? 'exists' : 'missing');
+        const response = await apiCall('/subscriptions/products', { method: 'GET' }, token);
         const data = await response.json();
         console.log('Products response:', data);
         if (response.ok && data.success) {
@@ -56,8 +56,11 @@ const ServicesPage: React.FC = () => {
       }
     };
 
-    loadProducts();
-  }, [user]);
+    // Only load products when we have both user and token (if user is logged in)
+    if (!user || token) {
+      loadProducts();
+    }
+  }, [user, token]);
 
   // Handle subscription redirect after login
   useEffect(() => {
@@ -84,7 +87,7 @@ const ServicesPage: React.FC = () => {
         }
       }
     }
-  }, [user, products]);
+  }, [user, products, token]);
 
   // Load user subscriptions when user is available
   useEffect(() => {
