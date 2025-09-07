@@ -35,11 +35,25 @@ export const apiCall = async (url: string, options: RequestInit = {}, token?: st
     headers.set('Content-Type', 'application/json');
   }
 
-  // Use relative URLs - React dev server will proxy to backend
-  const apiUrl = url.startsWith('/api') ? url : `/api${url}`;
+  // Use correct API URL based on environment
+  const isDevelopment = window.location.hostname === 'localhost';
+  let apiUrl;
+  
+  if (isDevelopment) {
+    // In development, use relative URLs - React dev server will proxy to backend
+    apiUrl = url.startsWith('/api') ? url : `/api${url}`;
+  } else {
+    // In production, frontend and backend are served from same domain
+    // Use relative URLs (same as development)
+    apiUrl = url.startsWith('/api') ? url : `/api${url}`;
+  }
+  
+  console.log('🌐 API call to:', apiUrl);
+  
   const response = await fetch(apiUrl, {
     ...options,
-    headers
+    headers,
+    credentials: 'include' // Include cookies for session-based auth
   });
 
   // Handle 401 errors globally
@@ -228,7 +242,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const productId = urlParams.get('product');
       const subscriptionType = urlParams.get('type');
       
-      let googleAuthUrl = `${window.location.origin.replace(':3000', ':5001')}/api/auth/google`;
+      // Use correct backend URL for Google OAuth redirect
+      const isDevelopment = window.location.hostname === 'localhost';
+      const backendUrl = isDevelopment 
+        ? window.location.origin.replace(':3000', ':5001') // localhost:5001 for dev
+        : window.location.origin; // Same domain in production
+      
+      let googleAuthUrl = `${backendUrl}/api/auth/google`;
+      console.log('🔗 Google OAuth URL:', googleAuthUrl);
       
       // If we have subscription parameters, pass them to the Google auth flow
       if ((redirect === 'subscribe' || redirect === 'subscribe-direct') && productId && subscriptionType) {

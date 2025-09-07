@@ -12,16 +12,25 @@ const AuthCallback: React.FC = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        console.log('🔄 AuthCallback: Processing OAuth callback');
+        console.log('🔍 Current URL:', window.location.href);
+        console.log('🔍 Search params:', window.location.search);
+        
         const token = searchParams.get('token');
         const error = searchParams.get('error');
+        
+        console.log('🔍 Extracted token:', token ? 'Token exists' : 'No token');
+        console.log('🔍 Extracted error:', error);
 
         if (error) {
+          console.log('❌ OAuth error detected:', error);
           toast.error('Authentication failed. Please try again.');
           navigate('/login');
           return;
         }
 
         if (token) {
+          console.log('✅ Token found, setting auth token...');
           // Set token and refresh profile through AuthContext
           await setAuthToken(token);
 
@@ -37,9 +46,11 @@ const AuthCallback: React.FC = () => {
             redirectTo = `/services?redirect=${subscriptionRedirect}&product=${productId}&type=${subscriptionType}`;
           }
 
+          console.log('🔀 Redirecting to:', redirectTo);
           // Navigate to the redirect URL
           navigate(redirectTo);
         } else {
+          console.log('❌ No token found in callback URL');
           toast.error('No authentication token received');
           navigate('/login');
         }
