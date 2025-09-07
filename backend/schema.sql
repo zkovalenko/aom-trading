@@ -2,8 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict nv2x8CZmAThY8R1e8QBREoHKyaP63PcUZzDr6zyMH9GLT6UL5sgujkCGeVS4C5I
-
 -- Dumped from database version 14.19 (Homebrew)
 -- Dumped by pg_dump version 14.19 (Homebrew)
 
@@ -347,6 +345,4 @@ ALTER TABLE ONLY public.user_subscriptions
 --
 -- PostgreSQL database dump complete
 --
-
-\unrestrict nv2x8CZmAThY8R1e8QBREoHKyaP63PcUZzDr6zyMH9GLT6UL5sgujkCGeVS4C5I
 
