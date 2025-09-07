@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
           <div className="footer-section">
             <h3>Learn To Trade</h3>
             <ul>
-              <li><Link to="/services">Our Services</Link></li>
+              <li><Link to="/learn-to-trade">Our Services</Link></li>
               <li><Link to="/tutoring">1-1 Tutoring</Link></li>
               <li><Link to="/ninjatrader">NinjaTrader 8</Link></li>
             </ul>

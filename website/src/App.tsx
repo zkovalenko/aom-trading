@@ -46,9 +46,8 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Homepage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/services/private-tutoring" element={<PrivateTutoringPage />} />
               <Route path="/learn-to-trade" element={<ServicesPage />} />
+              <Route path="/learn-to-trade/private-tutoring" element={<PrivateTutoringPage />} />
               <Route path="/my-subscriptions" element={<MySubscriptions />} />
               <Route path="/my-subscriptions/study-course" element={<StudyCourse />} />
               <Route path="/my-subscriptions/study-course/:chapterId/lesson/:lessonId" element={<LessonPage />} />

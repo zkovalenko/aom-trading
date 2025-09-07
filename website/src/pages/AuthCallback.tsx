@@ -34,8 +34,8 @@ const AuthCallback: React.FC = () => {
           // Set token and refresh profile through AuthContext
           await setAuthToken(token);
 
-          // Get redirect parameter, default to /services
-          let redirectTo = searchParams.get('redirect') || '/services';
+          // Get redirect parameter, default to /learn-to-trade
+          let redirectTo = searchParams.get('redirect') || '/learn-to-trade';
           
           // Handle subscription redirect parameters
           const subscriptionRedirect = searchParams.get('subscriptionRedirect');
@@ -43,7 +43,7 @@ const AuthCallback: React.FC = () => {
           const subscriptionType = searchParams.get('type');
           
           if ((subscriptionRedirect === 'subscribe' || subscriptionRedirect === 'subscribe-direct') && productId && subscriptionType) {
-            redirectTo = `/services?redirect=${subscriptionRedirect}&product=${productId}&type=${subscriptionType}`;
+            redirectTo = `/learn-to-trade?redirect=${subscriptionRedirect}&product=${productId}&type=${subscriptionType}`;
           }
 
           console.log('🔀 Redirecting to:', redirectTo);

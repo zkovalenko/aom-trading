@@ -38,7 +38,7 @@ const Homepage: React.FC = () => {
               <p>
                 <strong>Trading:</strong> Once you have Trading self class Trading.
               </p>
-              <Link to="/services" className="service-button">LEARN MORE</Link>
+              <Link to="/learn-to-trade" className="service-button">LEARN MORE</Link>
             </div>
 
             <div className="service-card">

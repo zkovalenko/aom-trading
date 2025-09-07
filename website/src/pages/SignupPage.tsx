@@ -18,7 +18,7 @@ const SignupPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as any)?.from?.pathname || '/services';
+  const from = (location.state as any)?.from?.pathname || '/learn-to-trade';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

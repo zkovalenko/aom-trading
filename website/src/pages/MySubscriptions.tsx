@@ -36,12 +36,14 @@ const MySubscriptions: React.FC = () => {
 
   useEffect(() => {
     const loadUserSubscriptions = async () => {
-      if (!user || !token) {
-        console.log('⏳ Waiting for auth state - user:', !!user, 'token:', !!token);
+      if (!token) {
+        console.log('⏳ Waiting for token - user:', !!user, 'token:', !!token);
         return;
       }
       
       console.log('✅ Loading subscriptions for authenticated user');
+      console.log('🔍 Token value:', token ? 'Token exists' : 'No token');
+      console.log('🔍 Token length:', token ? token.length : 0);
       
       try {
         const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
@@ -59,11 +61,11 @@ const MySubscriptions: React.FC = () => {
     };
 
     loadUserSubscriptions();
-  }, [user, token]);
+  }, [token]);
 
   useEffect(() => {
     const checkMethodologyDisclaimer = async () => {
-      if (!user || !token) return;
+      if (!token) return;
       
       try {
         const response = await apiCall('/auth/profile', { method: 'GET' }, token);
@@ -81,7 +83,7 @@ const MySubscriptions: React.FC = () => {
     };
 
     checkMethodologyDisclaimer();
-  }, [user, token]);
+  }, [token]);
 
   // Helper function to check if user has active subscription
   const hasActiveSubscription = () => {
@@ -168,7 +170,7 @@ const MySubscriptions: React.FC = () => {
           <div className="no-subscription">
             <h2>No Active Subscription</h2>
             <p>You don't have an active subscription yet. Subscribe to access our premium trading resources.</p>
-            <a href="/services" className="subscribe-button">View Subscription Plans</a>
+            <a href="/learn-to-trade" className="subscribe-button">View Subscription Plans</a>
           </div>
         </div>
       </div>

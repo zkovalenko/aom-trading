@@ -20,9 +20,9 @@ const LoginPage: React.FC = () => {
   const productId = urlParams.get('product');
   const subscriptionType = urlParams.get('type');
   
-  let redirectPath = '/services';
+  let redirectPath = '/learn-to-trade';
   if ((redirect === 'subscribe' || redirect === 'subscribe-direct') && productId && subscriptionType) {
-    redirectPath = `/services?redirect=${redirect}&product=${productId}&type=${subscriptionType}`;
+    redirectPath = `/learn-to-trade?redirect=${redirect}&product=${productId}&type=${subscriptionType}`;
   } else if ((location.state as any)?.from?.pathname) {
     redirectPath = (location.state as any).from.pathname;
   }

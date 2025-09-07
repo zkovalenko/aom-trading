@@ -90,12 +90,12 @@ router.get('/google/callback',
       // Check for subscription redirect parameters from session
       const frontendUrl = process.env.FRONTEND_URL || 
         (process.env.NODE_ENV === 'production' ? 'https://aom-trading.onrender.com' : 'http://localhost:3000');
-      let redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services`;
+      let redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/learn-to-trade`;
       
       if ((req.session as any).subscriptionRedirect) {
         const { redirect, product, type } = (req.session as any).subscriptionRedirect;
         console.log('Google OAuth callback - using stored params:', { redirect, product, type });
-        redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services&subscriptionRedirect=${redirect}&product=${product}&type=${type}`;
+        redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/learn-to-trade&subscriptionRedirect=${redirect}&product=${product}&type=${type}`;
         console.log('Google OAuth callback - redirect URL:', redirectUrl);
         // Clear the session data
         delete (req.session as any).subscriptionRedirect;

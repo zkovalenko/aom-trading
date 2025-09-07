@@ -25,10 +25,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Helper function for authenticated API calls
 export const apiCall = async (url: string, options: RequestInit = {}, token?: string | null): Promise<Response> => {
+  console.log('🌐 apiCall - Token received:', token ? 'Token exists' : 'No token received');
+  console.log('🌐 apiCall - Token type:', typeof token);
+  console.log('🌐 apiCall - Token length:', token ? token.length : 0);
+  
   const headers = new Headers(options.headers);
   
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
+    console.log('🌐 apiCall - Authorization header set');
+  } else {
+    console.log('🌐 apiCall - No Authorization header set (token is falsy)');
   }
   
   if (!headers.has('Content-Type') && options.method !== 'GET') {
@@ -185,11 +192,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateToken(newToken);
         setUser(userData);
         toast.success('Login successful!');
-        
-        // Force page reload to clear any cached session state
-        setTimeout(() => {
-          window.location.href = '/services';
-        }, 1000);
         
         return true;
       }
