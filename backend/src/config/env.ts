@@ -9,51 +9,21 @@ import dotenv from 'dotenv';
  * - Other production: Use process.env directly
  */
 export function loadEnvironmentVariables() {
-  if (process.env.NODE_ENV !== 'production') {
-    // Local development - load from .env file
+  // Try Render's secret file first
+  const renderSecretsPath = '/etc/secrets/.env.production';
+  
+  if (fs.existsSync(renderSecretsPath)) {
+    // On Render - load from /etc/secrets/.env.production
+    console.log('🔐 Loading secrets from /etc/secrets/.env.production');
+    dotenv.config({ path: renderSecretsPath });
+  } else if (process.env.NODE_ENV !== 'production') {
+    // Local development - load from .env.development
     const env = process.env.NODE_ENV || 'development';
     dotenv.config({ path: `.env.${env}` });
     console.log('🔧 Loaded environment from .env.development');
   } else {
-    // Production - try to load from Render's /etc/secrets/ first
-    const secretsPath = '/etc/secrets';
-    
-    if (fs.existsSync(secretsPath)) {
-      console.log('🔐 Loading secrets from /etc/secrets/');
-      
-      // List of environment variables we need
-      const requiredSecrets = [
-        'DATABASE_URL',
-        'JWT_SECRET', 
-        'SESSION_SECRET',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'STRIPE_SECRET_KEY',
-        'NET_LICENCE_API_KEY',
-        'NET_LICENCE_PRODUCT_ID',
-        'FRONTEND_URL',
-        'BACKEND_URL'
-      ];
-      
-      // Load each secret file
-      for (const secretName of requiredSecrets) {
-        const secretFile = path.join(secretsPath, secretName);
-        
-        try {
-          if (fs.existsSync(secretFile)) {
-            const secretValue = fs.readFileSync(secretFile, 'utf8').trim();
-            process.env[secretName] = secretValue;
-            console.log(`✅ Loaded ${secretName} from /etc/secrets/`);
-          } else if (!process.env[secretName]) {
-            console.log(`⚠️  ${secretName} not found in /etc/secrets/ or environment`);
-          }
-        } catch (error) {
-          console.error(`❌ Failed to read ${secretName} from /etc/secrets/:`, error);
-        }
-      }
-    } else {
-      console.log('🌐 Using environment variables directly (no /etc/secrets/ found)');
-    }
+    // Other production environments - use process.env directly
+    console.log('🌐 Using environment variables directly');
   }
   
   // Debug loaded variables (without showing actual values)
