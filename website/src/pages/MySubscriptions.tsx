@@ -36,7 +36,12 @@ const MySubscriptions: React.FC = () => {
 
   useEffect(() => {
     const loadUserSubscriptions = async () => {
-      if (!user) return;
+      if (!user || !token) {
+        console.log('⏳ Waiting for auth state - user:', !!user, 'token:', !!token);
+        return;
+      }
+      
+      console.log('✅ Loading subscriptions for authenticated user');
       
       try {
         const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
@@ -54,7 +59,7 @@ const MySubscriptions: React.FC = () => {
     };
 
     loadUserSubscriptions();
-  }, [user]);
+  }, [user, token]);
 
   useEffect(() => {
     const checkMethodologyDisclaimer = async () => {
