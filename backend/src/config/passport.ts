@@ -1,18 +1,13 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy, StrategyOptions, Profile } from 'passport-google-oauth20';
 import pool from './database';
-import dotenv from 'dotenv';
-
-// Load environment variables
-// In production, Render provides env vars directly
-// In development, load from .env.development
-if (process.env.NODE_ENV !== 'production') {
-  const env = process.env.NODE_ENV || 'development';
-  dotenv.config({ path: `.env.${env}` });
-}
+import { loadEnvironmentVariables } from './env';
 
 // Initialize passport configuration (called at runtime, not build time)
 export function initializePassport() {
+  // Load environment variables
+  loadEnvironmentVariables();
+  
   // Debug environment variables
   console.log('🔍 Passport Config Debug:');
   console.log('NODE_ENV:', process.env.NODE_ENV);

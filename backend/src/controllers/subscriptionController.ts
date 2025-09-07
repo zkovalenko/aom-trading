@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import stripe from '../config/stripe';
+import { getStripe } from '../config/stripe';
 import pool from '../config/database';
 import netLicensingService from '../services/netLicensingService';
 
@@ -72,6 +72,7 @@ export const createSubscription = async (req: Request, res: Response): Promise<v
     }
 
     // Create Stripe payment intent for subscription
+    const stripe = getStripe();
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: 'usd',
@@ -128,6 +129,7 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     }
 
     // Retrieve payment intent from Stripe
+    const stripe = getStripe();
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
     if (paymentIntent.status !== 'succeeded') {

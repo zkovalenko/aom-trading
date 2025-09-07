@@ -1,10 +1,4 @@
-import dotenv from 'dotenv';
-
-// Load environment variables
-if (process.env.NODE_ENV !== 'production') {
-  const env = process.env.NODE_ENV || 'development';
-  dotenv.config({ path: `.env.${env}` });
-}
+import { loadEnvironmentVariables } from '../config/env';
 
 interface NetLicensingLicenseeResponse {
   licenseeNumber: string;
@@ -23,6 +17,9 @@ export class NetLicensingService {
   private baseUrl = 'https://go.netlicensing.io/core/v2/rest';
 
   constructor() {
+    // Load environment variables
+    loadEnvironmentVariables();
+    
     this.apiKey = process.env.NET_LICENCE_API_KEY!;
     this.productId = process.env.NET_LICENCE_PRODUCT_ID!;
     

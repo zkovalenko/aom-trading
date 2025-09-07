@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import stripe from '../config/stripe';
+import { getStripe } from '../config/stripe';
 import pool from '../config/database';
 
 const PRODUCT_PRICE = 50000; // $500 in cents
@@ -27,6 +27,7 @@ export const createPaymentIntent = async (req: Request, res: Response): Promise<
     const currentUser = req.user as any;
 
     // Create payment intent
+    const stripe = getStripe();
     const paymentIntent = await stripe.paymentIntents.create({
       amount: PRODUCT_PRICE,
       currency: 'usd',
@@ -78,6 +79,7 @@ export const confirmPayment = async (req: Request, res: Response): Promise<void>
     }
 
     // Retrieve payment intent from Stripe
+    const stripe = getStripe();
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
     console.log("~~~~paymentIntent retrieved", paymentIntent);
     
@@ -178,6 +180,7 @@ export const handleStripeWebhook = async (req: Request, res: Response): Promise<
   let event;
 
   try {
+    const stripe = getStripe();
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (err: any) {
     console.error('Webhook signature verification failed:', err.message);

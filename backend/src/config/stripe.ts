@@ -1,21 +1,29 @@
 import Stripe from 'stripe';
-import dotenv from 'dotenv';
+import { loadEnvironmentVariables } from './env';
 
-// Load environment variables
-// In production, Render provides env vars directly
-// In development, load from .env.development
-if (process.env.NODE_ENV !== 'production') {
-  const env = process.env.NODE_ENV || 'development';
-  dotenv.config({ path: `.env.${env}` });
+let stripeInstance: Stripe | null = null;
+
+/**
+ * Get Stripe instance - lazy loaded to avoid build-time environment variable issues
+ */
+export function getStripe(): Stripe {
+  if (!stripeInstance) {
+    // Load environment variables if not already loaded
+    loadEnvironmentVariables();
+    
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is required but not found in environment variables');
+    }
+    
+    console.log('🔐 Initializing Stripe with secret key...');
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2023-08-16',
+      typescript: true,
+    });
+  }
+  
+  return stripeInstance;
 }
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is required');
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2023-08-16',
-  typescript: true,
-});
-
-export default stripe;
+// Export default for backward compatibility, but this will be lazy-loaded
+export default { get stripe() { return getStripe(); } };
