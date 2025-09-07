@@ -9,19 +9,15 @@ import path from 'path';
 
 import pool from './config/database';
 import passport, { initializePassport } from './config/passport';
+import { loadEnvironmentVariables } from './config/env';
 
 // Import routes
 import authRoutes from './routes/auth';
 import paymentRoutes from './routes/payments';
 import subscriptionRoutes from './routes/subscriptions';
 
-// Load environment variables
-// In production, Render provides env vars directly
-// In development, load from .env.development
-if (process.env.NODE_ENV !== 'production') {
-  const env = process.env.NODE_ENV || 'development';
-  dotenv.config({ path: `.env.${env}` });
-}
+// Load environment variables using our centralized system
+loadEnvironmentVariables();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -47,7 +43,7 @@ app.use(session({
     pool: pool,
     tableName: 'session'
   }),
-  secret: process.env.SESSION_SECRET!,
+  secret: process.env.JWT_SECRET!,
   resave: false,
   saveUninitialized: false,
   cookie: {
