@@ -40,28 +40,51 @@ router.get('/google',
 router.get('/google/callback', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
-    // Generate JWT token for the authenticated user
-    const user = req.user as any;
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    );
-    
-    // Check for subscription redirect parameters from session
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    let redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services`;
-    
-    if ((req.session as any).subscriptionRedirect) {
-      const { redirect, product, type } = (req.session as any).subscriptionRedirect;
-      console.log('Google OAuth callback - using stored params:', { redirect, product, type });
-      redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services&subscriptionRedirect=${redirect}&product=${product}&type=${type}`;
-      console.log('Google OAuth callback - redirect URL:', redirectUrl);
-      // Clear the session data
-      delete (req.session as any).subscriptionRedirect;
+    try {
+      console.log('🔄 Google OAuth callback started');
+      
+      // Check if user exists
+      if (!req.user) {
+        console.error('❌ No user found in callback');
+        return res.status(500).json({ success: false, message: 'Authentication failed - no user' });
+      }
+      
+      const user = req.user as any;
+      console.log('✅ User authenticated:', { id: user.id, email: user.email });
+      
+      // Check JWT_SECRET
+      if (!process.env.JWT_SECRET) {
+        console.error('❌ JWT_SECRET not found in environment');
+        return res.status(500).json({ success: false, message: 'Server configuration error' });
+      }
+      
+      // Generate JWT token for the authenticated user
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+      console.log('🎫 JWT token generated successfully');
+      
+      // Check for subscription redirect parameters from session
+      const frontendUrl = process.env.FRONTEND_URL || 'https://aom-trading.onrender.com';
+      let redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services`;
+      
+      if ((req.session as any).subscriptionRedirect) {
+        const { redirect, product, type } = (req.session as any).subscriptionRedirect;
+        console.log('Google OAuth callback - using stored params:', { redirect, product, type });
+        redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/services&subscriptionRedirect=${redirect}&product=${product}&type=${type}`;
+        console.log('Google OAuth callback - redirect URL:', redirectUrl);
+        // Clear the session data
+        delete (req.session as any).subscriptionRedirect;
+      }
+      
+      console.log('🔗 Redirecting to:', redirectUrl);
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error('❌ Google OAuth callback error:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
-    
-    res.redirect(redirectUrl);
   }
 );
 
