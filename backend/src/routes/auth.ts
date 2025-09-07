@@ -38,8 +38,24 @@ router.get('/google',
 );
 
 router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res, next) => {
+    console.log('🔍 Google OAuth callback received:', req.url);
+    next();
+  },
+  (req, res, next) => {
+    passport.authenticate('google', { 
+      failureRedirect: '/login',
+      failureFlash: false 
+    })(req, res, (err) => {
+      if (err) {
+        console.error('❌ Passport authentication error:', err);
+        return res.status(500).json({ success: false, message: 'OAuth authentication failed', error: err.message });
+      }
+      next();
+    });
+  },
   (req, res) => {
+    console.log('🔄 Passport authentication passed, entering callback handler');
     try {
       console.log('🔄 Google OAuth callback started');
       
