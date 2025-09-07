@@ -3,6 +3,7 @@ import passport from '../config/passport';
 import jwt from 'jsonwebtoken';
 import { register, login, getProfile, updateMethodologyDisclaimer } from '../controllers/authController';
 import { authenticateToken } from '../middleware/auth';
+import { loadEnvironmentVariables } from '../config/env';
 
 const router = express.Router();
 
@@ -67,6 +68,9 @@ router.get('/google/callback',
       
       const user = req.user as any;
       console.log('✅ User authenticated:', { id: user.id, email: user.email });
+      
+      // Ensure environment variables are loaded
+      loadEnvironmentVariables();
       
       // Check JWT_SECRET
       if (!process.env.JWT_SECRET) {

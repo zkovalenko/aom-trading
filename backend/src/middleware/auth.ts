@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import pool from '../config/database';
+import { loadEnvironmentVariables } from '../config/env';
 
 interface JWTPayload {
   userId: string;
@@ -15,14 +16,25 @@ export const authenticateToken = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log('🔐 authenticateToken called for:', req.method, req.path);
+    
+    // Ensure environment variables are loaded
+    loadEnvironmentVariables();
+    
     // Check for JWT token in Authorization header FIRST (prioritize JWT over session)
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    console.log('🔍 Auth header exists:', !!authHeader);
+    console.log('🔍 Token exists:', !!token);
+    console.log('🔍 JWT_SECRET exists:', !!process.env.JWT_SECRET);
 
     if (token && process.env.JWT_SECRET) {
       try {
+        console.log('🔍 Verifying JWT token...');
         // Verify JWT token
         const decoded = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
+        console.log('✅ JWT token decoded:', { userId: decoded.userId, email: decoded.email });
 
         // Get user from database
         const userResult = await pool.query(
@@ -31,23 +43,31 @@ export const authenticateToken = async (
         );
 
         if (userResult.rows.length > 0) {
+          console.log('✅ User found in database:', userResult.rows[0].email);
           // JWT token is valid, use JWT user data (override any session data)
           req.user = userResult.rows[0];
           return next();
+        } else {
+          console.log('❌ User not found in database for ID:', decoded.userId);
         }
       } catch (jwtError) {
         // JWT token is invalid, fall through to check session or return error
-        console.log('JWT verification failed, checking session authentication');
+        console.log('❌ JWT verification failed:', jwtError);
+        console.log('🔄 Checking session authentication...');
       }
     }
 
     // Fallback: Check if user is authenticated via session (Google OAuth)
+    console.log('🔍 Session user exists:', !!req.user);
     if (req.user) {
+      console.log('✅ User authenticated via session');
       return next();
     }
 
     // No valid authentication found
+    console.log('❌ No valid authentication found');
     if (!token) {
+      console.log('❌ No token provided');
       res.status(401).json({
         success: false,
         message: 'Access token required'
@@ -97,9 +117,16 @@ export const optionalAuth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log('🔐 optionalAuth called for:', req.method, req.path);
+    
+    // Ensure environment variables are loaded
+    loadEnvironmentVariables();
+    
     // Check for JWT token in Authorization header FIRST (prioritize JWT over session)
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    console.log('🔍 Optional auth - Token exists:', !!token);
 
     if (token && process.env.JWT_SECRET) {
       try {

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getStripe } from '../config/stripe';
 import pool from '../config/database';
+import { loadEnvironmentVariables } from '../config/env';
 
 const PRODUCT_PRICE = 50000; // $500 in cents
 
@@ -168,6 +169,9 @@ export const getPaymentHistory = async (req: Request, res: Response): Promise<vo
 
 // Stripe webhook handler
 export const handleStripeWebhook = async (req: Request, res: Response): Promise<void> => {
+  // Ensure environment variables are loaded
+  loadEnvironmentVariables();
+  
   const sig = req.headers['stripe-signature'] as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
