@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 import pool from './config/database';
-import passport from './config/passport';
+import passport, { initializePassport } from './config/passport';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -61,6 +61,9 @@ app.use(session({
 app.use('/api/payments/stripe-webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Initialize passport configuration (at runtime when env vars are available)
+initializePassport();
 
 // Passport middleware
 app.use(passport.initialize());
