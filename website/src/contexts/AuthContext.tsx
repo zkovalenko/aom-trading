@@ -89,8 +89,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'token') {
         const newToken = e.newValue;
-        console.log("~~handleStorageChange: ", newToken)
-        setToken(newToken);
+        console.log("~~handleStorageChange: ", newToken, "current token:", token)
+        
+        // Only update if the new value is different from current token
+        // and don't clear the token unless it was explicitly set to null/removed
+        if (newToken !== token) {
+          // If newToken is null but we have a current token, 
+          // verify this wasn't a spurious event by checking localStorage directly
+          if (!newToken && token) {
+            const actualStoredToken = localStorage.getItem('token');
+            console.log("~~verifying token removal, localStorage has:", actualStoredToken);
+            if (actualStoredToken === null) {
+              // Token was actually removed, clear it
+              setToken(null);
+            }
+            // If localStorage still has a token, ignore this event
+          } else {
+            // Normal case: set the new token
+            setToken(newToken);
+          }
+        }
       }
     };
 
@@ -98,7 +116,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []); // No dependencies needed
+  }, [token]); // Include token as dependency to access current value
 
 
   // Load user profile on app start
