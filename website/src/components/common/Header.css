@@ -152,7 +152,6 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 99;
-  display: none;
 }
 
 @media (max-width: 768px) {
@@ -185,9 +184,6 @@
     right: 0;
   }
   
-  .nav-menu-open ~ .menu-overlay {
-    display: block;
-  }
   
   .nav-link {
     font-size: 1.1rem;
@@ -240,6 +236,10 @@
   .nav-menu {
     width: 100%;
     right: -100%;
+  }
+  
+  .nav-menu-open {
+    right: 0;
   }
   
   .logo-text .aom,

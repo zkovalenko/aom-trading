@@ -257,8 +257,14 @@
     flex-shrink: 0;
   }
   
-  .lesson-grid {
-    grid-template-columns: 1fr;
+  .lesson-grid,
+  .quiz-grid {
+    flex-direction: column;
+  }
+  
+  .lesson-card,
+  .quiz-card {
+    width: 100%;
   }
   
   .progress-header {
