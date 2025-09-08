@@ -54,9 +54,25 @@ export const apiCall = async (url: string, options: RequestInit = {}, token?: st
     credentials: 'include' // Include cookies for session-based auth
   });
 
+  console.log('🌐 API response status:', response.status, 'for:', apiUrl);
+
   // Handle 401 errors globally
   if (response.status === 401) {
-    console.log('401 Unauthorized - clearing auth state');
+    console.log('❌ 401 Unauthorized - clearing auth state for URL:', apiUrl);
+    console.log('❌ Response details:', {
+      status: response.status,
+      statusText: response.statusText,
+      headers: Object.fromEntries(response.headers.entries())
+    });
+    
+    // Try to get response body for debugging
+    try {
+      const errorBody = await response.clone().text();
+      console.log('❌ 401 Response body:', errorBody);
+    } catch (e) {
+      console.log('❌ Could not read 401 response body');
+    }
+    
     localStorage.clear(); // Clear all localStorage data
     toast.error('Session expired. Please login again.');
     window.location.href = '/login';
