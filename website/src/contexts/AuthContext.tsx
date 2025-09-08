@@ -84,32 +84,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  // Listen for storage changes and check token periodically
+  // Listen for storage changes from other tabs/windows
   useEffect(() => {
-    const handleStorageChange = () => {
-      const newToken = localStorage.getItem('token');
-      console.log("~~handleStorageChange: ", newToken)
-      if (newToken && newToken !== token ) {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token') {
+        const newToken = e.newValue;
+        console.log("~~handleStorageChange: ", newToken)
         setToken(newToken);
       }
     };
 
-    // Check for token changes periodically
-    const interval = setInterval(() => {
-      const currentToken = localStorage.getItem('token');
-      if (currentToken !== token) {
-      console.log("~~interval: ", currentToken)
-
-        setToken(currentToken);
-      }
-    }, 1000);
-
     window.addEventListener('storage', handleStorageChange);
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
     };
-  }, [token]);
+  }, []); // No dependencies needed
 
 
   // Load user profile on app start
