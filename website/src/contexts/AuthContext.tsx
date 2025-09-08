@@ -33,7 +33,8 @@ export const apiCall = async (url: string, options: RequestInit = {}, token?: st
   
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
-    console.log('🌐 apiCall - Authorization header set');
+    localStorage.setItem('token', token);
+    console.log('🌐 apiCall - Authorization header set, setting in localstorage');
   } else {
     console.log('🌐 apiCall - No Authorization header set (token is falsy)');
   }
@@ -154,7 +155,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             console.log("~~verifying token removal, localStorage has:", actualStoredToken);
             if (actualStoredToken === null) {
               // Token was actually removed, clear it
-              setToken(null);
+              //setToken(null);
             }
             // If localStorage still has a token, ignore this event
           } else {
