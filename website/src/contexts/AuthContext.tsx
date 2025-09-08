@@ -89,7 +89,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const handleStorageChange = () => {
       const newToken = localStorage.getItem('token');
       console.log("~~handleStorageChange: ", newToken)
-      if (newToken !== token) {
+      if (newToken && newToken !== token ) {
         setToken(newToken);
       }
     };
