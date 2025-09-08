@@ -90,8 +90,45 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
   const [loading, setLoading] = useState(true);
 
+  // Debug localStorage operations
+  React.useEffect(() => {
+    const originalSetItem = localStorage.setItem;
+    const originalRemoveItem = localStorage.removeItem;
+    const originalClear = localStorage.clear;
+
+    localStorage.setItem = function(key, value) {
+      if (key === 'token') {
+        console.log('🔧 localStorage.setItem(token) called with:', value ? 'new token' : 'null/empty');
+        console.trace();
+      }
+      return originalSetItem.call(this, key, value);
+    };
+
+    localStorage.removeItem = function(key) {
+      if (key === 'token') {
+        console.log('🗑️ localStorage.removeItem(token) called');
+        console.trace();
+      }
+      return originalRemoveItem.call(this, key);
+    };
+
+    localStorage.clear = function() {
+      console.log('🧹 localStorage.clear() called');
+      console.trace();
+      return originalClear.call(this);
+    };
+
+    return () => {
+      localStorage.setItem = originalSetItem;
+      localStorage.removeItem = originalRemoveItem;
+      localStorage.clear = originalClear;
+    };
+  }, []);
+
   const updateToken = (newToken: string | null) => {
-    console.log('Updating token:', newToken ? 'New token set' : 'Token cleared');
+    console.log('🔄 updateToken called:', newToken ? 'New token set' : 'Token cleared');
+    console.log('🔍 updateToken stack trace:');
+    console.trace();
     setToken(newToken);
     if (newToken) {
       localStorage.setItem('token', newToken);
