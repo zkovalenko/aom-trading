@@ -44,16 +44,7 @@ export const apiCall = async (url: string, options: RequestInit = {}, token?: st
 
   // Use correct API URL based on environment
   const isDevelopment = window.location.hostname === 'localhost';
-  let apiUrl;
-  
-  if (isDevelopment) {
-    // In development, use relative URLs - React dev server will proxy to backend
-    apiUrl = url.startsWith('/api') ? url : `/api${url}`;
-  } else {
-    // In production, frontend and backend are served from same domain
-    // Use relative URLs (same as development)
-    apiUrl = url.startsWith('/api') ? url : `/api${url}`;
-  }
+  let apiUrl = url.startsWith('/api') ? url : `/api${url}`;
   
   console.log('🌐 API call to:', apiUrl);
   
@@ -78,7 +69,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(() => {
     const storedToken = localStorage.getItem('token');
-    console.log('Initial token from localStorage:', storedToken ? 'Token exists' : 'No token');
+    console.log('Token from localStorage:', storedToken ? 'Token exists' : 'No token');
     return storedToken;
   });
   const [loading, setLoading] = useState(true);
@@ -97,6 +88,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const handleStorageChange = () => {
       const newToken = localStorage.getItem('token');
+      console.log("~~handleStorageChange: ", newToken)
       if (newToken !== token) {
         setToken(newToken);
       }
@@ -106,6 +98,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const interval = setInterval(() => {
       const currentToken = localStorage.getItem('token');
       if (currentToken !== token) {
+      console.log("~~interval: ", currentToken)
+
         setToken(currentToken);
       }
     }, 1000);
