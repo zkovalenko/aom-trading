@@ -70,8 +70,8 @@ const Header: React.FC = () => {
             </div>
           ) : (
             <div className="auth-links">
-              <Link to="/login" className="nav-link" onClick={closeMenu}>Login</Link>
-              <Link to="/signup" className="nav-link signup-btn" onClick={closeMenu}>Sign Up</Link>
+              <Link to="/login" className="nav-link signup-btn" onClick={closeMenu}>Login</Link>
+              {/* <Link to="/signup" className="nav-link signup-btn" onClick={closeMenu}>Sign Up</Link> */}
             </div>
           )}
         </nav>

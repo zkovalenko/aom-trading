@@ -18,7 +18,7 @@
 .logo {
   min-width: 150px;
   min-height: 50px;
-  background: no-repeat url("../../assets/logo_header.png");
+  background: no-repeat url("../../assets/logo_header_pink.svg");
   background-size: contain;
   display: flex;
   align-items: center;
@@ -54,7 +54,7 @@
 
 .logout-btn {
   background-color: var(--bg-color-light-green);
-  color: var(--color-gray);
+  color: white;
   border: none;
   padding: 0.5rem 2.5rem;
   border-radius: 4px;
@@ -65,20 +65,19 @@
 }
 
 .logout-btn:hover {
-  background-color: var(--bg-color-purple-red);
-  color: white;
+  background-color: var(--bg-color-lighter-green);
 }
 
 .signup-btn {
-  background-color: #4CAF50;
+  font-weight: 500;
+  background-color: var(--bg-color-light-green);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
 .signup-btn:hover {
-  background-color: #2E7D32;
-  color: white;
+  background-color: var(--bg-color-lighter-green);
 }
 
 /* Mobile Menu Button */

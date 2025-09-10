@@ -8,8 +8,9 @@ const Homepage: React.FC = () => {
       <section className="hero">
         <div className="hero-overlay">
           <div className="hero-content">
-            <h1>Learn Professionally Developed Trading Strategies</h1>
-            <Link to="/learn-to-trade" className="cta-button">Start Learning</Link>
+            <p className="subtext"><i>In Just a few weeks</i></p>
+            <h1>Become a Professional Trader</h1>
+            <Link to="/learn-to-trade" className="cta-button">Get Started</Link>
           </div>
         </div>
       </section>
@@ -25,7 +26,6 @@ const Homepage: React.FC = () => {
           <div className="services-grid">
 
             <div className="service-card">
-              <div className="service-icon">🎓</div>
               <h3>Services</h3>
               <p>
                 <strong>Self-Study Program:</strong> Learn the AOMTrading methodology with our comprehensive training materials.
@@ -40,7 +40,6 @@ const Homepage: React.FC = () => {
             </div>
 
             <div className="service-card">
-              <div className="service-icon">👨‍🏫</div>
               <h3>Tutoring</h3>
               <p>
                 We provide individual or group Training to supplement your learning experience.

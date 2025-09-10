@@ -80,15 +80,6 @@
   margin: 0;
 }
 
-.services-intro {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  max-width: 800px;
-  margin: 0 auto 10rem;
-  line-height: 1.6;
-}
-
 .billing-toggle {
   display: flex;
   align-items: center;
@@ -450,11 +441,6 @@ input:checked + .slider:before {
     font-size: 1.3rem;
   }
   
-  .services-intro {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
   .billing-toggle {
     margin: 0 1rem 3rem;
     padding: 0.5rem 0 1.5rem 0;
@@ -500,10 +486,7 @@ input:checked + .slider:before {
     align-items: center;
   }
   
-  .cta-button {
-    width: 100%;
-    max-width: 300px;
-  }
+
 
   .protected-content-section {
     padding: 3rem 2rem;

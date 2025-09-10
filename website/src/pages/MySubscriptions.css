@@ -139,20 +139,6 @@
 }
 
 /* Protected Content Section */
-.protected-content-section {
-  background: linear-gradient(135deg, #f0f8ff, #ebeafd);
-  padding: 4rem 3rem;
-  border-radius: 20px;
-  margin: 4rem 0;
-  text-align: center;
-  border: 1px solid #4441931f;
-}
-
-.protected-content-section h2 {
-  font-size: 2.5rem;
-  color: #444193;
-  margin-bottom: 1rem;
-}
 
 .welcome-message {
   font-size: 1.2rem;
@@ -256,15 +242,6 @@
 
   .subscription-detail-item {
     padding: 0.8rem;
-  }
-
-  .protected-content-section {
-    padding: 3rem 2rem;
-    margin: 3rem 0;
-  }
-
-  .protected-content-section h2 {
-    font-size: 2rem;
   }
 
   .welcome-message {

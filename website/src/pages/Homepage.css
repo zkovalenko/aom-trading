@@ -25,21 +25,29 @@
   justify-content: center;
 }
 
+.hero-content {
+  justify-content: left;
+  text-align: left;
+}
+
 .hero-content h1 {
   font-size: 3.5rem;
   font-weight: bold;
-  margin-bottom: 5rem;
   max-width: 1000px;
+  text-transform: uppercase;
+  margin: 0 auto 3rem;
 }
 
 .hero-content p {
-  margin: 0 auto 40px;
-  font-size: 1.5rem;
+  font-size: 2rem;
   max-width: 600px;
+  text-transform: uppercase;
+  color: var(--color-purple-red);
 }
 
 /* Container */
 .container {
+  background-color: var(--bg-light-gradient-blue);
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
@@ -54,18 +62,20 @@
 .services-section h2 {
   text-align: center;
   font-size: 2.5rem;
+  font-weight: 400;
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--color-purple-red);
+  font-weight: bold;
+  font-style: italic;
 }
 
 .services-intro {
   text-align: center;
   font-size: 1.2rem;
-  margin-bottom: 3rem;
   color: #666;
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 4rem;
+  line-height: 1.6;
 }
 
 .services-grid {
@@ -84,11 +94,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-.service-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
 }
 
 .service-card h3 {
@@ -326,7 +331,12 @@
   .hero-content p {
     font-size: 1.2rem;
   }
-  
+
+  .services-intro {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
   .services-grid {
     grid-template-columns: 1fr;
   }
