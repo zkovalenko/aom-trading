@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Homepage.css';
 
 const Homepage: React.FC = () => {
   return (
@@ -10,7 +9,6 @@ const Homepage: React.FC = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1>Learn Professionally Developed Trading Strategies</h1>
-            <p>Master the art of options trading with our comprehensive training and tools</p>
             <Link to="/learn-to-trade" className="cta-button">Start Learning</Link>
           </div>
         </div>

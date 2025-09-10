@@ -8,7 +8,6 @@ import {
 } from '@stripe/react-stripe-js';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
-import './PaymentForm.css';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key');
 

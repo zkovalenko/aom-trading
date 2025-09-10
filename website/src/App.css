@@ -1,4 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Import common component styles */
+@import './components/common/Header.css';
+@import './components/common/Footer.css';
+@import './components/PaymentForm.css';
+@import './components/SubscriptionForm.css';
+
+/* Import page styles */
+@import './pages/Homepage.css';
+@import './pages/AuthPages.css';
+@import './pages/ServicesPage.css';
+@import './pages/MySubscriptions.css';
+@import './pages/StudyCourse.css';
+@import './pages/Software.css';
+@import './pages/services/PrivateTutoringPage.css';
+
+/* Brand Colors - CSS Variables */
+:root {
+    --color-light-green: #92E3A9;
+    --color-purple-red: #842A7B;
+    --color-light-purple: #535184;
+    --color-purple: #444193;
+    --color-teal: #00364C;
+    --color-gray: #424242;
+    --bg-color-light-green: #92E3A9;
+    --bg-color-purple-red: #842A7B;
+    --bg-color-light-purple: #535184;
+    --bg-color-teal: #00364C;
+    --bg-color-gray: #424242;
+}
 
 * {
   margin: 0;
@@ -13,42 +43,45 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  color: var(--color-gray);
+  background: #fff;
 }
 
+/* Color utility classes - using CSS variables */
 .color-light-green {
-  color: #92E3A9;
+  color: var(--color-light-green);
 }
 
 .color-light-purple {
-  color: 535184;
+  color: var(--color-light-purple);
 }
 
 .color-purple {
-  color: 444193;/* light purple #535184;*/
+  color: var(--color-purple);
 }
 
 .color-teal {
-  color: #00364C;
+  color: var(--color-teal);
 }
 
 .color-gray {
-  color: #424242;
+  color: var(--color-gray);
 }
 
 .bg-color-light-green {
-  color: #92E3A9;
+  background-color: var(--bg-color-light-green);
 }
 
 .bg-color-light-purple {
-  color: #535184;
+  background-color: var(--bg-color-light-purple);
 }
 
 .bg-color-teal {
-  color: #00364C;
+  background-color: var(--bg-color-teal);
 }
 
 .bg-color-gray {
-  color: #424242;
+  background-color: var(--bg-color-gray);
 }
 
 
@@ -79,17 +112,52 @@ body {
   padding: 0 2rem;
 }
 
-h1, h2, h3, h4, h5, h6 {
+/* Ensure Inter font for all elements */
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
+}
+
+h1 {
   font-weight: 600;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
+}
+
+h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
 }
 
 a {
   transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
 }
 
 button {
   cursor: pointer;
   transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
+}
+
+input, textarea, select {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
+}
+
+p, span, div, li, td, th {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
 }
 
 /* Utility Classes */
@@ -104,3 +172,58 @@ button {
 .mt-1 { margin-top: 1rem; }
 .mt-2 { margin-top: 2rem; }
 .mt-3 { margin-top: 3rem; }
+
+
+/* Common styles throughout the app */
+/* ------------- Buttons ------------------*/
+.cta-button {
+  display: inline-block;
+  background-color: var(--color-light-green);
+  color: var(--color-gray);
+  padding: 1.2rem 4rem;
+  text-decoration: none;
+  border-radius: 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--bg-color-purple-red);
+  color: white;
+}
+
+.cta-button.primary {
+  background: #007bff;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.cta-button.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+}
+
+.cta-button.secondary {
+  background: white;
+  color: #333;
+  border: 2px solid #007bff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button.secondary:hover {
+  background: #007bff;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+}
+
+
+
+/*--------------- Mobile styles ------------------------*/
+@media (max-width: 768px) {
+  .cta-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth, apiCall } from '../../contexts/AuthContext';
-import './Header.css';
 
 const Header: React.FC = () => {
   const { user, logout, token } = useAuth();
-  console.log("~~user",  user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const toggleMenu = () => {
@@ -47,23 +45,7 @@ const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="logo">
-          <div className="logo-squares">
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-          </div>
-          <div className="logo-text">
-            <span className="aom">AOM</span>
-            <span className="trading">TRADING</span>
-          </div>
-        </Link>
+        <Link to="/" className="logo"></Link>
         
         <button className="mobile-menu-btn" onClick={toggleMenu}>
           <span></span>
