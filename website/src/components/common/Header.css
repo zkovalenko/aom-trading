@@ -1,9 +1,11 @@
 .header {
-  background-color: var(--bg-color-teal);
+  background-color: white;
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow:  0 4px 12px rgba(0, 0, 0, 0.12);
+  color: var(--color-gray);
 }
 
 .header-container {
@@ -34,7 +36,7 @@
 }
 
 .nav-link {
-  color: white;
+  color: var(--color-gray);
   text-decoration: none;
   font-size: 1rem;
   font-weight: 400;
@@ -42,7 +44,7 @@
 }
 
 .nav-link:hover {
-  color: #4CAF50;
+  filter: brightness(1.05);
 }
 
 .user-menu,
@@ -53,7 +55,7 @@
 }
 
 .logout-btn {
-  background-color: var(--bg-color-light-green);
+  background-color: var(--bg-color-blue);
   color: white;
   border: none;
   padding: 0.5rem 2.5rem;
@@ -65,19 +67,20 @@
 }
 
 .logout-btn:hover {
-  background-color: var(--bg-color-lighter-green);
+  background-color: var(--bg-color-blue-purple);
 }
 
 .signup-btn {
   font-weight: 500;
-  background-color: var(--bg-color-light-green);
-  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #341ade, #1C0e78);
+  padding: 0.5rem 2.2rem;
   border-radius: 8px;
   transition: background-color 0.3s ease;
+  color: white;
 }
 
 .signup-btn:hover {
-  background-color: var(--bg-color-lighter-green);
+  background-color: var(--bg-color-blue-purple);
 }
 
 /* Mobile Menu Button */
@@ -150,6 +153,7 @@
   
   .nav-link:last-child {
     border-bottom: none;
+    color: white;
   }
   
   .user-menu,

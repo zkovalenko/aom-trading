@@ -8,7 +8,7 @@ const Homepage: React.FC = () => {
       <section className="hero">
         <div className="hero-overlay">
           <div className="hero-content">
-            <p className="subtext"><i>In Just a few weeks</i></p>
+            <p className="h3-subtext"><i>In Just a few weeks</i></p>
             <h1>Become a Professional Trader</h1>
             <Link to="/learn-to-trade" className="cta-button">Get Started</Link>
           </div>
@@ -18,36 +18,41 @@ const Homepage: React.FC = () => {
       {/* Services Section */}
       <section className="services-section">
         <div className="container">
-          <h2>OUR SERVICES</h2>
+          <h2>WHY AOM TRADING?</h2>
           <p className="services-intro">
-            Trading is a skill. At AOMTrading, we can build from you have no knowns. We focus on building skill development using our proprietary methodology.
+          Trading is a skill. At AOMTrading, we take you from beginner to skilled trader with our proprietary approach and software.
           </p>
           
           <div className="services-grid">
+            <div className="service-card">
+              <h3>Proven Methodology</h3>
+              <p>
+                Guided self-study course designed for your level.
+              </p>
+              <p>
+                AOMTrading methodology has been used by thousands succful customers.
+              </p>
+              
+            </div>
 
             <div className="service-card">
-              <h3>Services</h3>
+              <h3>Proprietary Software</h3>
               <p>
-                <strong>Self-Study Program:</strong> Learn the AOMTrading methodology with our comprehensive training materials.
+                Learn the AOMTrading methodology with our comprehensive training materials.
               </p>
               <p>
                 Access the AOMTrading methodology.
               </p>
-              <p>
-                <strong>Trading:</strong> Once you have Trading self class Trading.
-              </p>
-              <Link to="/learn-to-trade" className="service-button">LEARN MORE</Link>
             </div>
 
             <div className="service-card">
-              <h3>Tutoring</h3>
+              <h3>Live Trading Rooms</h3>
               <p>
                 We provide individual or group Training to supplement your learning experience.
               </p>
               <p>
                 You will gain knowledge and understanding about fundamentals of trading.
               </p>
-              <Link to="/tutoring" className="service-button">LEARN MORE</Link>
             </div>
           </div>
         </div>
@@ -57,20 +62,21 @@ const Homepage: React.FC = () => {
       <section className="consistent-trader">
         <div className="container">
           <div className="consistent-content">
+            <div className="consistent-image-back">
+              <div className="consistent-image">&nbsp;
+              </div>
+            </div>
             <div className="consistent-text">
-              <h2>Become a Consistent Trader</h2>
-              <h3>Your AOMTrading Ways</h3>
+              <h2>LEARN FROM THE PROS</h2>
+              <h3 className='h3-subtext'><i>Your AOMTrading Ways</i></h3>
               <p>
-                Our methodology helps reduce emotional reaction and provides systematic approach to trading using proven strategies.
+                Our methodology reduced emotional reaction and provides systematic approach to trading using proven strategies.
               </p>
               <p>
                 You will have the flexibility to select the time-frames and set your alert assistance to progress quickly. There is automation in the learning process to assist on chart reading to find winning fast and also to grow.
               </p>
-              <Link to="/learn-to-trade" className="cta-button">Apply To Trade</Link>
-            </div>
-            <div className="consistent-image">
-              <div className="image-placeholder">
-                <span>📊</span>
+              <div className="cta-container">
+                <Link to="/learn-to-trade" className="cta-button">Start Now</Link>
               </div>
             </div>
           </div>
@@ -81,26 +87,18 @@ const Homepage: React.FC = () => {
       <section className="founder-section">
         <div className="container">
           <h2>Meet the Founder of AOMTrading</h2>
-          <h3>Alex Minkovich</h3>
           
           <div className="founder-content">
             <div className="founder-text">
-              <p>
-                He served as Vice Chairman, and was the CFO and founder of ZenithSoft LLC. He has more than 20 years of financial systems, business focus on large scale systems and solutions.
-              </p>
-              <p>
-                I worked in tech-teams for more than 15 years before my first finance job. During the technology leadership and business experience as a CTO/CTO.
-              </p>
-              <p>
-                I believe we all thrive and continue to show true financial gains. During the process to fully grow gains which I and found that my first experience of this approach.
-              </p>
-              <p>
-                I do not sell the approach in a practical solution, but you do so from a marketing perspective. I want to deliver the highest value.
-              </p>
-              <p>
-                I want to help out to trade the right approach, but do not do the right expectations and truly deliver to trade their own in memorable time. We treat consistency to learn more! 
-                <Link to="/contact">Contact Alex!</Link>
-              </p>
+            <p>
+              Alex is the CTO and founder of AOM Trading, bringing over 20 years of experience in financial systems and large-scale technology solutions.
+            </p>
+            <p>
+              Before entering the world of finance, Alex led technology teams for more than two decades, combining technical leadership with deep business expertise.
+            </p>
+            <p>
+              At AOM Trading, his focus is on teaching traders a disciplined, proven approach. With the support of his proprietary software, you’ll gain the tools to trade with confidence, set realistic expectations, and build the consistency needed for lasting success.
+            </p>
             </div>
             <div className="founder-video">
               <div className="video-placeholder">

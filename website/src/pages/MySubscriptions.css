@@ -53,9 +53,7 @@
 }
 
 .subscribe-button:hover {
-  background: #333;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(68, 65, 147, 0.3);
+  filter: brightness(1.05);
 }
 
 /* Subscription Status Section */
@@ -123,9 +121,7 @@
 }
 
 .upgrade-button:hover {
-  background: #7dd396;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(146, 227, 169, 0.3);
+  box-shadow: 0 4px 15px rgba(68, 65, 147, 0.3);
 }
 
 .status-badge {

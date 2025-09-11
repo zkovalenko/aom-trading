@@ -3,10 +3,18 @@
 }
 
 /* Hero Section */
+.h3-subtext {
+  font-size: 1.2rem;
+  max-width: 600px;
+  text-transform: uppercase;
+  color: var(--color-purple-red);
+  margin-bottom: 3rem;
+}
+
 .hero {
   height: 80vh;
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-              url('../assets/homepage_back.jpg');
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), 
+              url(../assets/homepage_back.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -15,6 +23,10 @@
   justify-content: center;
   text-align: center;
   color: white;
+
+  .h3-subtext {
+    font-size: 2rem;;
+  }
 }
 
 .hero-overlay {
@@ -35,15 +47,8 @@
   font-weight: bold;
   max-width: 1000px;
   text-transform: uppercase;
-  margin: 0 auto 3rem;
 }
 
-.hero-content p {
-  font-size: 2rem;
-  max-width: 600px;
-  text-transform: uppercase;
-  color: var(--color-purple-red);
-}
 
 /* Container */
 .container {
@@ -56,7 +61,7 @@
 /* Services Section */
 .services-section {
   padding: 5rem 0;
-  background-color: #f9f9f9;
+  background-color: white
 }
 
 .services-section h2 {
@@ -64,7 +69,7 @@
   font-size: 2.5rem;
   font-weight: 400;
   margin-bottom: 1rem;
-  color: var(--color-purple-red);
+  /* color: var(--color-purple-red); */
   font-weight: bold;
   font-style: italic;
 }
@@ -81,13 +86,13 @@
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
+  gap: 1rem;
   margin-top: 3rem;
 }
 
 .service-card {
   background: white;
-  padding: 2rem;
+  padding: 3rem;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   text-align: center;
@@ -98,8 +103,10 @@
 
 .service-card h3 {
   font-size: 1.8rem;
+  font-weight: 600;
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--color-blue);
+  line-height: 2.5rem;
 }
 
 .service-card p {
@@ -131,7 +138,7 @@
 }
 
 .service-button:hover {
-  background-color: #2E7D32;
+  filter: brightness(1.05);
 }
 
 /* Consistent Trader Section */
@@ -145,6 +152,11 @@
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
+
+  .cta-container {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .consistent-text h2 {
@@ -153,32 +165,19 @@
   color: #333;
 }
 
-.consistent-text h3 {
-  font-size: 1.5rem;
-  color: #4CAF50;
-  margin-bottom: 1.5rem;
+.consistent-image-back {
+  padding: 4rem;
+  background: linear-gradient(45deg, #2c16be99, #201089fa);
+  border-radius: 20px;
 }
 
-.consistent-text p {
-  margin-bottom: 1.5rem;
-  color: #666;
-  line-height: 1.6;
-}
 
 .consistent-image {
+  background-image:  url(../assets/homepage_ninjatrader.png);
   display: flex;
   justify-content: center;
-}
-
-.image-placeholder {
-  width: 300px;
-  height: 200px;
-  background-color: #f0f0f0;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 4rem;
+  min-height: 300px;
+  background-size: cover;
 }
 
 /* Founder Section */
@@ -190,15 +189,8 @@
 .founder-section h2 {
   text-align: center;
   font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-.founder-section h3 {
-  text-align: center;
-  font-size: 1.8rem;
-  color: #4CAF50;
   margin-bottom: 3rem;
+  color: #333;
 }
 
 .founder-content {
@@ -328,7 +320,7 @@
     font-size: 2.5rem;
   }
   
-  .hero-content p {
+  .h3-subtext {
     font-size: 1.2rem;
   }
 
