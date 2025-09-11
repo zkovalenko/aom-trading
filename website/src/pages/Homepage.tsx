@@ -8,8 +8,10 @@ const Homepage: React.FC = () => {
       <section className="hero">
         <div className="hero-overlay">
           <div className="hero-content">
-            <p className="h3-subtext"><i>In Just a few weeks</i></p>
-            <h1>Become a Professional Trader</h1>
+            {/* <p className="h3-subtext"><i>In Just a few weeks</i></p>
+            <h1>Become a Professional Trader</h1> */}
+            <h1>Learn Professionally Developed Trading Strategies</h1>
+            <p className="h3-subtext"><i>Learn. Trade. Repeat.</i></p>
             <Link to="/learn-to-trade" className="cta-button">Get Started</Link>
           </div>
         </div>
@@ -68,7 +70,7 @@ const Homepage: React.FC = () => {
             </div>
             <div className="consistent-text">
               <h2>LEARN FROM THE PROS</h2>
-              <h3 className='h3-subtext'><i>Your AOMTrading Ways</i></h3>
+              <h3 className='h3-subtext'><i>AOMTrading Ways</i></h3>
               <p>
                 Our methodology reduced emotional reaction and provides systematic approach to trading using proven strategies.
               </p>
@@ -112,34 +114,36 @@ const Homepage: React.FC = () => {
       {/* Trusted Resources */}
       <section className="trusted-resources">
         <div className="container">
-          <h2>Trusted Resources</h2>
+          <h2>Trusted Partners</h2>
           <div className="resources-logos">
-            <div className="resource-logo">KINETIC</div>
+            <div className="resource-logo">STRIPE</div>
             <div className="resource-logo ninjatrader">NINJATRADER</div>
-            <div className="resource-logo">thinkorswim</div>
+            <div className="resource-logo">THINKORSWIM</div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="testimonials">
-        <div className="container">
-          <h2>Client Testimonials</h2>
-          <p className="testimonials-subtitle">
-            Professional, knowledgeable supporting are website may rank for representation of other clients or customers 
-            and is not a guarantee of future performance or success.
-          </p>
-          
-          <div className="testimonial">
-            <blockquote>
-              "Taking classes with AOM Trading is the best thing I have done for my trading career. The strategies taught have been 
-              taught me to much and I have been able to prove the to myself during classes and during self time trading. The classes 
-              are well presented and very informative. I like the fact that we talk about risk management and position sizing as well. 
-              I would highly recommend using this company!"
-            </blockquote>
-            <cite>- Sarah</cite>
+      {/* Services */}
+        <section className="services-description">
+          <h2>What's Included With Your Subscription</h2>
+          <div className="subscriptions">
+
+          <div className="subscription">
+            <div className="check">&#10003;</div> <div className="desc">Access to our training course with hands on practices </div>
+          </div>
+          <div className="subscription">
+            <div className="check">&#10003;</div> <div className="desc">Access our trading software</div>
+          </div>
+          <div className="subscription">
+            <div className="check">&#10003;</div> <div className="desc">Access to Trading Rooms based on your Subscription</div>
+          </div>
+          <div className="subscription">
+            <div className="check">&#10003;</div> <div className="desc">Customer Support</div>
           </div>
         </div>
+        <div className="cta-container">
+                <Link to="/learn-to-trade" className="cta-button">Start Now</Link>
+              </div>
       </section>
     </div>
   );

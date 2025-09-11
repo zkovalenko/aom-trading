@@ -5,22 +5,8 @@ const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
-        <div className="footer-logo">
-          <div className="logo-squares">
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-            <div className="square"></div>
-          </div>
-          <div className="logo-text">
-            <span className="aom">AOM</span>
-            <span className="trading">TRADING</span>
-          </div>
+        <div className="logo">
+          &nbsp;
         </div>
         
         <div className="footer-sections">
