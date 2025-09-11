@@ -27,10 +27,10 @@ const Homepage: React.FC = () => {
             <div className="service-card">
               <h3>Proven Methodology</h3>
               <p>
-                Guided self-study course designed for your level.
+                Guided self-study course designed for any level.
               </p>
               <p>
-                AOMTrading methodology has been used by thousands succful customers.
+                AOMTrading methodology has been used by thousands of now successful traders.
               </p>
               
             </div>
