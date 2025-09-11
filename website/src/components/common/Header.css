@@ -98,7 +98,7 @@
 .mobile-menu-btn span {
   width: 25px;
   height: 3px;
-  background-color: white;
+  background-color: var(--color-purple-red);
   transition: all 0.3s ease;
 }
 
@@ -147,13 +147,13 @@
   .nav-link {
     font-size: 1.1rem;
     padding: 1rem 0;
-    border-bottom: 1px solid #404040;
+    border-bottom: 1px solid #3e3e3e;
     display: block;
+    color: white;
   }
   
   .nav-link:last-child {
     border-bottom: none;
-    color: white;
   }
   
   .user-menu,

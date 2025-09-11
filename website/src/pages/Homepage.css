@@ -319,7 +319,8 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-content {
-    padding: 5rem;
+    text-align: center;
+    padding: 6rem;
   }
   
   .hero-content h1 {
@@ -351,5 +352,13 @@
   
   .container {
     padding: 0 1rem;
+  }
+
+  .services-description {
+    padding: 2rem 3rem;
+  }
+
+  .subscriptions {
+    flex-direction: column;
   }
 }

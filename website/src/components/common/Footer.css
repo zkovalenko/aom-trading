@@ -1,14 +1,14 @@
 .footer {
-  background-color: var(--bg-color-light-gray);
-  color: var(--color-gray);
+  background-color: var(--bg-color-gray);
+  color: white;
   padding: 3rem 0 1rem;
   margin-top: auto;
 }
 
 .footer .logo {
-  min-width: 200px;
-  min-height: 200px;
-  background: no-repeat url("../../assets/logo_header_pink.svg");
+  min-width: 150px;
+  min-height: 150px;
+  background: no-repeat url("../../assets/logo_header.png");
   background-size: contain;
   display: flex;
   align-items: center;
@@ -32,7 +32,7 @@
 .footer-section h3 {
   font-size: 1.2rem;
   margin-bottom: 1rem;
-  color: var(--color-blue);
+  color: var(--color-purple-red);
 }
 
 .footer-section ul {
@@ -45,13 +45,14 @@
 }
 
 .footer-section a {
-  color: var(--color-gray);
+  color: white;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .footer-disclaimer {
-  border-top: 1px solid #444;
+  background-color: var(--bg-color-gray);
+  color: var(--color-light-gray);
   margin-top: 2rem;
   padding-top: 1rem;
   max-width: 1200px;
@@ -81,5 +82,10 @@
   .footer-disclaimer {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .footer .logo {
+    min-width: 80px;
+    min-height: 80px;
   }
 }

@@ -125,7 +125,7 @@ const Homepage: React.FC = () => {
 
       {/* Services */}
         <section className="services-description">
-          <h2>What's Included With Your Subscription</h2>
+          <h2>Your Subscription Includes</h2>
           <div className="subscriptions">
 
           <div className="subscription">
