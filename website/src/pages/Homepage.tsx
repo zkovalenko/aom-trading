@@ -118,7 +118,6 @@ const Homepage: React.FC = () => {
             <div className="resource-logo ninjatrader">NINJATRADER</div>
             <div className="resource-logo">thinkorswim</div>
           </div>
-          <Link to="/resources" className="service-button">LEARN MORE</Link>
         </div>
       </section>
 

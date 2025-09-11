@@ -222,7 +222,6 @@ p, span, div, li, td, th {
 /*--------------- Mobile styles ------------------------*/
 @media (max-width: 768px) {
   .cta-button {
-    width: 100%;
     max-width: 300px;
   }
 }
