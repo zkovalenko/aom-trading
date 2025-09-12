@@ -8,7 +8,7 @@
 .footer .logo {
   min-width: 150px;
   min-height: 150px;
-  background: no-repeat url("../../assets/logo_header.png");
+  background: no-repeat url("../../assets/logo_header_purple.svg");
   background-size: contain;
   display: flex;
   align-items: center;

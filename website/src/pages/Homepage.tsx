@@ -116,7 +116,7 @@ const Homepage: React.FC = () => {
         <div className="container">
           <h2>Trusted Partners</h2>
           <div className="resources-logos">
-            <div className="resource-logo">STRIPE</div>
+            <div className="resource-logo">TD AMERITRADE</div>
             <div className="resource-logo ninjatrader">NINJATRADER</div>
             <div className="resource-logo">THINKORSWIM</div>
           </div>

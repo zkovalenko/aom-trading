@@ -19,12 +19,12 @@
 :root {
     --color-blue-purple: #1c0e78;
     --color-blue: #341ade;
-    --color-purple-red: #ff0098;
+    --color-purple-red: #d81bdd;
     --color-light-gray: #f1f1f1;
     --color-gray: #333;
     --bg-color-blue-purple: #1c0e78;
     --bg-color-blue: #341ade;
-    --bg-color-purple-red: #ff0098;
+    --bg-color-purple-red: #d81bdd;
     --bg-color-gray: #333;
     --bg-gradient-blue: linear-gradient(135deg, #341ADE, #1C0E78);
     --bg-color-light-gray: #f1f1f1;
