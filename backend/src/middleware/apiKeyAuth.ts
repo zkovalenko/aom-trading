@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   apiKey?: {
-    id: number;
+    id: string;
     key_name: string;
     api_key: string;
   };
