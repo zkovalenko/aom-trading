@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
 
-export interface AuthenticatedRequest extends Request {
-  apiKey?: {
-    id: string;
-    key_name: string;
-    api_key: string;
-  };
-}
+export type AuthenticatedRequest = Request & { 
+  apiKey?: { 
+    id: string; 
+    key_name: string; 
+    api_key: string 
+  } 
+};
 
 /**
  * Middleware to authenticate API key requests
