@@ -176,7 +176,6 @@
 /* Founder Section */
 .founder-section {
   padding: 5rem 0;
-  background-color: #f9f9f9;
 }
 
 .founder-section h2 {
@@ -260,8 +259,8 @@
 
 /* services */
 .services-description {
-  padding: 5rem 0;
-  background-color: #f9f9f9;
+  padding: 3rem 0;
+  background: var(--bg-color-light-gray);
   text-align: center;
 }
 

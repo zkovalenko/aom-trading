@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth, apiCall } from '../../contexts/AuthContext';
 
 const Header: React.FC = () => {
   const { user, logout, token } = useAuth();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const toggleMenu = () => {
@@ -70,8 +71,13 @@ const Header: React.FC = () => {
             </div>
           ) : (
             <div className="auth-links">
-              <Link to="/login" className="nav-link signup-btn" onClick={closeMenu}>Login</Link>
-              {/* <Link to="/signup" className="nav-link signup-btn" onClick={closeMenu}>Sign Up</Link> */}
+              <button
+                type="button"
+                className="nav-link signup-btn"
+                onClick={() => { closeMenu(); navigate('/login'); }}
+              >
+                Login
+              </button>
             </div>
           )}
         </nav>
