@@ -89,7 +89,7 @@ router.get('/google/callback',
       
       // Check for subscription redirect parameters from session
       const frontendUrl = process.env.FRONTEND_URL || 
-        (process.env.NODE_ENV === 'production' ? 'https://aom-trading.onrender.com' : 'http://localhost:3001');
+        (process.env.NODE_ENV === 'production' ? 'https://aom-trading.onrender.com' : 'http://localhost:3000');
       let redirectUrl = `${frontendUrl}/auth/callback?token=${token}&redirect=/learn-to-trade`;
       
       if ((req.session as any).subscriptionRedirect) {

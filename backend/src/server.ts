@@ -15,6 +15,7 @@ import { loadEnvironmentVariables } from './config/env';
 import authRoutes from './routes/auth';
 import paymentRoutes from './routes/payments';
 import subscriptionRoutes from './routes/subscriptions';
+import licenseRoutes from './routes/license';
 
 // Load environment variables using our centralized system
 loadEnvironmentVariables();
@@ -34,7 +35,7 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'x-api-key']
 }));
 
 // Session configuration
@@ -69,6 +70,7 @@ app.use(passport.session());
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/license', licenseRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
