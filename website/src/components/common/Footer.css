@@ -1,5 +1,5 @@
 .footer {
-  background-color: var(--bg-color-gray);
+  background-color: #140572;
   color: white;
   padding: 3rem 0 1rem;
   margin-top: auto;
@@ -8,7 +8,7 @@
 .footer .logo {
   min-width: 150px;
   min-height: 150px;
-  background: no-repeat url("../../assets/logo_header_purple.svg");
+  background: no-repeat url("../../assets/Logo_header.svg");
   background-size: contain;
   display: flex;
   align-items: center;
@@ -32,7 +32,6 @@
 .footer-section h3 {
   font-size: 1.2rem;
   margin-bottom: 1rem;
-  color: var(--color-purple-red);
 }
 
 .footer-section ul {
@@ -51,7 +50,6 @@
 }
 
 .footer-disclaimer {
-  background-color: var(--bg-color-gray);
   color: var(--color-light-gray);
   margin-top: 2rem;
   padding-top: 1rem;

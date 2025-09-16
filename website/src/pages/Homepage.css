@@ -3,14 +3,6 @@
 }
 
 /* Hero Section */
-.h3-subtext {
-  font-size: 1.2rem;
-  max-width: 600px;
-  text-transform: uppercase;
-  color: var(--color-purple-red);
-  margin-bottom: 3rem;
-}
-
 .hero {
   height: 80vh;
   background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), 
@@ -25,7 +17,11 @@
   color: white;
 
   .h3-subtext {
-    font-size: 2rem;;
+    font-family: 'Montserat';
+    text-transform: uppercase;
+    color: var(--color-purple-red);
+    font-size: 2.6rem;
+    font-weight: bold;
   }
 }
 
@@ -168,18 +164,12 @@
   margin-top: 2rem;
 }
 
-.consistent-image-back {
-  padding: 4rem;
-  background: linear-gradient(45deg, #2c16be99, #201089fa);
-  border-radius: 20px;
-}
-
 
 .consistent-image {
-  background-image:  url(../assets/homepage_ninjatrader.png);
+  background-image:  url(../assets/monitor_w_back_home.png);
   display: flex;
   justify-content: center;
-  min-height: 300px;
+  min-height: 411px;
   background-size: cover;
 }
 
@@ -296,7 +286,8 @@
   max-width: 800px;
   margin: 0 auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
   font-size: 1.2rem;
   font-style: italic;
   margin-bottom: 1rem;
@@ -306,15 +297,51 @@
   background: white;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  text-align: left;
+  text-align: center;
 }
 
-.subscription .check {
-  color: var(--color-purple-red);
-  font-size: larger;
-  font-weight: bolder;
-  margin-right: 1rem;
+.subscription .desc {
+  font-size: 1rem;
+  text-transform: none;
 }
+
+.subscription .icon-course {
+  background-image: url(../assets/course.svg);
+  background-size: cover;
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.subscription .icon-software {
+  background-image: url(../assets/software.svg);
+  background-size: cover;
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.subscription .icon-trading {
+  background-image: url(../assets/trading_room.svg);
+  background-size: cover;
+  min-width: 36px;
+  min-height: 30px;
+}
+
+.subscription .icon-support {
+  background-image: url(../assets/support.svg);
+  background-size: cover;
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.subscription-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--color-gray);
+  margin: 1rem;
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

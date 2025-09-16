@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* Fonts are loaded in index.html for better performance */
 
 /* Import common component styles */
 @import './components/common/Header.css';
@@ -21,11 +21,11 @@
     --color-blue: #341ade;
     --color-purple-red: #d81bdd;
     --color-light-gray: #f1f1f1;
-    --color-gray: #333;
+    --color-gray: #222;
     --bg-color-blue-purple: #1c0e78;
     --bg-color-blue: #341ade;
     --bg-color-purple-red: #d81bdd;
-    --bg-color-gray: #333;
+    --bg-color-gray: #222;
     --bg-gradient-blue: linear-gradient(135deg, #341ADE, #1C0E78);
     --bg-color-light-gray: #f1f1f1;
 }
@@ -45,43 +45,6 @@ body {
   line-height: 1.6;
   color: var(--color-gray);
   background: #fff;
-}
-
-/* Color utility classes - using CSS variables */
-.color-blue {
-  color: var(--color-blue);
-}
-
-.color-light-purple {
-  color: var(--color-light-purple);
-}
-
-.color-purple {
-  color: var(--color-purple);
-}
-
-.color-teal {
-  color: var(--color-teal);
-}
-
-.color-gray {
-  color: var(--color-gray);
-}
-
-.bg-color-blue {
-  background-color: var(--bg-color-blue);
-}
-
-.bg-color-light-purple {
-  background-color: var(--bg-color-light-purple);
-}
-
-.bg-color-teal {
-  background-color: var(--bg-color-teal);
-}
-
-.bg-color-gray {
-  background-color: var(--bg-color-gray);
 }
 
 

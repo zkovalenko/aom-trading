@@ -8,10 +8,8 @@ const Homepage: React.FC = () => {
       <section className="hero">
         <div className="hero-overlay">
           <div className="hero-content">
-            {/* <p className="h3-subtext"><i>In Just a few weeks</i></p>
-            <h1>Become a Professional Trader</h1> */}
+            <p className="h3-subtext"><i>In Just few weeks</i></p>
             <h1>Learn Professionally Developed Trading Strategies</h1>
-            <p className="h3-subtext"><i>Learn. Trade. Repeat.</i></p>
             <Link to="/learn-to-trade" className="cta-button">Get Started</Link>
           </div>
         </div>
@@ -64,9 +62,7 @@ const Homepage: React.FC = () => {
       <section className="consistent-trader">
         <div className="container">
           <div className="consistent-content">
-            <div className="consistent-image-back">
-              <div className="consistent-image">&nbsp;
-              </div>
+            <div className="consistent-image">&nbsp;
             </div>
             <div className="consistent-text">
               <h2>LEARN FROM THE PROS</h2>
@@ -129,17 +125,25 @@ const Homepage: React.FC = () => {
           <div className="subscriptions">
 
           <div className="subscription">
-            <div className="check">&#10003;</div> <div className="desc">Access to our training course with hands on practices </div>
+            <div className="icon-course">&nbsp;</div> 
+            <span className="subscription-title">Training Course</span>
+            <div className="desc">Learn trading fundamentals through guided lessons and real-world practice exercises.</div>
           </div>
           <div className="subscription">
-            <div className="check">&#10003;</div> <div className="desc">Access our trading software</div>
+            <div className="icon-software">&nbsp;</div> 
+            <span className="subscription-title">Trading Software</span>
+            <div className="desc">Use our powerful, intuitive tools to analyze markets and make informed decisions.</div>
           </div>
           <div className="subscription">
-            <div className="check">&#10003;</div> <div className="desc">Access to Trading Rooms based on your Subscription</div>
+            <div className="icon-trading">&nbsp;</div>
+            <span className="subscription-title">Trading Rooms</span>
+            <div className="desc">Join live rooms tailored to your subscription level to trade, learn, and collaborate.</div>
           </div>
           <div className="subscription">
-            <div className="check">&#10003;</div> <div className="desc">Customer Support</div>
-          </div>
+            <div className="icon-support">&nbsp;</div>
+            <span className="subscription-title">Customer Support</span>
+            <div className="desc">Get responsive support from our team whenever you need help along the way.</div>
+            </div>
         </div>
         <div className="cta-container">
                 <Link to="/learn-to-trade" className="cta-button">Start Now</Link>

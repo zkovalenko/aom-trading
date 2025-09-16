@@ -19,9 +19,9 @@
 
 .logo {
   min-width: 150px;
-  min-height: 50px;
-  background: no-repeat url("../../assets/logo_header_purple.svg");
-  background-size: contain;
+  min-height: 58px;
+  background: no-repeat url("../../assets/Logo_header.svg");
+  background-size: cover;
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -55,15 +55,15 @@
 }
 
 .logout-btn {
-  background-color: var(--bg-color-blue);
+  background: linear-gradient(130deg, #D81BDD, #341ADE);
   color: white;
   border: none;
-  padding: 0.5rem 2.5rem;
-  border-radius: 4px;
+  padding: 1rem 3rem;
+  border-radius: 44px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease
 }
 
 .logout-btn:hover {
@@ -71,12 +71,15 @@
 }
 
 .signup-btn {
-  font-weight: 500;
-  background: linear-gradient(135deg, #341ade, #1C0e78);
-  padding: 0.5rem 2.2rem;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  background: linear-gradient(130deg, #D81BDD, #341ADE);
   color: white;
+  border: none;
+  padding: 1rem 3rem;
+  border-radius: 44px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease
 }
 
 .signup-btn:hover {
