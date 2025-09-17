@@ -3,14 +3,6 @@
   min-height: 80vh;
 }
 
-.services-page h1 {
-  text-align: center;
-  font-size: 3rem;
-  margin-bottom: 3rem;
-  color: #333;
-  padding-top: 50px;
-}
-
 .content-section {
   display: flex;
   flex-direction: row;
@@ -27,13 +19,10 @@
 
 .content-image {
   width: 100%;
-  min-height: 345px;
-  height: 100%;
-  max-width: 500px;
-  background: url('../assets/trade_placeholder.png');
+  min-height: 411px;
+  min-width: 545px;
+  background-image:  url(../assets/monitor_w_back_home.png);
   background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .content-right {
@@ -265,12 +254,12 @@ input:checked + .slider:before {
 
 /* Protected Content Section */
 .protected-content-section {
-  background: linear-gradient(135deg, #f0f8ff, #ebeafd);
+  background: linear-gradient(172deg, #fdf9ff, #a78fff5c);
   padding: 4rem 3rem;
   border-radius: 20px;
   margin: 4rem 0;
   text-align: center;
-  border: 1px solid #4441931f;
+  border-radius: 16px;
 }
 
 .protected-content-section h2 {
@@ -303,6 +292,9 @@ input:checked + .slider:before {
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #e6f3ff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .protected-feature-item:hover {
@@ -386,10 +378,6 @@ input:checked + .slider:before {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .services-page h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-  }
 
   .hero-features {
     grid-template-columns: 1fr;

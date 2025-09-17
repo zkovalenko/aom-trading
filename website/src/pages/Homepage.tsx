@@ -59,7 +59,7 @@ const Homepage: React.FC = () => {
       </section>
 
       {/* Trusted Resources */}
-      {/* <section className="trusted-resources">
+      <section className="trusted-resources">
         <div className="container">
           <h2>Trusted Partners</h2>
           <div className="resources-logos">
@@ -68,8 +68,8 @@ const Homepage: React.FC = () => {
             <div className="resource-logo">THINKORSWIM</div>
           </div>
         </div>
-      </section> */}
-
+      </section>
+      
       {/* Become Consistent Trader Section */}
       <section className="consistent-trader">
         <div className="container">

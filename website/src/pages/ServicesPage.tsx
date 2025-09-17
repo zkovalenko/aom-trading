@@ -183,13 +183,13 @@ const ServicesPage: React.FC = () => {
   return (
     <div className="services-page">
       <div className="container">
-        <h1 className="pt-10">Trade with confidence</h1>
         
         <div className="content-section">
           <div className="content-left content-image">&nbsp;</div>
           
           <div className="content-right">
-              {/* <h3>Expertise Simplified</h3> */}
+              <h1 className="pt-10 color-blue">Learn to Trade with our State of the Art Software</h1>
+
               <p>
                 Years of market research, real-time data analysis, and tested strategies distilled into a practical way to learn and trade with confidence.
               </p>

@@ -47,6 +47,9 @@ body {
   background: #fff;
 }
 
+.color-blue {
+  color: var(--color-blue);
+}
 
 .App {
   min-height: 100vh;
