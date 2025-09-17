@@ -75,6 +75,19 @@
   border: 2px solid #e1e1e1;
   border-radius: 6px;
   transition: border-color 0.3s ease;
+  min-height: 44px; /* Safari touch target requirement */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-appearance: none) {
+  .card-element-container .StripeElement {
+    -webkit-appearance: none !important;
+    -webkit-user-select: text;
+    -webkit-touch-callout: none;
+  }
 }
 
 .card-element-container .StripeElement:focus,

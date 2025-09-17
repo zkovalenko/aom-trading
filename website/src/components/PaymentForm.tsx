@@ -33,6 +33,7 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
   const { user, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string>('');
+  const [cardReady, setCardReady] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -150,8 +151,29 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
                     color: '#aab7c4',
                   },
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  ':-webkit-autofill': {
+                    color: '#333',
+                  },
+                },
+                invalid: {
+                  color: '#e74c3c',
+                  iconColor: '#e74c3c',
                 },
               },
+              hidePostalCode: false,
+              disabled: false,
+            }}
+            onReady={() => {
+              console.log('CardElement ready');
+              setCardReady(true);
+            }}
+            onChange={(event) => {
+              console.log('CardElement change:', event);
+              if (event.error) {
+                setPaymentError(event.error.message || 'Card validation error');
+              } else {
+                setPaymentError('');
+              }
             }}
           />
         </div>
