@@ -19,6 +19,14 @@ interface AuthContextType {
   loading: boolean;
   refreshProfile: () => Promise<void>;
   setAuthToken: (token: string) => Promise<void>;
+  // Modal state management
+  isLoginModalOpen: boolean;
+  isSignupModalOpen: boolean;
+  openLoginModal: () => void;
+  openSignupModal: () => void;
+  closeAuthModals: () => void;
+  switchToSignupModal: () => void;
+  switchToLoginModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -90,6 +98,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return storedToken;
   });
   const [loading, setLoading] = useState(true);
+  
+  // Modal state
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   // Debug localStorage operations
   React.useEffect(() => {
@@ -376,6 +388,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  // Modal management functions
+  const openLoginModal = () => {
+    setIsSignupModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
+  const openSignupModal = () => {
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(true);
+  };
+
+  const closeAuthModals = () => {
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+  };
+
+  const switchToSignupModal = () => {
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(true);
+  };
+
+  const switchToLoginModal = () => {
+    setIsSignupModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
   const value = {
     user,
     token,
@@ -385,7 +423,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     logout,
     loading,
     refreshProfile,
-    setAuthToken
+    setAuthToken,
+    // Modal state and functions
+    isLoginModalOpen,
+    isSignupModalOpen,
+    openLoginModal,
+    openSignupModal,
+    closeAuthModals,
+    switchToSignupModal,
+    switchToLoginModal
   };
 
   return (

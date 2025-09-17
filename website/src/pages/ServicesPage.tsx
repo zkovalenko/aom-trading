@@ -264,7 +264,7 @@ const ServicesPage: React.FC = () => {
                   </div>
 
                   <button 
-                    className="service-button"
+                    className="cta-button"
                     onClick={() => handleSubscribe(product)}
                   >
                     GET STARTED

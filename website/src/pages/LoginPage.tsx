@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import './AuthPages.css';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -106,7 +105,7 @@ const LoginPage: React.FC = () => {
 
             <button 
               type="submit" 
-              className="auth-button primary"
+              className="signup-btn"
               disabled={loading}
             >
               {loading ? 'Signing In...' : 'Sign In'}

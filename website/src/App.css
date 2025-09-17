@@ -154,6 +154,7 @@ p, span, div, li, td, th {
   font-weight: bold;
   transition: background-color 0.3s ease;
   margin-top: 3rem;
+  border-color: transparent;
 }
 
 .cta-button:hover {

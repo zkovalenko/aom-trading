@@ -94,7 +94,6 @@ export class NetLicensingService {
         licenseeNumber: licenseeNumber,
         active: 'true'
       });
-console.log("~~~productID", this.productId)
       const response = await fetch(`${this.baseUrl}/license`, {
         method: 'POST',
         headers: {

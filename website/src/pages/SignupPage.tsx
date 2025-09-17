@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import './AuthPages.css';
 
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -180,7 +179,7 @@ const SignupPage: React.FC = () => {
 
             <button 
               type="submit" 
-              className="auth-button primary"
+              className="signup-btn"
               disabled={loading}
             >
               {loading ? 'Creating Account...' : 'Sign Up'}

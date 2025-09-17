@@ -217,23 +217,45 @@ export const releaseDevice = async (req: Request, res: Response): Promise<void> 
 
     const user = userResult.rows[0];
     
-    if (!user.subscriptions) {
+    if (!user.subscriptions || user.subscriptions.length === 0) {
       res.status(404).json({
-        message: 'No subscription found',
+        message: 'No active subscription found',
         error: 'User has no subscriptions'
       });
       return;
     }
 
-    // Find matching subscription by license number (productNumber)
+    // Get product template mapping to find which product this template belongs to
+    const productResult = await pool.query(
+      `SELECT id, name, product_license_template 
+       FROM products 
+       WHERE is_active = true AND (
+         product_license_template->>'monthly' = $1 OR 
+         product_license_template->>'annual' = $1
+       )`,
+      [productNumber]
+    );
+
+    if (productResult.rows.length === 0) {
+      res.status(404).json({
+        message: 'Invalid product template',
+        error: 'Product template not found'
+      });
+      return;
+    }
+
+    const product = productResult.rows[0];
+    console.log(`🔍 Releasing device for product: ${product.name}, template: ${productNumber}`);
+
+    // Find matching subscription for this product
     const subscriptions = user.subscriptions || [];
     const matchingSubscription = subscriptions.find(sub => 
-      sub.licenseNumber === productNumber
+      sub.productId === product.id
     );
 
     if (!matchingSubscription) {
       res.status(404).json({
-        message: 'License not found',
+        message: 'No subscription found for this product',
         error: 'License does not exist for this user and product'
       });
       return;
@@ -263,8 +285,9 @@ export const releaseDevice = async (req: Request, res: Response): Promise<void> 
 
     // Return success response
     res.status(200).json({
-      message: 'OK',
-      error: null
+      message: 'Device released successfully',
+      error: null,
+      devicesUsed: deviceIds.length
     });
 
   } catch (error) {

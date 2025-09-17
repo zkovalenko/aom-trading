@@ -178,7 +178,6 @@ const MySubscriptions: React.FC = () => {
   }
 
   const activeSubscription = getActiveSubscription();
-console.log("~~~activeSubscription", activeSubscription)
   return (
     <div className="my-subscriptions-page">
       <div className="container">

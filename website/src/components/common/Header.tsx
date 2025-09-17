@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth, apiCall } from '../../contexts/AuthContext';
+import LoginModal from '../../components/auth/LoginModal';
+import SignupModal from '../../components/auth/SignupModal';
 
 const Header: React.FC = () => {
-  const { user, logout, token } = useAuth();
+  const { 
+    user, 
+    logout, 
+    token,
+    isLoginModalOpen,
+    isSignupModalOpen,
+    openLoginModal,
+    openSignupModal,
+    closeAuthModals,
+    switchToSignupModal,
+    switchToLoginModal
+  } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
@@ -74,7 +87,7 @@ const Header: React.FC = () => {
               <button
                 type="button"
                 className="nav-link signup-btn"
-                onClick={() => { closeMenu(); navigate('/login'); }}
+                onClick={() => { closeMenu(); openLoginModal(); }}
               >
                 Login
               </button>
@@ -84,6 +97,27 @@ const Header: React.FC = () => {
         
         {isMenuOpen && <div className="menu-overlay" onClick={closeMenu}></div>}
       </div>
+      
+      {/* Authentication Modals */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={closeAuthModals}
+        onSwitchToSignup={switchToSignupModal}
+        onSuccess={() => {
+          // Optional: redirect to a specific page after login
+          navigate('/learn-to-trade');
+        }}
+      />
+      
+      <SignupModal
+        isOpen={isSignupModalOpen}
+        onClose={closeAuthModals}
+        onSwitchToLogin={switchToLoginModal}
+        onSuccess={() => {
+          // Optional: redirect to a specific page after signup
+          navigate('/learn-to-trade');
+        }}
+      />
     </header>
   );
 };
