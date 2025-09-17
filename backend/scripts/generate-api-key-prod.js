@@ -1,6 +1,10 @@
 const crypto = require('crypto');
+const path = require('path');
 
-// Simple standalone script - no dependencies
+// Load environment variables
+require('dotenv').config({ path: path.join(__dirname, '../.env.development') });
+
+// Simple standalone script - minimal dependencies
 const keyName = process.argv[2];
 const description = process.argv[3] || '';
 
@@ -20,7 +24,8 @@ async function generateApiKeyProd() {
     const { Client } = require('pg');
     
     const client = new Client({
-      connectionString: process.env.DATABASE_URL
+      connectionString: process.env.DATABASE_URL || 
+        `postgresql://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`
     });
     
     await client.connect();
