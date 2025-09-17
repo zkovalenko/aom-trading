@@ -30,6 +30,17 @@ async function generateApiKey() {
     await client.connect();
     console.log(`🔑 Generating API key for: ${keyName}`);
     
+    // Create api_keys table if it doesn't exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS api_keys (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        key_name VARCHAR(255) NOT NULL,
+        api_key VARCHAR(255) NOT NULL UNIQUE,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
     const apiKey = generateSecureApiKey();
     
     const result = await client.query(`
