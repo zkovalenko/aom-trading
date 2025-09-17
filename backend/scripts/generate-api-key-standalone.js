@@ -23,6 +23,8 @@ async function generateApiKey() {
   try {
     const { Client } = require('pg');
     
+    console.log('🔍 Using connection string:', DATABASE_URL);
+    
     client = new Client({
       connectionString: DATABASE_URL
     });
