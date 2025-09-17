@@ -26,7 +26,10 @@ async function generateApiKey() {
     console.log('🔍 Using connection string:', DATABASE_URL);
     
     client = new Client({
-      connectionString: DATABASE_URL
+      connectionString: DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
     });
     
     await client.connect();
