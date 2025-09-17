@@ -1,0 +1,68 @@
+const crypto = require('crypto');
+
+// Get arguments
+const keyName = process.argv[2];
+const description = process.argv[3] || '';
+
+if (!keyName) {
+  console.log('Usage: node generate-api-key-standalone.js <key-name> [description]');
+  process.exit(1);
+}
+
+// Environment variables - set these manually or pass via command line
+const DATABASE_URL = process.env.DATABASE_URL || 
+  `postgresql://${process.env.POSTGRES_USER || 'postgres'}:${process.env.POSTGRES_PASSWORD || 'password'}@${process.env.POSTGRES_HOST || 'localhost'}:${process.env.POSTGRES_PORT || '5432'}/${process.env.POSTGRES_DB || 'aom_trading'}`;
+
+function generateSecureApiKey(prefix = 'ak') {
+  const randomBytes = crypto.randomBytes(32).toString('hex');
+  return `${prefix}_${randomBytes}`;
+}
+
+async function generateApiKey() {
+  let client;
+  try {
+    const { Client } = require('pg');
+    
+    client = new Client({
+      connectionString: DATABASE_URL
+    });
+    
+    await client.connect();
+    console.log(`🔑 Generating API key for: ${keyName}`);
+    
+    const apiKey = generateSecureApiKey();
+    
+    const result = await client.query(`
+      INSERT INTO api_keys (key_name, api_key, is_active, created_at)
+      VALUES ($1, $2, true, CURRENT_TIMESTAMP)
+      RETURNING id, key_name, api_key, created_at
+    `, [keyName, apiKey]);
+    
+    const newKey = result.rows[0];
+    
+    console.log('✅ API Key generated successfully:');
+    console.log(`   ID: ${newKey.id}`);
+    console.log(`   Name: ${newKey.key_name}`);
+    console.log(`   Key: ${newKey.api_key}`);
+    console.log(`   Created: ${newKey.created_at}`);
+    console.log('');
+    console.log('🚨 IMPORTANT: Store this API key securely!');
+    console.log('   This key will not be shown again.');
+    console.log('');
+    
+    if (description) {
+      console.log(`📝 Description: ${description}`);
+    }
+    
+  } catch (error) {
+    console.error('❌ Error generating API key:', error.message);
+    console.error('Stack:', error.stack);
+    process.exit(1);
+  } finally {
+    if (client) {
+      await client.end();
+    }
+  }
+}
+
+generateApiKey();
