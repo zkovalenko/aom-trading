@@ -3,7 +3,7 @@ import pool from '../config/database';
 
 interface LicenseValidationRequest {
   email: string;
-  productNumber: string;
+  productNumber: string; // This should be the product template ID (e.g., E6RYSASXI)
   deviceId: string;
 }
 
@@ -29,7 +29,7 @@ export const validateLicense = async (req: Request, res: Response): Promise<void
       return;
     }
 
-    // Find user with their subscription
+    // Find user with their subscription and get product info for template matching
     const userResult = await pool.query(
       `SELECT u.id, us.subscriptions, us.device_ids, us.max_devices
        FROM users u
@@ -48,24 +48,46 @@ export const validateLicense = async (req: Request, res: Response): Promise<void
 
     const user = userResult.rows[0];
     
-    if (!user.subscriptions) {
+    if (!user.subscriptions || user.subscriptions.length === 0) {
       res.status(404).json({
         valid: false,
-        message: 'No subscription found'
+        message: 'No active subscription found'
       });
       return;
     }
 
-    // Find matching subscription by license number (productNumber)
+    // Get product template mapping to find which product this template belongs to
+    const productResult = await pool.query(
+      `SELECT id, name, product_license_template 
+       FROM products 
+       WHERE is_active = true AND (
+         product_license_template->>'monthly' = $1 OR 
+         product_license_template->>'annual' = $1
+       )`,
+      [productNumber]
+    );
+
+    if (productResult.rows.length === 0) {
+      res.status(404).json({
+        valid: false,
+        message: 'Invalid product template'
+      });
+      return;
+    }
+
+    const product = productResult.rows[0];
+    console.log(`🔍 Validating license for product: ${product.name}, template: ${productNumber}`);
+
+    // Find matching subscription for this product
     const subscriptions = user.subscriptions || [];
     const matchingSubscription = subscriptions.find(sub => 
-      sub.licenseNumber === productNumber
+      sub.productId === product.id
     );
 
     if (!matchingSubscription) {
       res.status(404).json({
         valid: false,
-        message: 'License not found'
+        message: 'No subscription found for this product'
       });
       return;
     }
@@ -75,17 +97,31 @@ export const validateLicense = async (req: Request, res: Response): Promise<void
     const expiryDate = new Date(matchingSubscription.subscriptionExpiryDate);
     const trialExpiryDate = new Date(matchingSubscription.subscriptionTrialExpiryDate);
     
+    // Determine subscription type for proper response
+    const isPremium = product.name.toLowerCase().includes('premium') || 
+                      matchingSubscription.subscriptionType === 'premium';
+    const isBasic = !isPremium;
+    
     // Check if both trial and subscription have expired
-    if (now > expiryDate && now > trialExpiryDate) {
+    const isTrialExpired = now > trialExpiryDate;
+    const isSubscriptionExpired = now > expiryDate;
+    
+    if (isTrialExpired && isSubscriptionExpired) {
       res.status(200).json({
         valid: false,
-        message: 'License expired',
-        isBasic: true, // Assume basic for now
-        isPremium: false,
-        expiresUtc: expiryDate.toISOString()
+        message: 'License has expired',
+        isBasic: isBasic,
+        isPremium: isPremium,
+        expiresUtc: Math.max(trialExpiryDate.getTime(), expiryDate.getTime()) > trialExpiryDate.getTime() ? 
+                   expiryDate.toISOString() : trialExpiryDate.toISOString(),
+        subscriptionStatus: 'expired'
       });
       return;
     }
+    
+    // Determine current status (trial or active subscription)
+    const isInTrial = !isTrialExpired && matchingSubscription.subscriptionStatus === 'trial';
+    const currentStatus = isInTrial ? 'trial' : 'active';
 
     // Get current device list
     const deviceIds: DeviceInfo[] = user.device_ids || [];
@@ -103,9 +139,10 @@ export const validateLicense = async (req: Request, res: Response): Promise<void
         res.status(200).json({
           valid: false,
           message: `Maximum devices limit reached (${maxDevices} devices)`,
-          isBasic: true,
-          isPremium: false,
-          expiresUtc: expiryDate.toISOString()
+          isBasic: isBasic,
+          isPremium: isPremium,
+          expiresUtc: isInTrial ? trialExpiryDate.toISOString() : expiryDate.toISOString(),
+          subscriptionStatus: currentStatus
         });
         return;
       }
@@ -123,18 +160,16 @@ export const validateLicense = async (req: Request, res: Response): Promise<void
       [JSON.stringify(deviceIds), user.id]
     );
 
-    // Determine if it's premium based on subscription type or product name
-    const isPremium = matchingSubscription.subscriptionType === 'premium' || 
-                      (matchingSubscription.productName && matchingSubscription.productName.toLowerCase().includes('premium'));
-    const isBasic = !isPremium;
-
     // Return successful validation
     res.status(200).json({
       valid: true,
       isBasic: isBasic,
       isPremium: isPremium,
-      expiresUtc: expiryDate.toISOString(),
-      message: 'OK'
+      expiresUtc: isInTrial ? trialExpiryDate.toISOString() : expiryDate.toISOString(),
+      subscriptionStatus: currentStatus,
+      message: 'License valid',
+      devicesUsed: deviceIds.length,
+      maxDevices: maxDevices
     });
 
   } catch (error) {
