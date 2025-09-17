@@ -183,12 +183,17 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     let licenseeNumber: string | null = null;
     let licenseNumber: string | null = null;
     
+    console.log('🔍 Product license template:', product.product_license_template);
+    console.log('🔍 Subscription type:', subscriptionType);
+    
     if (product.product_license_template) {
       try {
         // Get the correct license template based on subscription type
         const licenseTemplateNumber = product.product_license_template[subscriptionType];
+        console.log('🔍 License template number:', licenseTemplateNumber);
+        
         if (!licenseTemplateNumber) {
-          throw new Error(`No license template found for ${subscriptionType} subscription type`);
+          throw new Error(`No license template found for ${subscriptionType} subscription type. Available templates: ${JSON.stringify(product.product_license_template)}`);
         }
         
         console.log(`🎫 Generating license for user ${currentUser.email} with template ${licenseTemplateNumber} (${subscriptionType})`);
@@ -196,15 +201,20 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
           currentUser.email,
           licenseTemplateNumber
         );
-        console.log("~~licenseData", licenseData);
+        console.log("✅ License data received:", licenseData);
+        
         licenseeNumber = licenseData.licenseeNumber;
         licenseNumber = licenseData.licenseNumber;
-        console.log(`✅ License generated successfully: ${licenseNumber}`);
+        
+        console.log(`✅ License generated successfully: Licensee=${licenseeNumber}, License=${licenseNumber}`);
       } catch (error) {
         console.error('❌ Failed to generate license:', error);
+        console.error('❌ License generation error stack:', (error as Error).stack);
         // Continue with subscription creation even if license generation fails
         // This ensures payment processing isn't blocked by licensing issues
       }
+    } else {
+      console.log('⚠️  No license template configured for this product');
     }
 
     // Record payment
@@ -224,32 +234,63 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
       errorObj: null,
       autoRenewal: true,
       productId: productId,
+      productName: product.name,
       createdAt: now.toISOString(),
       licenseeNumber: licenseeNumber,
       licenseNumber: licenseNumber
     };
+    
+    console.log('📝 Subscription data to store:', subscriptionData);
 
     // Check if user already has subscriptions
     const existingUserSub = await pool.query(
       'SELECT * FROM user_subscriptions WHERE user_id = $1',
       [currentUser.id]
     );
+    
+    console.log(`🔍 Existing user subscriptions found: ${existingUserSub.rows.length}`);
 
     if (existingUserSub.rows.length > 0) {
       // Update existing subscriptions
       const currentSubscriptions = existingUserSub.rows[0].subscriptions || [];
       currentSubscriptions.push(subscriptionData);
       
+      console.log('📝 Updating existing user subscriptions record');
+      console.log('📝 Total subscriptions after update:', currentSubscriptions.length);
+      
       await pool.query(
         'UPDATE user_subscriptions SET subscriptions = $1, licensee_number = $2, license_number = $3, updated_at = CURRENT_TIMESTAMP WHERE user_id = $4',
         [JSON.stringify(currentSubscriptions), licenseeNumber, licenseNumber, currentUser.id]
       );
+      
+      console.log('✅ Successfully updated user subscriptions record');
     } else {
       // Create new user subscription record
+      console.log('📝 Creating new user subscriptions record');
+      
       await pool.query(
         'INSERT INTO user_subscriptions (user_id, subscriptions, licensee_number, license_number) VALUES ($1, $2, $3, $4)',
         [currentUser.id, JSON.stringify([subscriptionData]), licenseeNumber, licenseNumber]
       );
+      
+      console.log('✅ Successfully created new user subscriptions record');
+    }
+    
+    // Verify the data was stored correctly
+    const verifyResult = await pool.query(
+      'SELECT licensee_number, license_number, subscriptions FROM user_subscriptions WHERE user_id = $1',
+      [currentUser.id]
+    );
+    
+    if (verifyResult.rows.length > 0) {
+      const stored = verifyResult.rows[0];
+      console.log('🔍 Verification - Stored data:');
+      console.log('   Licensee Number:', stored.licensee_number);
+      console.log('   License Number:', stored.license_number);
+      console.log('   Subscriptions count:', stored.subscriptions?.length || 0);
+      console.log('   Latest subscription license:', stored.subscriptions?.[stored.subscriptions.length - 1]?.licenseNumber);
+    } else {
+      console.error('❌ Verification failed - no user subscription record found after creation/update');
     }
 
     res.json({
