@@ -153,9 +153,6 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
                     color: '#aab7c4',
                   },
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  ':-webkit-autofill': {
-                    color: '#333',
-                  },
                   // Touch-specific optimizations
                   iconColor: '#666',
                   ':-webkit-autofill': {
