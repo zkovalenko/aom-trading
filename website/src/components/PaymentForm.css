@@ -284,3 +284,99 @@
 .card-element-invalid {
   border-color: #dc3545 !important;
 }
+
+/* Stripe loading and error states */
+.stripe-loading,
+.stripe-error {
+  text-align: center;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.stripe-loading p {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.stripe-loading small {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.stripe-error {
+  background-color: #fff5f5;
+  border: 2px solid #fed7d7;
+  border-radius: 8px;
+  color: #c53030;
+}
+
+.stripe-error h3 {
+  color: #c53030;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.stripe-error p {
+  color: #742a2a;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.troubleshooting-steps {
+  text-align: left;
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  border: 1px solid #e2e8f0;
+}
+
+.troubleshooting-steps h4 {
+  color: #2d3748;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.troubleshooting-steps ul {
+  color: #4a5568;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.troubleshooting-steps li {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.retry-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.retry-button:hover {
+  background-color: #2E7D32;
+}

@@ -133,7 +133,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  color: var(--bg-color-blue);
   transition: 0.3s;
   border-radius: 30px;
 }

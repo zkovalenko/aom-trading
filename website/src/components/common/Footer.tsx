@@ -13,16 +13,15 @@ const Footer: React.FC = () => {
           <div className="footer-section">
             <h3>Learn To Trade</h3>
             <ul>
-              <li><Link to="/learn-to-trade">Our Services</Link></li>
-              <li><Link to="/tutoring">1-1 Tutoring</Link></li>
-              <li><Link to="/ninjatrader">NinjaTrader 8</Link></li>
+              <li><Link to="/learn-to-trade">Study Course</Link></li>
+              <li><Link to="/tutoring">Software</Link></li>
             </ul>
           </div>
           
           <div className="footer-section">
             <h3>Contact Us</h3>
             <ul>
-              <li><Link to="/contact">Email</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
               <li><Link to="/faq">FAQ</Link></li>
               <li><Link to="/terms">Terms of Service</Link></li>
             </ul>

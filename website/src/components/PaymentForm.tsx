@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import React, { useState, useEffect } from 'react';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 import {
   Elements,
   CardElement,
@@ -10,7 +10,64 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import './PaymentForm.css';
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key');
+// Enhanced Stripe loading with fallback options
+const loadStripeWithFallback = async (): Promise<Stripe | null> => {
+  try {
+    // First attempt: Load Stripe normally
+    const stripe = await loadStripe(
+      process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key',
+      {
+        // Additional options for better compatibility
+        apiVersion: '2023-10-16',
+        stripeAccount: undefined,
+      }
+    );
+    
+    if (stripe) {
+      console.log('Stripe loaded successfully');
+      return stripe;
+    }
+  } catch (error) {
+    console.warn('Primary Stripe loading failed:', error);
+  }
+
+  try {
+    // Fallback: Try loading with manual script injection
+    console.log('Attempting Stripe fallback loading...');
+    
+    // Check if Stripe is already loaded globally
+    if (window?.Stripe) {
+      return window.Stripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key');
+    }
+
+    // Manually inject Stripe script if not loaded
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://js.stripe.com/v3/';
+      script.async = true;
+      script.onload = () => {
+        if (window.Stripe) {
+          const stripe = window.Stripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key');
+          console.log('Stripe loaded via fallback');
+          resolve(stripe);
+        } else {
+          console.error('Stripe failed to load even with fallback');
+          resolve(null);
+        }
+      };
+      script.onerror = () => {
+        console.error('Failed to load Stripe script');
+        resolve(null);
+      };
+      document.head.appendChild(script);
+    });
+  } catch (error) {
+    console.error('Stripe fallback loading failed:', error);
+    return null;
+  }
+};
+
+const stripePromise = loadStripeWithFallback();
 
 interface PaymentFormProps {
   productType: 'tutoring';
@@ -239,8 +296,73 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
 };
 
 const PaymentForm: React.FC<PaymentFormProps> = (props) => {
+  const [stripe, setStripe] = useState<Stripe | null>(null);
+  const [stripeError, setStripeError] = useState<string | null>(null);
+  const [isStripeLoading, setIsStripeLoading] = useState(true);
+
+  useEffect(() => {
+    const initializeStripe = async () => {
+      setIsStripeLoading(true);
+      try {
+        const stripeInstance = await stripePromise;
+        if (stripeInstance) {
+          setStripe(stripeInstance);
+          setStripeError(null);
+        } else {
+          setStripeError('Unable to load payment system. Please check your browser settings and disable ad blockers, then refresh the page.');
+        }
+      } catch (error) {
+        console.error('Stripe initialization error:', error);
+        setStripeError('Payment system blocked. Please disable ad blockers and browser extensions, then refresh the page.');
+      } finally {
+        setIsStripeLoading(false);
+      }
+    };
+
+    initializeStripe();
+  }, []);
+
+  if (isStripeLoading) {
+    return (
+      <div className="payment-form">
+        <div className="stripe-loading">
+          <div className="loading-spinner"></div>
+          <p>Loading secure payment system...</p>
+          <small>If this takes too long, please disable ad blockers and refresh the page.</small>
+        </div>
+      </div>
+    );
+  }
+
+  if (stripeError) {
+    return (
+      <div className="payment-form">
+        <div className="stripe-error">
+          <h3>Payment System Unavailable</h3>
+          <p>{stripeError}</p>
+          <div className="troubleshooting-steps">
+            <h4>Troubleshooting Steps:</h4>
+            <ul>
+              <li>Disable ad blockers (uBlock Origin, AdBlock, etc.)</li>
+              <li>Disable browser extensions temporarily</li>
+              <li>Try using an incognito/private window</li>
+              <li>Clear your browser cache and cookies</li>
+              <li>Try a different browser (Chrome, Firefox, Safari)</li>
+            </ul>
+          </div>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="retry-button"
+          >
+            Retry Payment System
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripe}>
       <CheckoutForm {...props} />
     </Elements>
   );
