@@ -8,6 +8,7 @@ import {
 } from '@stripe/react-stripe-js';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import './PaymentForm.css';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_publishable_key');
 
@@ -145,8 +146,9 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
             options={{
               style: {
                 base: {
-                  fontSize: '16px',
+                  fontSize: '18px', // Larger font size for better touch experience
                   color: '#333',
+                  lineHeight: '1.5', // Better line height for touch
                   '::placeholder': {
                     color: '#aab7c4',
                   },
@@ -154,14 +156,30 @@ const CheckoutForm: React.FC<PaymentFormProps> = ({
                   ':-webkit-autofill': {
                     color: '#333',
                   },
+                  // Touch-specific optimizations
+                  iconColor: '#666',
+                  ':-webkit-autofill': {
+                    color: '#333',
+                    backgroundColor: 'transparent',
+                  },
                 },
                 invalid: {
                   color: '#e74c3c',
                   iconColor: '#e74c3c',
                 },
+                complete: {
+                  color: '#28a745',
+                  iconColor: '#28a745',
+                },
               },
               hidePostalCode: false,
               disabled: false,
+              // iOS Safari specific fixes
+              classes: {
+                focus: 'card-element-focus',
+                empty: 'card-element-empty',
+                invalid: 'card-element-invalid',
+              },
             }}
             onReady={() => {
               console.log('CardElement ready');

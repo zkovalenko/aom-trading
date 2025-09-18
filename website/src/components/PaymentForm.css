@@ -71,14 +71,21 @@
 
 .card-element-container .StripeElement {
   background-color: white;
-  padding: 12px;
+  padding: 16px; /* Increased padding for better touch */
   border: 2px solid #e1e1e1;
   border-radius: 6px;
   transition: border-color 0.3s ease;
-  min-height: 44px; /* Safari touch target requirement */
+  min-height: 56px; /* Larger touch target for mobile */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  /* iOS specific fixes */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: text;
+  -webkit-touch-callout: none;
+  /* Ensure proper font rendering on iOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Safari-specific fixes */
@@ -189,6 +196,7 @@
   line-height: 1.4;
 }
 
+/* Touch screen and mobile optimizations */
 @media (max-width: 768px) {
   .payment-form {
     margin: 1rem;
@@ -217,4 +225,62 @@
   .security-badge {
     justify-content: center;
   }
+
+  /* Enhanced mobile card element */
+  .card-element-container .StripeElement {
+    padding: 20px; /* Even more padding on mobile */
+    min-height: 60px; /* Larger touch target */
+    font-size: 18px; /* Ensure large enough font */
+  }
+
+  .pay-button,
+  .cancel-button {
+    padding: 1rem; /* Larger buttons for touch */
+    font-size: 1.1rem;
+    min-height: 50px; /* Ensure minimum touch target */
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-appearance: none) {
+  .card-element-container .StripeElement {
+    -webkit-appearance: none !important;
+    -webkit-user-select: text !important;
+    -webkit-touch-callout: none !important;
+    /* Prevent zoom on focus in iOS */
+    font-size: 18px !important;
+  }
+}
+
+/* iPad specific optimizations */
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+  
+  .card-element-container .StripeElement {
+    min-height: 54px;
+    padding: 18px;
+    font-size: 18px;
+  }
+
+  .pay-button,
+  .cancel-button {
+    min-height: 48px;
+    padding: 0.9rem;
+  }
+}
+
+/* Focus states for better accessibility */
+.card-element-focus {
+  border-color: #4CAF50 !important;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
+}
+
+.card-element-empty {
+  /* Styles for empty state */
+}
+
+.card-element-invalid {
+  border-color: #dc3545 !important;
 }
