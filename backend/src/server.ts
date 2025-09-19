@@ -28,6 +28,16 @@ const pgSession = connectPgSimple(session);
 
 // Middleware
 app.use(helmet());
+
+// Custom Content Security Policy for Stripe compatibility
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' https://js.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; connect-src 'self' https://api.stripe.com https://r.stripe.com; img-src 'self' data: blob: https://q.stripe.com; style-src 'self' 'unsafe-inline' https://js.stripe.com; font-src 'self' https://fonts.stripe.com;"
+  );
+  next();
+});
+
 app.use(morgan('combined'));
 
 // CORS configuration
