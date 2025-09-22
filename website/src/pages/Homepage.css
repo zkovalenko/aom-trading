@@ -19,7 +19,7 @@
   .h3-subtext {
     font-family: 'Montserat';
     text-transform: uppercase;
-    color: var(--color-purple-red);
+    color: var(--color-green);
     font-size: 2.6rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
@@ -67,7 +67,7 @@
   font-size: 2.5rem;
   font-weight: 400;
   margin-bottom: 1rem;
-  /* color: var(--color-purple-red); */
+  /* color: var(--color-green); */
   font-weight: bold;
   font-style: italic;
 }
@@ -100,6 +100,7 @@
 }
 
 .service-card h3 {
+  color: var(--color-green);
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -227,7 +228,7 @@
 /* Trusted Resources */
 .trusted-resources {
   padding: 3rem 0;
-  background: linear-gradient(0deg, #2c16be99, #201089fa);
+  background: var(--bg-color-green);
   text-align: center;
 }
 
@@ -249,14 +250,11 @@
   font-size: 1.5rem;
   font-weight: bold;
   padding: 1rem 2rem;
-  border: 0.5px solid white;
-  border-radius: 5px;
+  border: 1px solid white;
+  border-radius: 20px;
   color: white;
 }
 
-.resource-logo.ninjatrader {
-  color: #FF6B35;
-}
 
 /* services */
 .services-description {

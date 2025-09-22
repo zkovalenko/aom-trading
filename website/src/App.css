@@ -18,12 +18,12 @@
 :root {
     --color-blue-purple: #1c0e78;
     --color-blue: #341ade;
-    --color-purple-red: #3CF270;
+    --color-green: #43db6e;
     --color-light-gray: #ececec;
     --color-gray: #222;
     --bg-color-blue-purple: #1c0e78;
     --bg-color-blue: #341ade;
-    --bg-color-purple-red: #3CF270;
+    --bg-color-green: #43db6e;
     --bg-color-gray: #222;
     --bg-gradient-blue: linear-gradient(135deg, #341ADE, #1C0E78);
     --bg-color-light-gray: #ececec;
@@ -144,8 +144,8 @@ p, span, div, li, td, th {
 /* ------------- Buttons ------------------*/
 .cta-button {
   display: inline-block;
-  background-color: var(--color-blue);
-  color: white;
+  background-color: var(--color-green);
+  color: var(--color-gray);
   padding: 1.2rem 4rem;
   text-decoration: none;
   border-radius: 40px;
