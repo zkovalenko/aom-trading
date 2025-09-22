@@ -20,7 +20,7 @@
 .logo {
   min-width: 150px;
   min-height: 58px;
-  background: no-repeat url("../../assets/Logo_header.svg");
+  background: no-repeat url("../../assets/aom_logo_green.svg");
   background-size: cover;
   display: flex;
   align-items: center;
@@ -41,9 +41,6 @@
   font-size: 1rem;
   font-weight: 600;
   transition: color 0.3s ease;
-  .nav-link:nth-child(4) {
-    min-width: 145px;
-  }
 }
 
 .nav-link:hover {
@@ -57,9 +54,13 @@
   align-items: center;
 }
 
+.user-menu .nav-link {
+  min-width: 145px;
+}
+
 .logout-btn,
 .signup-btn {
-  background: linear-gradient(130deg, #D81BDD, #341ADE);
+  background: linear-gradient(130deg, #3CF270, #341ADE);
   color: white;
   border: none;
   padding: 1rem 3rem;
