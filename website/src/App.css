@@ -21,11 +21,11 @@
     --color-green: #43db6e;
     --color-dark-green: #238C41;
     --color-light-gray: #ececec;
-    --color-gray: #222;
+    --color-gray: #2f2d3c;
     --bg-color-blue-purple: #1c0e78;
     --bg-color-blue: #341ade;
     --bg-color-green: #43db6e;
-    --bg-color-gray: #222;
+    --bg-color-gray: #2f2d3c;
     --bg-gradient-blue: linear-gradient(135deg, #341ADE, #1C0E78);
     --bg-color-light-gray: #ececec;
 }
@@ -122,6 +122,7 @@ input, textarea, select {
 }
 
 p, span, div, li, td, th {
+  font-size: 1.1rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif !important;
@@ -158,7 +159,8 @@ p, span, div, li, td, th {
 }
 
 .cta-button:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.01);
+  transform: translateY(-1px);
 }
 
 .cta-button.primary {

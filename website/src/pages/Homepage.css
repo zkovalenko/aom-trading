@@ -57,7 +57,7 @@
 
 /* Services Section */
 .services-section {
-  padding: 5rem 0;
+  padding: 7rem 0;
   background-color: white
 }
 
@@ -66,9 +66,8 @@
   font-size: 2.5rem;
   font-weight: 400;
   margin-bottom: 1rem;
-  /* color: var(--color-green); */
+  color: var(--color-blue);
   font-weight: bold;
-  font-style: italic;
 }
 
 .services-intro {
@@ -99,7 +98,6 @@
 }
 
 .service-card h3 {
-  color: var(--color-blue);
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -135,12 +133,13 @@
 }
 
 .service-button:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.01);
+  transform: translateY(-1px); 
 }
 
 /* Consistent Trader Section */
 .consistent-trader {
-  padding: 5rem 0;
+  padding: 7rem 0;
   background-color: white;
 }
 
@@ -153,6 +152,7 @@
   .cta-container {
     width: 100%;
     text-align: center;
+    padding: 3rem 0 0 0;
   }
 }
 
@@ -163,6 +163,10 @@
 }
 .consistent-text p {
   margin-top: 2rem;
+}
+
+.consistent-text p:nth-of-type(2) {
+  margin-bottom: 3rem;
 }
 
 
@@ -176,7 +180,7 @@
 
 /* Founder Section */
 .founder-section {
-  padding: 5rem 0;
+  padding: 7rem 0;
 }
 
 .founder-section h2 {
@@ -226,15 +230,16 @@
 
 /* Trusted Resources */
 .trusted-resources {
-  padding: 3rem 0;
-  background: #5f8068;
+  padding: 4rem 0;
+  background: linear-gradient(10deg, #1c3a24, #72e092);
   text-align: center;
 }
 
 .trusted-resources h2 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 2rem;
   color: white;
+  text-transform: uppercase;
 }
 
 .resources-logos {
@@ -248,8 +253,8 @@
 .resource-logo {
   font-size: 1.5rem;
   font-weight: bold;
-  padding: 1rem 2rem;
-  border: 1px solid white;
+  padding: 1rem 3rem;
+  border: 2px solid #ffffff4d;
   border-radius: 20px;
   color: white;
 }
@@ -257,7 +262,7 @@
 
 /* services */
 .services-description {
-  padding: 3rem 0;
+  padding: 5rem 0;
   background: var(--bg-color-light-gray);
   text-align: center;
 }

@@ -44,7 +44,8 @@
 }
 
 .nav-link:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.01);
+  transform: translateY(-1px);
 }
 
 .user-menu,

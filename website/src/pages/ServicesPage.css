@@ -254,7 +254,7 @@ input:checked + .slider:before {
 
 /* Protected Content Section */
 .protected-content-section {
-  background: linear-gradient(172deg, #fdf9ff, #a78fff5c);
+  background: linear-gradient(172deg, #f1f1f1);
   padding: 4rem 3rem;
   border-radius: 20px;
   margin: 4rem 0;
@@ -288,7 +288,6 @@ input:checked + .slider:before {
   background: white;
   padding: 2rem;
   border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #e6f3ff;

@@ -70,7 +70,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="500px">
       <div className="auth-modal-content">
-        <div className="auth-header">
+        <div>
           <h1>Welcome Back</h1>
           <p>Sign in to access your AOM Trading courses and materials</p>
         </div>
