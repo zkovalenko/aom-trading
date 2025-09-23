@@ -1,7 +1,7 @@
 .study-course-page {
   min-height: 100vh;
   background-color: #f8f9fa;
-  padding: 2rem 0;
+  padding: 5rem 0;
 }
 
 .study-course-header {
@@ -45,6 +45,7 @@
   border-radius: 8px;
   transition: all 0.3s ease;
   font-weight: 500;
+  border: 2px solid #aaa;
 }
 
 .nav-item:hover {
@@ -54,7 +55,8 @@
 }
 
 .nav-item.active {
-  background: #92E3A9;
+  background: var(--color-blue);
+  border: 2px solid var(--color-blue);
   color: white;
 }
 
@@ -75,7 +77,7 @@
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #92E3A9;
+  border-bottom: 2px solid var(--color-blue);
 }
 
 .lesson-grid {
@@ -91,6 +93,9 @@
   padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
 }
 
 .lesson-card:hover {
@@ -135,7 +140,7 @@
 }
 
 .start-lesson-btn {
-  background: #92E3A9;
+  background: var(--color-blue);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -147,7 +152,7 @@
 }
 
 .start-lesson-btn:hover {
-  background: #7dd699;
+  filter: brightness(1.01);
   transform: translateY(-1px);
 }
 
@@ -188,7 +193,7 @@
 
 .progress-fill {
   height: 100%;
-  background: #92E3A9;
+  background: var(--color-blue);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -355,7 +360,7 @@
 
 .content-section h3 {
   color: #2c3e50;
-  border-bottom: 2px solid #92E3A9;
+  border-bottom: 2px solid var(--color-blue);
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
 }
@@ -525,7 +530,7 @@
 }
 
 .complete-btn {
-  background: #28a745;
+  background: var(--color-blue);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -537,13 +542,13 @@
 }
 
 .complete-btn:hover {
-  background: #218838;
+  background: var(--color-blue);
   transform: translateY(-1px);
 }
 
 .completion-message {
   font-size: 1.2rem;
-  color: #28a745;
+  color: var(--color-blue);
   font-weight: 600;
 }
 
@@ -564,13 +569,13 @@
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  border: 2px solid #92E3A9;
+  border: 2px solid var(--color-blue);
   background: white;
-  color: #92E3A9;
+  color: var(--color-blue);
 }
 
 .nav-btn:hover {
-  background: #92E3A9;
+  background: var(--color-blue);
   color: white;
   text-decoration: none;
   transform: translateY(-1px);
@@ -694,7 +699,7 @@
 
 .option-label:hover {
   background: rgba(146, 227, 169, 0.1);
-  border-color: #92E3A9;
+  border-color: var(--color-blue);
 }
 
 .option-text.correct {
@@ -723,7 +728,7 @@
 
 .short-answer textarea:focus {
   outline: none;
-  border-color: #92E3A9;
+  border-color: var(--color-blue);
 }
 
 .submit-quiz-btn {

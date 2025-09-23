@@ -303,7 +303,7 @@
 }
 
 .modal-header h2 {
-  color: #444193;
+  color: var(--bg-color-blue);
   margin: 0 0 1rem 0;
   font-size: 1.8rem;
   text-align: center;
@@ -343,6 +343,10 @@
   margin-bottom: 2rem;
 }
 
+.disclaimer-sections p {
+  font-size: 1rem;
+}
+
 .disclaimer-agreement {
   background: #fff3cd;
   border: 1px solid #ffeaa7;
@@ -374,7 +378,7 @@
 }
 
 .modal-btn.primary {
-  background: #444193;
+  background: var(--bg-color-blue);
   color: white;
 }
 
