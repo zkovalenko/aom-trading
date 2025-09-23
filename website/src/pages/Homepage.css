@@ -44,7 +44,6 @@
   font-weight: bold;
   max-width: 1000px;
   text-transform: uppercase;
-  line-height: normal;
 }
 
 
@@ -100,7 +99,7 @@
 }
 
 .service-card h3 {
-  color: var(--color-green);
+  color: var(--color-blue);
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -171,7 +170,7 @@
   background-image:  url(../assets/monitor_w_back_home.png);
   display: flex;
   justify-content: center;
-  min-height: 411px;
+  min-height: 434px;
   background-size: cover;
 }
 
@@ -228,7 +227,7 @@
 /* Trusted Resources */
 .trusted-resources {
   padding: 3rem 0;
-  background: var(--bg-color-green);
+  background: #5f8068;
   text-align: center;
 }
 

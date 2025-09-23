@@ -19,7 +19,7 @@
 
 .content-image {
   width: 100%;
-  min-height: 411px;
+  min-height: 434px;
   min-width: 545px;
   background-image:  url(../assets/monitor_w_back_home.png);
   background-size: cover;
@@ -240,7 +240,7 @@ input:checked + .slider:before {
 .feature-item h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--color-blue);
 }
 
 .feature-item p {
@@ -374,6 +374,7 @@ input:checked + .slider:before {
   gap: 2rem;
   justify-content: center;
   flex-wrap: wrap;
+  margin: 0;
 }
 
 /* Responsive Design */

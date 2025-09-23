@@ -188,7 +188,7 @@ const ServicesPage: React.FC = () => {
           <div className="content-left content-image">&nbsp;</div>
           
           <div className="content-right">
-              <h1 className="pt-10 color-blue">Learn to Trade with our State of the Art Software</h1>
+              <h1 className="pt-10">Learn to Trade with our State of the Art Software</h1>
 
               <p>
                 Years of market research, real-time data analysis, and tested strategies distilled into a practical way to learn and trade with confidence.
@@ -340,12 +340,9 @@ const ServicesPage: React.FC = () => {
           <h2>Ready to Start Trading?</h2>
           <p>
             Join thousands of traders who have improved their results with our proven methodology. 
-            <br />
-            <br />
           </p>
             <div className="auth-buttons">
-              <Link to="/signup" className="cta-button primary">Create Account</Link>
-              <Link to="/login" className="cta-button secondary">Sign In</Link>
+              <Link to="/signup" className="cta-button">Create Account</Link>
             </div>
           </div>
         )} 
