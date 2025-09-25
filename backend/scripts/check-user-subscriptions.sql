@@ -31,8 +31,6 @@ SELECT
     sl.is_premium,
     sl.is_active,
     sl.expires_at,
-    sl.device_ids,
-    sl.max_devices,
     sl.purchased_at,
     sl.created_at
 FROM software_licenses sl

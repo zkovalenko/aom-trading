@@ -43,7 +43,6 @@ async function checkLicenses() {
         sl.is_premium,
         sl.is_active,
         sl.expires_at,
-        sl.device_ids,
         sl.max_devices,
         sl.created_at,
         sl.updated_at
@@ -81,7 +80,6 @@ async function checkLicenses() {
           is_premium: row.is_premium,
           is_active: row.is_active,
           expires_at: row.expires_at,
-          device_ids: row.device_ids,
           max_devices: row.max_devices,
           created_at: row.created_at
         });
@@ -108,12 +106,6 @@ async function checkLicenses() {
           console.log(`      - Active: ${license.is_active}`);
           console.log(`      - Expires: ${license.expires_at || 'Never'}`);
           console.log(`      - Max Devices: ${license.max_devices || 'N/A'}`);
-          console.log(`      - Current Devices: ${license.device_ids ? license.device_ids.length : 0}`);
-          if (license.device_ids && license.device_ids.length > 0) {
-            license.device_ids.forEach((device, i) => {
-              console.log(`        Device ${i + 1}: ${device.deviceId} (last seen: ${device.lastSeen})`);
-            });
-          }
           console.log(`      - Created: ${license.created_at}`);
         });
       }

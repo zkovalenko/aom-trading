@@ -12,7 +12,7 @@
     "init-db": "node scripts/init-db.js",
     "migrate": "node scripts/migrate.js",
     "create-migration": "node scripts/create-migration.js",
-    "test": "jest"
+    "test": "ts-node --transpile-only tests/licenseValidation.test.ts"
   },
   "dependencies": {
     "@types/bcrypt": "^6.0.0",

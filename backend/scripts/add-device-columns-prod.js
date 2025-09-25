@@ -4,7 +4,6 @@ const crypto = require('crypto');
 const confirm = process.argv[2];
 
 if (confirm !== '--confirm') {
-  console.log('This will add device_ids and max_devices columns to user_subscriptions table in PRODUCTION.');
   console.log('Usage: node scripts/add-device-columns-prod.js --confirm');
   process.exit(1);
 }
@@ -40,7 +39,6 @@ async function addDeviceColumns() {
       SELECT column_name 
       FROM information_schema.columns 
       WHERE table_name = 'user_subscriptions' 
-      AND column_name IN ('device_ids', 'max_devices')
     `);
     
     if (checkColumns.rows.length > 0) {

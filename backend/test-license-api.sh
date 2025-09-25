@@ -16,8 +16,7 @@ curl -X POST "$BASE_URL/api/license/validate" \
   -H "x-api-key: $API_KEY" \
   -d '{
     "email": "zhenya.minkovich@gmail.com",
-    "productNumber": "LEXWRYX9E",
-    "deviceId": "DEVICE123456789"
+    "productNumber": "LEXWRYX9E"
   }' \
   -w "\nStatus Code: %{http_code}\n" \
   -s
@@ -34,7 +33,6 @@ curl -X POST "$BASE_URL/api/license/releaseDevice" \
   -d '{
     "email": "zhenya.minkovich@gmail.com",
     "productNumber": "LEXWRYX9E", 
-    "deviceId": "DEVICE123456789"
   }' \
   -w "\nStatus Code: %{http_code}\n" \
   -s
@@ -50,8 +48,7 @@ curl -X POST "$BASE_URL/api/license/validate" \
   -H "x-api-key: $API_KEY" \
   -d '{
     "email": "nonexistent@example.com",
-    "productNumber": "LEXWRYX9E",
-    "deviceId": "DEVICE123456789"
+    "productNumber": "LEXWRYX9E"
   }' \
   -w "\nStatus Code: %{http_code}\n" \
   -s
@@ -67,8 +64,7 @@ curl -X POST "$BASE_URL/api/license/validate" \
   -H "x-api-key: $API_KEY" \
   -d '{
     "email": "zhenya.minkovich@gmail.com",
-    "productNumber": "INVALID_LICENSE",
-    "deviceId": "DEVICE123456789"
+    "productNumber": "INVALID_LICENSE"
   }' \
   -w "\nStatus Code: %{http_code}\n" \
   -s
@@ -83,4 +79,4 @@ echo "3. API key authentication required (using: test-api-key-12345)"
 echo "4. Make sure backend server is running on localhost:5001"
 echo ""
 echo "🔐 Add test for invalid API key:"
-echo "curl -X POST \"$BASE_URL/api/license/validate\" -H \"Content-Type: application/json\" -H \"x-api-key: invalid-key\" -d '{\"email\":\"zhenya.minkovich@gmail.com\",\"productNumber\":\"LEXWRYX9E\",\"deviceId\":\"DEVICE123456789\"}'"
+echo "curl -X POST \"$BASE_URL/api/license/validate\" -H \"Content-Type: application/json\" -H \"x-api-key: invalid-key\" -d '{\"email\":\"zhenya.minkovich@gmail.com\",\"productNumber\":\"LEXWRYX9E\"}'"
