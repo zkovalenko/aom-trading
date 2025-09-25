@@ -74,9 +74,14 @@ const Header: React.FC = () => {
           {user ? (
             <div className="user-menu">
               {hasActiveSubscription && (
-                <Link to="/my-subscriptions" className="nav-link" onClick={closeMenu}>
-                  My Subscriptions
-                </Link>
+                <>
+                  <Link to="/my-subscriptions" className="nav-link" onClick={closeMenu}>
+                    My Subscriptions
+                  </Link>
+                  <Link to="/meetings" className="nav-link" onClick={closeMenu}>
+                    Meetings
+                  </Link>
+                </>
               )}
               <button onClick={() => { logout(); closeMenu(); }} className="logout-btn">
                 Logout

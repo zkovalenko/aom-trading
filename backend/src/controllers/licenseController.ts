@@ -80,7 +80,7 @@ export const validateLicense = async (req: Request, res: Response): Promise<void
 
     // Find matching subscription for this product
     const subscriptions = user.subscriptions || [];
-    const matchingSubscription = subscriptions.find(sub => 
+    const matchingSubscription = subscriptions.find((sub: any) =>
       sub.productId === product.id
     );
 
@@ -249,7 +249,7 @@ export const releaseDevice = async (req: Request, res: Response): Promise<void> 
 
     // Find matching subscription for this product
     const subscriptions = user.subscriptions || [];
-    const matchingSubscription = subscriptions.find(sub => 
+    const matchingSubscription = subscriptions.find((sub: any) =>
       sub.productId === product.id
     );
 

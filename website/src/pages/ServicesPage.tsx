@@ -318,11 +318,11 @@ const ServicesPage: React.FC = () => {
                 <Link to="/my-subscriptions/software" className="feature-access-button">Download Software</Link>
               </div>
               
-              <div className="protected-feature-item">
-                <h3>Live Trading Rooms</h3>
-                <p>Join our live trading sessions where you can watch expert traders in action and ask questions in real-time.</p>
-                <button className="feature-access-button">Enter Trading Room</button>
-              </div>
+            <div className="protected-feature-item">
+              <h3>Live Trading Rooms</h3>
+              <p>Join our live trading sessions where you can watch expert traders in action and ask questions in real-time.</p>
+              <Link to="/meetings" className="feature-access-button">Enter Trading Room</Link>
+            </div>
               
               {getActiveSubscription()?.product?.name?.includes('Premium') && (
                 <div className="protected-feature-item premium-feature">

@@ -16,6 +16,7 @@ import authRoutes from './routes/auth';
 import paymentRoutes from './routes/payments';
 import subscriptionRoutes from './routes/subscriptions';
 import licenseRoutes from './routes/license';
+import meetingRoutes from './routes/meetings';
 
 // Load environment variables using our centralized system
 loadEnvironmentVariables();
@@ -81,6 +82,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/license', licenseRoutes);
+app.use('/api/meetings', meetingRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -102,7 +104,7 @@ if (process.env.NODE_ENV === 'production') {
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ success: false, message: 'API route not found' });
     }
-    res.sendFile(path.join(publicPath, 'index.html'));
+    return res.sendFile(path.join(publicPath, 'index.html'));
   });
 }
 

@@ -2,6 +2,13 @@ import { User as UserType } from '../controllers/authController';
 
 declare global {
   namespace Express {
+    interface SubscriptionAccess {
+      subscriptions: any[];
+      hasAnyActiveSubscription: boolean;
+      hasBasicAccess: boolean;
+      hasPremiumAccess: boolean;
+    }
+
     interface User {
       id: string;
       email: string;
@@ -13,6 +20,7 @@ declare global {
 
     interface Request {
       user?: User;
+      subscriptionAccess?: SubscriptionAccess;
     }
   }
 }

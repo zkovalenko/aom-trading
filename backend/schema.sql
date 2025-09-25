@@ -123,6 +123,22 @@ CREATE TABLE IF NOT EXISTS public.user_subscriptions (
 
 
 --
+-- Name: zoom_meetings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE IF NOT EXISTS public.zoom_meetings (
+    id SERIAL PRIMARY KEY,
+    meeting_id text NOT NULL,
+    meeting_url text NOT NULL,
+    passcode text NOT NULL,
+    is_active boolean DEFAULT true,
+    required_subscription_tier text NOT NULL DEFAULT 'basic'
+        CHECK (required_subscription_tier IN ('basic', 'premium')),
+    CONSTRAINT zoom_meetings_meeting_id_unique UNIQUE (meeting_id)
+);
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -402,4 +418,3 @@ END $$;
 --
 -- PostgreSQL database dump complete
 --
-

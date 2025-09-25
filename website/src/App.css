@@ -16,17 +16,17 @@
 
 /* Brand Colors - CSS Variables */
 :root {
-    --color-blue-purple: #1c0e78;
-    --color-blue: #341ade;
+    --color-blue-purple: #0a0f1c;
+    --color-blue: #2f498b;
     --color-green: #43db6e;
     --color-dark-green: #238C41;
     --color-light-gray: #ececec;
     --color-gray: #2f2d3c;
     --bg-color-blue-purple: #1c0e78;
-    --bg-color-blue: #341ade;
+    --bg-color-blue: #2f498b;
     --bg-color-green: #43db6e;
     --bg-color-gray: #2f2d3c;
-    --bg-gradient-blue: linear-gradient(135deg, #341ADE, #1C0E78);
+    --bg-gradient-blue: linear-gradient(135deg, #341ADE, #0a0f1c);
     --bg-color-light-gray: #ececec;
 }
 

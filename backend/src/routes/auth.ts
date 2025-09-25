@@ -47,12 +47,12 @@ router.get('/google/callback',
     passport.authenticate('google', { 
       failureRedirect: '/login',
       failureFlash: false 
-    })(req, res, (err) => {
+    })(req, res, (err: any) => {
       if (err) {
         console.error('❌ Passport authentication error:', err);
         return res.status(500).json({ success: false, message: 'OAuth authentication failed', error: err.message });
       }
-      next();
+      return next();
     });
   },
   (req, res) => {
@@ -102,10 +102,10 @@ router.get('/google/callback',
       }
       
       console.log('🔗 Redirecting to:', redirectUrl);
-      res.redirect(redirectUrl);
+      return res.redirect(redirectUrl);
     } catch (error) {
       console.error('❌ Google OAuth callback error:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
+      return res.status(500).json({ success: false, message: 'Internal server error' });
     }
   }
 );

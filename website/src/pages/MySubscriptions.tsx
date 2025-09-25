@@ -95,6 +95,22 @@ const MySubscriptions: React.FC = () => {
     return userSubscriptions.find(sub => sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial');
   };
 
+  // Helper function to determine user's subscription tier
+  const getSubscriptionTier = () => {
+    const activeSubscription = getActiveSubscription();
+    if (!activeSubscription) return null;
+
+    // Check if it's premium based on subscription type or product name
+    const subscriptionType = activeSubscription.subscriptionType?.toLowerCase() || '';
+    const productName = activeSubscription.product?.name?.toLowerCase() || '';
+
+    if (subscriptionType.includes('premium') || productName.includes('premium')) {
+      return 'premium';
+    }
+
+    return 'basic';
+  };
+
   // Handle methodology disclaimer acknowledgment (only when user agrees)
   const handleMethodologyDisclaimerAcknowledge = async () => {
     if (!token) {
@@ -178,11 +194,20 @@ const MySubscriptions: React.FC = () => {
   }
 
   const activeSubscription = getActiveSubscription();
+  const subscriptionTier = getSubscriptionTier();
+
   return (
     <div className="my-subscriptions-page">
       <div className="container">
         <div className="subscription-status-section">
-          <h2>Your Subscription</h2>
+          <div className="subscription-header">
+            <h2>Your Subscription</h2>
+            {subscriptionTier && (
+              <span className={`tier-badge ${subscriptionTier === 'premium' ? 'tier-premium' : 'tier-basic'}`}>
+                {subscriptionTier === 'premium' ? 'Premium' : 'Basic'}
+              </span>
+            )}
+          </div>
           <span>{user.email}</span>
           <div className="subscription-details">
             <div className="subscription-detail-item">
@@ -251,7 +276,7 @@ const MySubscriptions: React.FC = () => {
             <div className="protected-feature-item">
               <h3>Live Trading Rooms</h3>
               <p>Join our live trading sessions where you can watch expert traders in action and ask questions in real-time.</p>
-              <button className="feature-access-button">Enter Trading Room</button>
+              <Link to="/meetings" className="feature-access-button">Enter Trading Room</Link>
             </div>
             
             {getActiveSubscription()?.productId && (

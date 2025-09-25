@@ -66,11 +66,40 @@
   margin-bottom: 3rem;
 }
 
+.subscription-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
 .subscription-status-section h2 {
   color: #444193;
-  margin-bottom: 2rem;
+  margin: 0;
   text-align: center;
   font-size: 1.8rem;
+}
+
+/* Tier Badge Styles */
+.tier-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+}
+
+.tier-basic {
+  background: rgba(74, 144, 226, 0.35);
+  border: 1px solid rgba(74, 144, 226, 0.6);
+}
+
+.tier-premium {
+  background: rgba(236, 72, 153, 0.35);
+  border: 1px solid rgba(236, 72, 153, 0.6);
 }
 
 .subscription-details {
