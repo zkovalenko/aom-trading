@@ -87,7 +87,7 @@ const MeetingsPage: React.FC = () => {
 
     const fetchMeetings = async () => {
       try {
-        const response = await apiCall('/meetings', { method: 'GET' }, token);
+        const response = await apiCall('/trading-rooms', { method: 'GET' }, token);
 
         if (response.status === 403) {
           setError('An active subscription is required to view meetings.');
@@ -277,11 +277,6 @@ const MeetingsPage: React.FC = () => {
                 <div className="meeting-detail">
                   <span className="label">Passcode:</span>
                   <span className="value">{meeting.passcode}</span>
-                </div>
-                {/* Debug info */}
-                <div className="meeting-detail">
-                  <span className="label">Debug - Zoom Data:</span>
-                  <span className="value">{meeting.zoomData ? 'Available' : 'Missing'}</span>
                 </div>
                 {!meeting.zoomData && (
                   <div className="meeting-detail">

@@ -52,7 +52,7 @@ function App() {
               <Route path="/my-subscriptions/study-course/:chapterId/lesson/:lessonId" element={<LessonPage />} />
               <Route path="/my-subscriptions/study-course/:chapterId/quiz/:quizId" element={<QuizPage />} />
               <Route path="/my-subscriptions/software" element={<Software />} />
-              <Route path="/meetings" element={<MeetingsPage />} />
+              <Route path="/trading-rooms" element={<MeetingsPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/contact" element={<div className="page-placeholder">Contact Page Coming Soon</div>} />

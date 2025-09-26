@@ -78,8 +78,8 @@ const Header: React.FC = () => {
                   <Link to="/my-subscriptions" className="nav-link" onClick={closeMenu}>
                     My Subscriptions
                   </Link>
-                  <Link to="/meetings" className="nav-link" onClick={closeMenu}>
-                    Meetings
+                  <Link to="/trading-rooms" className="nav-link" onClick={closeMenu}>
+                    Trading Rooms
                   </Link>
                 </>
               )}

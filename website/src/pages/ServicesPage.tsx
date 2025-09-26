@@ -321,7 +321,7 @@ const ServicesPage: React.FC = () => {
             <div className="protected-feature-item">
               <h3>Live Trading Rooms</h3>
               <p>Join our live trading sessions where you can watch expert traders in action and ask questions in real-time.</p>
-              <Link to="/meetings" className="feature-access-button">Enter Trading Room</Link>
+              <Link to="/trading-rooms" className="feature-access-button">Enter Trading Room</Link>
             </div>
               
               {getActiveSubscription()?.product?.name?.includes('Premium') && (
