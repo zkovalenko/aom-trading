@@ -50,4 +50,7 @@ export function loadEnvironmentVariables() {
   console.log('GOOGLE_CLIENT_ID exists:', !!process.env.GOOGLE_CLIENT_ID);
   console.log('GOOGLE_CLIENT_SECRET exists:', !!process.env.GOOGLE_CLIENT_SECRET);
   console.log('STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
+  console.log('ZOOM_API_CLIENT_ID exists:', !!process.env.ZOOM_API_CLIENT_ID);
+  console.log('ZOOM_API_SECRET exists:', !!process.env.ZOOM_API_SECRET);
+  console.log('ZOOM_API_ACCOUNT_ID exists:', !!process.env.ZOOM_API_ACCOUNT_ID);
 }
