@@ -49,27 +49,6 @@ async function addDeviceColumns() {
       return;
     }
     
-    console.log('📝 Adding device_ids and max_devices columns to user_subscriptions...');
-    
-    // Add the columns
-    await client.query(`
-      ALTER TABLE user_subscriptions 
-      ADD COLUMN IF NOT EXISTS device_ids JSONB DEFAULT '[]'::jsonb,
-      ADD COLUMN IF NOT EXISTS max_devices INTEGER DEFAULT 2
-    `);
-    
-    console.log('✅ Successfully added device columns to user_subscriptions table:');
-    console.log('   - device_ids: JSONB column for storing device information');
-    console.log('   - max_devices: INTEGER column with default value 2');
-    
-    // Verify the columns were added
-    const verifyColumns = await client.query(`
-      SELECT column_name, data_type, column_default
-      FROM information_schema.columns 
-      WHERE table_name = 'user_subscriptions' 
-      AND column_name IN ('device_ids', 'max_devices')
-      ORDER BY column_name
-    `);
     
     console.log('\n📊 Column verification:');
     verifyColumns.rows.forEach(row => {

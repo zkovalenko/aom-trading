@@ -85,7 +85,7 @@ const evaluateSubscriptionAccess = (subscriptions: any[]) => {
 export const getActiveMeetings = async (req: Request, res: Response): Promise<void> => {
   try {
     // First, get user's subscriptions from the database
-    const userId = (req.user as any).id;
+    const userId = (req.user as any)?.id;
 
     const userSubscriptionResult = await pool.query(
       'SELECT subscriptions, license_number, licensee_number FROM user_subscriptions WHERE user_id = $1',
@@ -143,11 +143,12 @@ export const getActiveMeetings = async (req: Request, res: Response): Promise<vo
     );
 
     // Get Zoom data for accessible meetings
-    let meetingsWithOccurrences = [];
+    let meetingsWithOccurrences: any[] = [];
 
-    console.log("Checking if ZOOM is configured: ", zoomService.isConfigured());
+    const isZoomConfigured = zoomService.isConfigured();
+    console.log(`🔍 Zoom API configured: ${isZoomConfigured}`);
 
-    if (zoomService.isConfigured() && accessibleMeetings.length > 0) {
+    if (isZoomConfigured) {
       console.log('🔄 Fetching Zoom meeting occurrences...');
 
       const meetingIds = accessibleMeetings.map(row => row.meeting_id);
@@ -156,19 +157,24 @@ export const getActiveMeetings = async (req: Request, res: Response): Promise<vo
       meetingsWithOccurrences = accessibleMeetings.map((row, index) => {
         const zoomMeeting = zoomData[index];
 
+        console.log(`📊 Processing meeting ${row.meeting_id}:`, {
+          zoomMeetingExists: !!zoomMeeting,
+          duration: zoomMeeting?.duration,
+          topic: zoomMeeting?.topic,
+          occurrencesCount: zoomMeeting?.occurrences?.length || 0
+        });
+
         return {
           meetingId: row.meeting_id,
           meetingUrl: row.meeting_url,
           passcode: row.passcode,
           requiredSubscriptionTier: row.required_subscription_tier,
-          // Add occurrences directly to the meeting object for easy access
           occurrences: zoomMeeting?.occurrences || [],
-          // Add Zoom API data if available
           zoomData: zoomMeeting ? {
             topic: zoomMeeting.topic,
             status: zoomMeeting.status,
             start_time: zoomMeeting.start_time,
-            duration: zoomMeeting.duration,
+            duration: zoomMeeting.duration || 60, // Default to 60 minutes if Zoom doesn't provide duration
             timezone: zoomMeeting.timezone,
             occurrences: zoomMeeting.occurrences || []
           } : null
@@ -186,12 +192,23 @@ export const getActiveMeetings = async (req: Request, res: Response): Promise<vo
       }));
     }
 
+    console.log('📤 Final response data:', {
+      meetingsCount: meetingsWithOccurrences.length,
+      firstMeetingExample: meetingsWithOccurrences[0] ? {
+        meetingId: meetingsWithOccurrences[0].meetingId,
+        hasZoomData: !!meetingsWithOccurrences[0].zoomData,
+        zoomDataDuration: meetingsWithOccurrences[0].zoomData?.duration,
+        occurrencesCount: meetingsWithOccurrences[0].occurrences?.length || 0
+      } : null,
+      zoomApiConfigured: isZoomConfigured
+    });
+
     res.json({
       success: true,
       data: {
         meetings: meetingsWithOccurrences,
         subscriptionAccess: userAccess,
-        zoomApiConfigured: zoomService.isConfigured()
+        zoomApiConfigured: isZoomConfigured
       }
     });
   } catch (error) {

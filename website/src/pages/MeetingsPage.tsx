@@ -101,6 +101,9 @@ const MeetingsPage: React.FC = () => {
 
         const data = await response.json();
         const meetingsData: Meeting[] = data?.data?.meetings || [];
+        console.log("~~meetingsData:", meetingsData);
+        console.log("~~First meeting zoomData:", meetingsData[0]?.zoomData);
+        console.log("~~First meeting duration:", meetingsData[0]?.zoomData?.duration);
         setMeetings(meetingsData);
       } catch (err) {
         console.error('Failed to load meetings:', err);
@@ -226,11 +229,6 @@ const MeetingsPage: React.FC = () => {
               <div className="meeting-card" key={`${meeting.meetingId}-${meeting.scheduledAt}`}>
                 <div className="meeting-card-header">
                   <h2>{meeting.zoomData?.topic || 'Zoom Session'}</h2>
-                  <span
-                    className={`tier-badge ${meeting.requiredSubscriptionTier === 'premium' ? 'tier-premium' : 'tier-basic'}`}
-                  >
-                    {meeting.requiredSubscriptionTier === 'premium' ? 'Premium' : 'Basic'}
-                  </span>
                 </div>
                 {meeting.zoomData && (
                   <div className="zoom-info">
@@ -251,7 +249,7 @@ const MeetingsPage: React.FC = () => {
                     )}
                     <div className="meeting-detail">
                       <span className="label">Duration:</span>
-                      <span className="value">{meeting.zoomData.duration} minutes</span>
+                      <span className="value">{meeting.zoomData.duration || 'N/A'} minutes</span>
                     </div>
                     {meeting.zoomData.timezone && (
                       <div className="meeting-detail">
@@ -280,6 +278,17 @@ const MeetingsPage: React.FC = () => {
                   <span className="label">Passcode:</span>
                   <span className="value">{meeting.passcode}</span>
                 </div>
+                {/* Debug info */}
+                <div className="meeting-detail">
+                  <span className="label">Debug - Zoom Data:</span>
+                  <span className="value">{meeting.zoomData ? 'Available' : 'Missing'}</span>
+                </div>
+                {!meeting.zoomData && (
+                  <div className="meeting-detail">
+                    <span className="label">Duration (Fallback):</span>
+                    <span className="value">60 minutes (default)</span>
+                  </div>
+                )}
                 {meeting.occurrences && meeting.occurrences.length > 0 && (
                   <div className="occurrences-section">
                     <h3>Upcoming Occurrences</h3>

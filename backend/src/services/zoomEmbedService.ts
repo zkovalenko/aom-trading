@@ -7,7 +7,7 @@ app.get("/api/zoom-signature", (req, res) => {
   const sdkKey = process.env.ZOOM_SDK_KEY!;
   const sdkSecret = process.env.ZOOM_SDK_SECRET!;
   const meetingNumber = req.query.meetingNumber as string;
-  const role = parseInt(req.query.role as string) || 0; // 0 = attendee, 1 = host
+  const role = 0; // 0 = attendee, 1 = host
 
   const iat = Math.floor(Date.now() / 1000) - 30;
   const exp = iat + 60 * 60 * 2; // valid 2h

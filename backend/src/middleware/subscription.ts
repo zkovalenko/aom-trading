@@ -97,7 +97,7 @@ export const requireActiveSubscription = async (
 
     const result = await pool.query(
       'SELECT subscriptions, license_number, licensee_number FROM user_subscriptions WHERE user_id = $1',
-      [(req.user as any).id]
+      [(req.user as any)?.id]
     );
 
     if (result.rows.length === 0) {
@@ -115,7 +115,7 @@ export const requireActiveSubscription = async (
       try {
         subscriptions = JSON.parse(subscriptions);
       } catch (error) {
-        console.warn('Failed to parse subscriptions JSON for user', (req.user as any).id, error);
+        console.warn('Failed to parse subscriptions JSON for user', (req.user as any)?.id, error);
         subscriptions = [];
       }
     }
