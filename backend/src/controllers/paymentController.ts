@@ -197,7 +197,7 @@ export const handleStripeWebhook = async (req: Request, res: Response): Promise<
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
         console.log('Payment succeeded:', paymentIntent.id);
-        
+
         // Update payment status in database
         await pool.query(
           'UPDATE payments SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE stripe_payment_intent_id = $2',
@@ -208,12 +208,92 @@ export const handleStripeWebhook = async (req: Request, res: Response): Promise<
       case 'payment_intent.payment_failed':
         const failedPayment = event.data.object;
         console.log('Payment failed:', failedPayment.id);
-        
+
         // Update payment status in database
         await pool.query(
           'UPDATE payments SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE stripe_payment_intent_id = $2',
           ['failed', failedPayment.id]
         );
+        break;
+
+      case 'customer.subscription.created':
+        const createdSubscription = event.data.object;
+        console.log('🎉 Subscription created:', createdSubscription.id);
+        console.log('📋 Subscription status:', createdSubscription.status);
+        console.log('🎁 Trial ends:', createdSubscription.trial_end ? new Date(createdSubscription.trial_end * 1000).toISOString() : 'No trial');
+        break;
+
+      case 'customer.subscription.trial_will_end':
+        const trialEndingSubscription = event.data.object;
+        console.log('⚠️ Trial ending soon for subscription:', trialEndingSubscription.id);
+
+        // Find user by subscription ID and send notification
+        const trialEndingResult = await pool.query(
+          `SELECT us.*, u.email, u.name
+           FROM user_subscriptions us
+           JOIN users u ON us.user_id = u.id
+           WHERE us.subscriptions::text LIKE $1`,
+          [`%"stripeSubscriptionId":"${trialEndingSubscription.id}"%`]
+        );
+
+        if (trialEndingResult.rows.length > 0) {
+          const user = trialEndingResult.rows[0];
+          console.log(`📧 Trial ending notification for user: ${user.email}`);
+          // TODO: Send email notification about trial ending
+        }
+        break;
+
+      case 'invoice.payment_succeeded':
+        const invoice = event.data.object;
+        console.log('💰 Invoice payment succeeded:', invoice.id);
+        console.log('🔄 Subscription:', invoice.subscription);
+
+        // Update subscription status to active after first payment
+        if (invoice.subscription) {
+          const subscriptionResult = await pool.query(
+            `UPDATE user_subscriptions
+             SET subscriptions = jsonb_set(
+               subscriptions::jsonb,
+               '{0,subscriptionStatus}',
+               '"active"'::jsonb
+             )
+             WHERE subscriptions::text LIKE $1`,
+            [`%"stripeSubscriptionId":"${invoice.subscription}"%`]
+          );
+
+          console.log('✅ Updated subscription status to active');
+        }
+        break;
+
+      case 'invoice.payment_failed':
+        const failedInvoice = event.data.object;
+        console.log('❌ Invoice payment failed:', failedInvoice.id);
+        console.log('🔄 Subscription:', failedInvoice.subscription);
+
+        // Handle failed payment - potentially suspend access
+        if (failedInvoice.subscription) {
+          console.log('⚠️ Payment failed for subscription, may need to suspend access');
+          // TODO: Handle failed payment logic - suspend user access after retry attempts
+        }
+        break;
+
+      case 'customer.subscription.deleted':
+        const deletedSubscription = event.data.object;
+        console.log('🗑️ Subscription cancelled:', deletedSubscription.id);
+
+        // Update subscription status to cancelled
+        await pool.query(
+          `UPDATE user_subscriptions
+           SET subscriptions = jsonb_set(
+             subscriptions::jsonb,
+             '{0,subscriptionStatus}',
+             '"cancelled"'::jsonb
+           )
+           WHERE subscriptions::text LIKE $1`,
+          [`%"stripeSubscriptionId":"${deletedSubscription.id}"%`]
+        );
+
+        console.log('✅ Updated subscription status to cancelled');
         break;
 
       default:

@@ -16,6 +16,7 @@ interface Product {
 
 interface UserSubscription {
   id: string;
+  subscriptionId: string;
   user_id: string;
   productId: string;
   createdAt: string;
@@ -33,6 +34,8 @@ const MySubscriptions: React.FC = () => {
   const [userSubscriptions, setUserSubscriptions] = useState<UserSubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [showMethodologyModal, setShowMethodologyModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancellingSubscription, setCancellingSubscription] = useState(false);
 
   useEffect(() => {
     const loadUserSubscriptions = async () => {
@@ -145,11 +148,73 @@ const MySubscriptions: React.FC = () => {
     setShowMethodologyModal(false);
   };
 
+  // Handle cancel subscription
+  const handleCancelSubscription = async () => {
+    if (!token) return;
+
+    const activeSubscription = getActiveSubscription();
+    if (!activeSubscription) return;
+
+    setCancellingSubscription(true);
+
+    try {
+      const response = await apiCall('/subscriptions/cancel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          subscriptionId: activeSubscription.subscriptionId
+        })
+      }, token);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Subscription cancelled successfully:', data);
+
+        // Refresh subscriptions
+        const refreshResponse = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
+        if (refreshResponse.ok) {
+          const refreshData = await refreshResponse.json();
+          if (refreshData.success) {
+            setUserSubscriptions(refreshData.data.subscriptions);
+          }
+        }
+
+        setShowCancelModal(false);
+        alert('Subscription cancelled successfully. You will continue to have access until your current billing period ends.');
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to cancel subscription:', errorData);
+        alert('Failed to cancel subscription. Please try again or contact support.');
+      }
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      alert('An error occurred while cancelling your subscription. Please try again.');
+    } finally {
+      setCancellingSubscription(false);
+    }
+  };
+
+  // Show cancel confirmation modal
+  const showCancelConfirmation = () => {
+    setShowCancelModal(true);
+  };
+
+  // Hide cancel confirmation modal
+  const hideCancelConfirmation = () => {
+    setShowCancelModal(false);
+  };
+
   // Handle escape key press
   useEffect(() => {
     const handleEscapePress = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && showMethodologyModal) {
-        handleMethodologyDisclaimerDismiss();
+      if (event.key === 'Escape') {
+        if (showCancelModal) {
+          hideCancelConfirmation();
+        } else if (showMethodologyModal) {
+          handleMethodologyDisclaimerDismiss();
+        }
       }
     };
 
@@ -157,7 +222,7 @@ const MySubscriptions: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleEscapePress);
     };
-  }, [showMethodologyModal]);
+  }, [showMethodologyModal, showCancelModal]);
 
   if (loading) {
     return (
@@ -286,6 +351,10 @@ const MySubscriptions: React.FC = () => {
               </div>
             )}
           </div>
+          <button className="cancel-btn" onClick={showCancelConfirmation}>
+            Cancel Subscription
+          </button>
+
         </div>
 
         {/* Methodology Disclaimer Modal */}
@@ -294,7 +363,7 @@ const MySubscriptions: React.FC = () => {
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h2>Trading Methodology Disclaimer</h2>
-                <button 
+                <button
                   className="modal-close-btn"
                   onClick={handleMethodologyDisclaimerDismiss}
                   aria-label="Close modal"
@@ -305,32 +374,81 @@ const MySubscriptions: React.FC = () => {
               <div className="modal-body">
                 <div className="disclaimer-content">
                   <div className="disclaimer-sections">
-                  CFTC RULE 4.41 HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE INHERENT LIMITATIONS. UNLIKE AN ACTUAL PERFORMANCE RECORD, 
-                  SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, SINCE THE TRADES HAVE NOT BEEN EXECUTED, 
-                  THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY. 
-                  SIMULATED TRADING PROGRAMS IN GENERAL ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT. 
+                  CFTC RULE 4.41 HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE INHERENT LIMITATIONS. UNLIKE AN ACTUAL PERFORMANCE RECORD,
+                  SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, SINCE THE TRADES HAVE NOT BEEN EXECUTED,
+                  THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY.
+                  SIMULATED TRADING PROGRAMS IN GENERAL ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT.
                   NO REPRESENTATION IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFIT OR LOSSES SIMILAR TO THOSE SHOWN.
 
-                  <p>Trading contains substantial risk and is not for every investor. An investor could potentially lose all or more than the initial investment. 
-                    Risk capital is money that can be lost without jeopardizing one’s financial security or lifestyle. 
-                    Only risk capital should be used for trading and only those with sufficient risk capital should consider trading. 
-                    Past performance is not necessarily indicative of future results. All Software provided or purchased is strictly for educational purposes only. 
-                    Any presentation (live or recorded) is for educational purposes only and the opinions expressed are those of the presenter only. 
+                  <p>Trading contains substantial risk and is not for every investor. An investor could potentially lose all or more than the initial investment.
+                    Risk capital is money that can be lost without jeopardizing one's financial security or lifestyle.
+                    Only risk capital should be used for trading and only those with sufficient risk capital should consider trading.
+                    Past performance is not necessarily indicative of future results. All Software provided or purchased is strictly for educational purposes only.
+                    Any presentation (live or recorded) is for educational purposes only and the opinions expressed are those of the presenter only.
                     Testimonials may not be representative of the experience of other clients or customers and is not a guarantee of future performance or success.
                   </p>
                   </div>
-                  
+
                   <div className="disclaimer-agreement">
                     <p><strong>By proceeding, you acknowledge that you have read, understood, and agree to these terms.</strong></p>
                   </div>
                 </div>
               </div>
               <div className="modal-actions">
-                <button 
-                  className="modal-btn primary" 
+                <button
+                  className="modal-btn primary"
                   onClick={handleMethodologyDisclaimerAcknowledge}
                 >
                   I Understand and Agree
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Cancel Subscription Confirmation Modal */}
+        {showCancelModal && (
+          <div className="modal-overlay" onClick={hideCancelConfirmation}>
+            <div className="modal-content cancel-subscription-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Cancel Subscription?</h2>
+                <button
+                  className="modal-close-btn"
+                  onClick={hideCancelConfirmation}
+                  aria-label="Close modal"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="cancel-warning">
+                  <p><strong>Are you sure you want to cancel your subscription?</strong></p>
+                  <div className="cancel-details">
+                    <p>If you cancel:</p>
+                    <ul>
+                      <li>You will continue to have access until your current billing period ends</li>
+                      <li>You will lose access to all trading rooms, materials, and premium features</li>
+                      <li>Your account data will be preserved in case you want to resubscribe</li>
+                      <li>No refunds will be issued for the current billing period</li>
+                    </ul>
+                    <p>You can always resubscribe later if you change your mind.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button
+                  className="modal-btn secondary"
+                  onClick={hideCancelConfirmation}
+                  disabled={cancellingSubscription}
+                >
+                  Keep Subscription
+                </button>
+                <button
+                  className="modal-btn danger"
+                  onClick={handleCancelSubscription}
+                  disabled={cancellingSubscription}
+                >
+                  {cancellingSubscription ? 'Cancelling...' : 'Yes, Cancel Subscription'}
                 </button>
               </div>
             </div>

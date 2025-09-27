@@ -1,9 +1,10 @@
 import express from 'express';
-import { 
-  getProducts, 
-  createSubscription, 
-  confirmSubscription, 
-  getUserSubscriptions 
+import {
+  getProducts,
+  createSubscription,
+  confirmSubscription,
+  getUserSubscriptions,
+  cancelSubscription
 } from '../controllers/subscriptionController';
 import { authenticateToken } from '../middleware/auth';
 
@@ -20,5 +21,8 @@ router.post('/confirm', authenticateToken, confirmSubscription);
 
 // Get user's subscriptions
 router.get('/my-subscriptions', authenticateToken, getUserSubscriptions);
+
+// Cancel subscription
+router.post('/cancel', authenticateToken, cancelSubscription);
 
 export default router;

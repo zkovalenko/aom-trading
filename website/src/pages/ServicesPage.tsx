@@ -17,6 +17,7 @@ interface Product {
 
 interface UserSubscription {
   id: string;
+  subscriptionId: string;
   user_id: string;
   productId: string;
   createdAt: string;

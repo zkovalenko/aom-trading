@@ -260,6 +260,14 @@ input:checked + .slider:before {
   margin: 4rem 0;
   text-align: center;
   border-radius: 16px;
+  text-align: center;
+}
+
+.cancel-btn {
+  border: none;
+  text-decoration: underline;
+  color: var(--color-blue);
+  padding: 5rem 0 0 0;
 }
 
 .protected-content-section h2 {
