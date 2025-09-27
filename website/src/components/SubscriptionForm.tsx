@@ -72,54 +72,49 @@ const CheckoutForm: React.FC<SubscriptionFormProps> = ({
         throw new Error(data.message || 'Failed to create subscription');
       }
 
-      const { clientSecret, paymentIntentId } = data.data;
-      console.log("~~~~paymentIntentId", paymentIntentId);
-      
-      // Confirm payment with Stripe
+      const { customerId } = data.data;
+
+      if (!customerId) {
+        throw new Error('Missing customer information from subscription setup');
+      }
+
       const cardElement = elements.getElement(CardElement);
       if (!cardElement) {
         throw new Error('Card element not found');
       }
 
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-          payment_method: {
-            card: cardElement,
-            billing_details: {
-              name: `${user.firstName} ${user.lastName}`,
-              email: user.email,
-            },
-          },
-        }
-      );
+      const paymentMethodResult = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+        },
+      });
 
-      if (stripeError) {
-        throw new Error(stripeError.message || 'Payment failed');
+      if (paymentMethodResult.error || !paymentMethodResult.paymentMethod) {
+        throw new Error(paymentMethodResult.error?.message || 'Failed to create payment method');
       }
 
-      if (paymentIntent && paymentIntent.status === 'succeeded') {
-        // Confirm subscription on backend
-        const paymentMethodId = typeof paymentIntent.payment_method === 'string' 
-          ? paymentIntent.payment_method 
-          : paymentIntent.payment_method?.id;
-          
-        const confirmResponse = await apiCall('/subscriptions/confirm', {
-          method: 'POST',
-          body: JSON.stringify({
-            paymentIntentId: paymentIntentId,
-            ccToken: paymentMethodId
-          })
-        }, token);
+      const confirmResponse = await apiCall('/subscriptions/confirm', {
+        method: 'POST',
+        body: JSON.stringify({
+          customerId,
+          productId: product.id,
+          subscriptionType,
+          paymentMethodId: paymentMethodResult.paymentMethod.id
+        })
+      }, token);
 
-        const confirmData = await confirmResponse.json();
+      const confirmData = await confirmResponse.json();
 
-        if (confirmResponse.ok && confirmData.success) {
-          toast.success('Subscription created successfully!');
-          onSuccess?.();
-        } else {
-          throw new Error(confirmData.message || 'Failed to confirm subscription');
-        }
+      if (confirmResponse.ok && confirmData.success) {
+        const card = elements.getElement(CardElement);
+        card?.clear();
+        toast.success('Subscription created successfully!');
+        onSuccess?.();
+      } else {
+        throw new Error(confirmData.message || 'Failed to confirm subscription');
       }
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred during payment';
