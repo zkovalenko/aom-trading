@@ -99,7 +99,7 @@ export async function sendWelcomeEmail({
             <!-- Footer with Logo -->
             <hr style="border:none; border-top:1px solid #ddd; margin:30px 0;" />
             <p style="text-align:center; margin-top:20px;">
-              <img src="https://aom-trading.onrender.com/static/media/aom_logo_green.feb6a5063a110ae94ad5.svg" alt="AOMTrading" width="120" style="max-width:150px; height:auto;" />
+              <img src="https://aom-trading.onrender.com/logo.svg" alt="AOMTrading" width="120" style="max-width:150px; height:auto;" />
             </p>
             <p style="text-align:center; font-size:12px; color:#777;">
               © 2025 AOMTrading, All rights reserved.
