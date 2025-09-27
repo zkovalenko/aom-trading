@@ -238,7 +238,6 @@ const ServicesPage: React.FC = () => {
                         <p>Spot high probability trades for intraday and swing trading</p>
                         <p>State of the art trading software and analytics</p>
                         <p>Access to our live trading rooms</p>
-                        <p></p>
                       </div>
                   }
                   {product.name.includes('Premium') && 

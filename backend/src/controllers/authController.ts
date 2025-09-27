@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import pool from '../config/database';
 import { loadEnvironmentVariables } from '../config/env';
+import { sendWelcomeEmail } from '../services/mailgunService';
 
 export interface User {
   id: string;
@@ -109,6 +110,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     console.log('🎫 Generating JWT token...');
     const token = generateToken(newUser);
     console.log('✅ JWT token generated successfully');
+
+    // Fire-and-forget welcome email
+    sendWelcomeEmail({
+      email: newUser.email,
+      firstName: newUser.first_name || newUser.email,
+    }).catch((emailErr) => {
+      console.error('✉️  Failed to send welcome email:', emailErr);
+    });
 
     res.status(201).json({
       success: true,
