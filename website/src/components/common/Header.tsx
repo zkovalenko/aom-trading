@@ -80,7 +80,6 @@ const Header: React.FC = () => {
         
         <nav className={`nav-menu ${isMenuOpen ? 'nav-menu-open' : ''}`}>
           <Link to="/learn-to-trade" className="nav-link" onClick={closeMenu}>Learn to Trade</Link>
-          <Link to="/contact" className="nav-link" onClick={closeMenu}>Contact Us</Link>
           
           {user ? (
             <div className="user-menu">
@@ -89,9 +88,10 @@ const Header: React.FC = () => {
                   <Link to="/my-subscriptions" className="nav-link" onClick={closeMenu}>
                     My Subscriptions
                   </Link>
-                  <Link to="/meetings" className="nav-link" onClick={closeMenu}>
+                  <Link to="/trading-rooms" className="nav-link" onClick={closeMenu}>
                     Trading Rooms
                   </Link>
+                  <Link to="/support" className="nav-link" onClick={closeMenu}>Contact Us</Link>
                 </>
               )}
               <button onClick={() => { logout(); closeMenu(); }} className="logout-btn">

@@ -17,6 +17,7 @@ import paymentRoutes from './routes/payments';
 import subscriptionRoutes from './routes/subscriptions';
 import licenseRoutes from './routes/license';
 import meetingRoutes from './routes/trading-rooms';
+import supportRoutes from './routes/support';
 
 // Load environment variables using our centralized system
 loadEnvironmentVariables();
@@ -83,6 +84,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/license', licenseRoutes);
 app.use('/api/trading-rooms', meetingRoutes);
+app.use('/api/support', supportRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

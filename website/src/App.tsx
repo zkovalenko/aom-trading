@@ -16,6 +16,7 @@ import LoginPage from './pages/LoginPage';
 import AuthCallback from './pages/AuthCallback';
 import MeetingsPage from './pages/MeetingsPage';
 import TermsOfService from './pages/TermsOfService';
+import SupportPage from './pages/SupportPage';
 import './App.css';
 
 function App() {
@@ -55,9 +56,9 @@ function App() {
               <Route path="/my-subscriptions/software" element={<Software />} />
               <Route path="/trading-rooms" element={<MeetingsPage />} />
               <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/support" element={<SupportPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/contact" element={<div className="page-placeholder">Contact Page Coming Soon</div>} />
               <Route path="/auth/callback" element={<AuthCallback />} />
             </Routes>
           </main>

@@ -1,0 +1,118 @@
+.support-page {
+  background: linear-gradient(140deg, #0a1326 0%, #172950 100%);
+  min-height: 80vh;
+  padding: 60px 0;
+  color: #eaf1ff;
+}
+
+.support-container {
+  width: min(880px, 92vw);
+  margin: 0 auto;
+  background: rgba(14, 25, 52, 0.88);
+  border-radius: 18px;
+  border: 1px solid rgba(76, 112, 196, 0.25);
+  box-shadow: 0 28px 55px -24px rgba(10, 16, 30, 0.8);
+  padding: 48px 54px;
+}
+
+.support-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.support-header h1 {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  color: #f3f6ff;
+}
+
+.support-header p {
+  color: rgba(227, 233, 255, 0.8);
+  font-size: 1rem;
+}
+
+.support-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.form-row {
+  display: flex;
+  gap: 22px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(10, 20, 42, 0.95);
+  border: 1px solid rgba(82, 120, 205, 0.4);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  color: #f8f9ff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6ea5ff;
+  box-shadow: 0 0 0 3px rgba(110, 165, 255, 0.25);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.submit-btn {
+  align-self: flex-end;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #3f7bff, #2350c9);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -16px rgba(35, 80, 201, 0.6);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+  .support-container {
+    padding: 32px 24px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .submit-btn {
+    width: 100%;
+    align-self: stretch;
+  }
+}

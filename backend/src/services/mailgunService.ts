@@ -14,9 +14,10 @@ interface EmailOptions {
   text: string;
   html: string;
   from?: string;
+  replyTo?: string;
 }
 
-export async function sendEmail({ to, subject, text, html, from }: EmailOptions): Promise<void> {
+export async function sendEmail({ to, subject, text, html, from, replyTo }: EmailOptions): Promise<void> {
   if (!mg) {
     console.warn('📭 Mailgun client not configured. Skipping email send.');
     return;
@@ -37,6 +38,7 @@ export async function sendEmail({ to, subject, text, html, from }: EmailOptions)
       subject,
       text,
       html,
+      ...(replyTo ? { 'h:Reply-To': replyTo } : {}),
     });
 
     console.log('✅ Email sent:', message.id);
