@@ -1,0 +1,84 @@
+.terms-page {
+  background: linear-gradient(135deg, #0a1326, #111c38);
+  min-height: 80vh;
+  padding: 60px 0;
+  color: #f8f9ff;
+}
+
+.terms-container {
+  width: min(900px, 90vw);
+  margin: 0 auto;
+  background: rgba(10, 20, 45, 0.85);
+  border-radius: 18px;
+  border: 1px solid rgba(67, 104, 197, 0.25);
+  box-shadow: 0 30px 60px -25px rgba(10, 15, 30, 0.8);
+  padding: 48px 56px;
+}
+
+.terms-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.terms-header h1 {
+  font-size: 2.6rem;
+  margin-bottom: 16px;
+  color: #e4ecff;
+}
+
+.terms-header p {
+  margin: 6px 0;
+  font-size: 1rem;
+  color: rgba(226, 233, 255, 0.85);
+}
+
+.terms-header a {
+  color: #69a7ff;
+  text-decoration: none;
+}
+
+.terms-header a:hover {
+  text-decoration: underline;
+}
+
+.terms-container section {
+  margin-bottom: 28px;
+}
+
+.terms-container h2 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: #b6ccff;
+}
+
+.terms-container p,
+.terms-container li {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(235, 241, 255, 0.88);
+}
+
+.terms-container ul {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.terms-container address {
+  font-style: normal;
+  line-height: 1.6;
+  color: rgba(235, 241, 255, 0.88);
+}
+
+@media (max-width: 640px) {
+  .terms-container {
+    padding: 32px 24px;
+  }
+
+  .terms-header h1 {
+    font-size: 2.1rem;
+  }
+
+  .terms-container h2 {
+    font-size: 1.25rem;
+  }
+}

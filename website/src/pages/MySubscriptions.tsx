@@ -422,7 +422,6 @@ const MySubscriptions: React.FC = () => {
               </div>
               <div className="modal-body">
                 <div className="cancel-warning">
-                  <p><strong>Are you sure you want to cancel your subscription?</strong></p>
                   <div className="cancel-details">
                     <p>If you cancel:</p>
                     <ul>

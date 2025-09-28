@@ -2,25 +2,21 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 
 const mailgun = new Mailgun(formData);
+const LOGO_URL = 'https://aom-trading.onrender.com/logo.svg';
 
 const mg = process.env.MAILGUN_API_KEY
-  ? mailgun.client({
-      username: 'api',
-      key: process.env.MAILGUN_API_KEY,
-    })
+  ? mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY })
   : null;
 
-interface EmailType {
+interface EmailOptions {
   to: string;
   subject: string;
   text: string;
   html: string;
   from?: string;
-};
+}
 
-export async function sendEmail(emailObj: EmailType): Promise<void> {
-  const {to, subject, text, html, from} = emailObj;
-  
+export async function sendEmail({ to, subject, text, html, from }: EmailOptions): Promise<void> {
   if (!mg) {
     console.warn('📭 Mailgun client not configured. Skipping email send.');
     return;
@@ -96,10 +92,9 @@ export async function sendWelcomeEmail({
               <b>The AOMTrading Team</b>
             </p>
 
-            <!-- Footer with Logo -->
             <hr style="border:none; border-top:1px solid #ddd; margin:30px 0;" />
             <p style="text-align:center; margin-top:20px;">
-              <img src="https://aom-trading.onrender.com/logo.svg" alt="AOMTrading" width="120" style="max-width:150px; height:auto;" />
+              <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="max-width:150px; height:auto;" />
             </p>
             <p style="text-align:center; font-size:12px; color:#777;">
               © 2025 AOMTrading, All rights reserved.
@@ -108,6 +103,111 @@ export async function sendWelcomeEmail({
         </tr>
       </table>
     </body>
+    `,
+  });
+}
+
+export async function sendSubscriptionEmail({
+  email,
+  firstName,
+  tier,
+  trialEndsAt,
+}: {
+  email: string;
+  firstName: string;
+  tier: 'basic' | 'premium';
+  trialEndsAt?: string;
+}): Promise<void> {
+  const safeName = firstName?.trim() || 'Trader';
+  const normalizedTier = tier === 'premium' ? 'Premium' : 'Basic';
+  const trialMessage = trialEndsAt
+    ? `<p><strong>Free Trial:</strong> You have access through ${new Date(trialEndsAt).toLocaleDateString()} before billing begins.</p>`
+    : '';
+
+  const benefits = tier === 'premium'
+    ? `
+        <li>Premium trading rooms and advanced mentorship</li>
+        <li>Full study-course library and quizzes</li>
+        <li>Access to proprietary trading software</li>
+        <li>Priority customer support</li>
+      `
+    : `
+        <li>Live Basic trading room access</li>
+        <li>Full study-course library and quizzes</li>
+        <li>Access to proprietary trading software</li>
+        <li>Customer support</li>
+      `;
+
+  await sendEmail({
+    to: email,
+    subject: `Your ${normalizedTier} AOMTrading subscription is active`,
+    text: `Hi ${safeName},\n\nWelcome to the ${normalizedTier} plan!\n\nYou now have access to course materials, the trading software, live rooms, and ongoing support. ${trialEndsAt ? `Your free trial runs until ${new Date(trialEndsAt).toLocaleDateString()}.` : ''}`,
+    html: `
+      <h1>Welcome to the AOMTrading ${normalizedTier} Plan!</h1>
+      <p>Your subscription is active and includes:</p>
+      <ul>
+        ${benefits}
+      </ul>
+      ${trialMessage}
+      <hr style="border:none; border-top:1px solid #ddd; margin:30px 0;" />
+      <p style="text-align:left; margin-top:20px;">
+        <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="max-width:150px; height:auto;" />
+      </p>
+      <p style="text-align:left; font-size:12px; color:#777;">
+        © 2025 AOMTrading, All rights reserved.
+      </p>
+    `,
+  });
+}
+
+export async function sendSubscriptionCancellationEmail({
+  email,
+  firstName,
+  tier,
+  cancelledAt,
+}: {
+  email: string;
+  firstName: string;
+  tier: 'basic' | 'premium';
+  cancelledAt?: string;
+}): Promise<void> {
+  const safeName = firstName?.trim() || 'Trader';
+  const normalizedTier = tier === 'premium' ? 'Premium' : 'Basic';
+  const cancelDate = cancelledAt
+    ? new Date(cancelledAt).toLocaleDateString()
+    : new Date().toLocaleDateString();
+
+  const reminders = tier === 'premium'
+    ? `
+        <li>Premium trading rooms remain open until your billing cycle ends.</li>
+        <li>Download any resources you need before your end date.</li>
+        <li>You can reactivate anytime to regain premium access.</li>
+      `
+    : `
+        <li>You retain access to course content until your current period ends.</li>
+        <li>Download software or materials you need before it expires.</li>
+        <li>Your account will stay ready should you decide to return.</li>
+      `;
+
+  await sendEmail({
+    to: email,
+    subject: `Your ${normalizedTier} subscription has been cancelled`,
+    text: `Hi ${safeName},\n\nWe've processed the cancellation of your ${normalizedTier} plan effective ${cancelDate}. You'll keep access until the end of your current billing period. Need help or want to reactivate later? Reach out at info@aomtrading.com.`,
+    html: `
+      <h1>Hi ${safeName},</h1>
+      <p>Your <strong>${normalizedTier}</strong> subscription will end on ${cancelDate}.</p>
+      <p>You still have access until the end of your current period. Before then you can:</p>
+      <ul>
+        ${reminders}
+      </ul>
+      <p>If we can help tailor a new plan, reply to this email or contact <a href="mailto:info@aomtrading.com">info@aomtrading.com</a>.</p>
+      <hr style="border:none; border-top:1px solid #ddd; margin:30px 0;" />
+      <p style="text-align:left; margin-top:20px;">
+        <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="max-width:150px; height:auto;" />
+      </p>
+      <p style="text-align:left; font-size:12px; color:#777;">
+        © 2025 AOMTrading, All rights reserved.
+      </p>
     `,
   });
 }

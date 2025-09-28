@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getStripe } from '../config/stripe';
 import pool from '../config/database';
 import netLicensingService from '../services/netLicensingService';
+import { sendSubscriptionEmail, sendSubscriptionCancellationEmail } from '../services/mailgunService';
 
 export const getProducts = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -382,6 +383,15 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
         }
       }
     });
+
+    sendSubscriptionEmail({
+      email: currentUser.email,
+      firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
+      tier: product.name.toLowerCase().includes('premium') ? 'premium' : 'basic',
+      trialEndsAt: trialExpiryDate.toISOString(),
+    }).catch((emailErr) => {
+      console.error('✉️  Failed to send subscription email:', emailErr);
+    });
   } catch (error) {
     console.error('Confirm subscription error:', error);
     res.status(500).json({
@@ -525,6 +535,15 @@ export const cancelSubscription = async (req: Request, res: Response): Promise<v
           cancelledAt: new Date().toISOString()
         }
       }
+    });
+
+    sendSubscriptionCancellationEmail({
+      email: currentUser.email,
+      firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
+      tier: subscriptionToCancel.productName?.toLowerCase().includes('premium') ? 'premium' : 'basic',
+      cancelledAt: new Date().toISOString(),
+    }).catch((emailErr) => {
+      console.error('✉️  Failed to send cancellation email:', emailErr);
     });
 
   } catch (error) {

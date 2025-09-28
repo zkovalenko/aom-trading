@@ -112,6 +112,7 @@ const CheckoutForm: React.FC<SubscriptionFormProps> = ({
         const card = elements.getElement(CardElement);
         card?.clear();
         toast.success('Subscription created successfully!');
+        window.dispatchEvent(new Event('subscription-updated'));
         onSuccess?.();
       } else {
         throw new Error(confirmData.message || 'Failed to confirm subscription');

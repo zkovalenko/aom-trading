@@ -15,11 +15,12 @@ const Footer: React.FC = () => {
             <ul>
               <li><Link to="/learn-to-trade">Study Course</Link></li>
               <li><Link to="/tutoring">Software</Link></li>
+              <li><Link to="/terms">Platform Tour (coming soon)</Link></li>
             </ul>
           </div>
           
           <div className="footer-section">
-            <h3>Contact Us</h3>
+            <h3>AOM Trading</h3>
             <ul>
               <li><Link to="/contact">Contact Us</Link></li>
               <li><Link to="/faq">FAQ</Link></li>

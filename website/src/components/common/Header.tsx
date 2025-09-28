@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth, apiCall } from '../../contexts/AuthContext';
 import LoginModal from '../../components/auth/LoginModal';
@@ -28,33 +28,44 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   };
 
-  useEffect(() => {
-    const checkSubscriptions = async () => {
-      if (!user || !token) {
-        setHasActiveSubscription(false);
-        return;
-      }
-      
-      try {
-        const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-            const subscriptions = data.data.subscriptions || [];
-            const hasActive = subscriptions.some((sub: any) => 
-              sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial'
-            );
-            setHasActiveSubscription(hasActive);
-          }
+  const checkSubscriptions = useCallback(async () => {
+    if (!user || !token) {
+      setHasActiveSubscription(false);
+      return;
+    }
+
+    try {
+      const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          const subscriptions = data.data.subscriptions || [];
+          const hasActive = subscriptions.some((sub: any) =>
+            sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial'
+          );
+          setHasActiveSubscription(hasActive);
         }
-      } catch (error) {
-        console.error('Failed to check subscriptions:', error);
-        setHasActiveSubscription(false);
       }
+    } catch (error) {
+      console.error('Failed to check subscriptions:', error);
+      setHasActiveSubscription(false);
+    }
+  }, [token, user]);
+
+  useEffect(() => {
+    checkSubscriptions();
+  }, [checkSubscriptions]);
+
+  useEffect(() => {
+    const handleSubscriptionUpdate = () => {
+      checkSubscriptions();
     };
 
-    checkSubscriptions();
-  }, [user, token]);
+    window.addEventListener('subscription-updated', handleSubscriptionUpdate);
+    return () => {
+      window.removeEventListener('subscription-updated', handleSubscriptionUpdate);
+    };
+  }, [checkSubscriptions]);
 
   return (
     <header className="header">
@@ -78,7 +89,7 @@ const Header: React.FC = () => {
                   <Link to="/my-subscriptions" className="nav-link" onClick={closeMenu}>
                     My Subscriptions
                   </Link>
-                  <Link to="/trading-rooms" className="nav-link" onClick={closeMenu}>
+                  <Link to="/meetings" className="nav-link" onClick={closeMenu}>
                     Trading Rooms
                   </Link>
                 </>
