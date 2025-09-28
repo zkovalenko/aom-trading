@@ -91,7 +91,7 @@ const Header: React.FC = () => {
                   <Link to="/trading-rooms" className="nav-link" onClick={closeMenu}>
                     Trading Rooms
                   </Link>
-                  <Link to="/support" className="nav-link" onClick={closeMenu}>Contact Us</Link>
+                  <Link to="/support" className="nav-link" onClick={closeMenu}>Support</Link>
                 </>
               )}
               <button onClick={() => { logout(); closeMenu(); }} className="logout-btn">

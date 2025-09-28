@@ -22,9 +22,10 @@ const Footer: React.FC = () => {
           <div className="footer-section">
             <h3>AOM Trading</h3>
             <ul>
+              <li><Link to="/support">Support</Link></li>
               <li><Link to="/faq">FAQ</Link></li>
               <li><Link to="/terms">Terms of Service</Link></li>
-              <li><Link to="/support">Contact Us</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
             </ul>
           </div>
         </div>

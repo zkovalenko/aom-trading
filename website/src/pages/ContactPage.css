@@ -1,0 +1,106 @@
+.contact-page {
+  background: linear-gradient(145deg, #0d162f, #172c52);
+  min-height: 80vh;
+  padding: 60px 0;
+  color: #eef3ff;
+}
+
+.contact-container {
+  width: min(760px, 92vw);
+  margin: 0 auto;
+  background: rgba(14, 25, 54, 0.9);
+  border-radius: 18px;
+  border: 1px solid rgba(74, 112, 205, 0.25);
+  box-shadow: 0 28px 58px -26px rgba(10, 15, 30, 0.75);
+  padding: 48px 46px;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.contact-header h1 {
+  font-size: 2.3rem;
+  margin-bottom: 10px;
+  color: #f5f8ff;
+}
+
+.contact-header p {
+  font-size: 1.05rem;
+  color: rgba(226, 234, 255, 0.84);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #c9d7ff;
+}
+
+.form-group input,
+.form-group textarea {
+  background: rgba(10, 20, 42, 0.95);
+  border: 1px solid rgba(90, 128, 214, 0.4);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  color: #f8faff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6e9cff;
+  box-shadow: 0 0 0 3px rgba(110, 156, 255, 0.25);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.submit-btn {
+  align-self: flex-end;
+  padding: 12px 26px;
+  background: linear-gradient(135deg, #3f7bff, #254ec8);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 28px -20px rgba(37, 78, 200, 0.65);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .contact-container {
+    padding: 32px 24px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    align-self: stretch;
+  }
+}
