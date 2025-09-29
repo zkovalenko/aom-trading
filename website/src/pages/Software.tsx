@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import './Software.css';
+import { Link } from 'react-router-dom';
 
 const Software: React.FC = () => {
   const { user } = useAuth();
@@ -136,19 +137,26 @@ const Software: React.FC = () => {
           <h3>Need Help?</h3>
           <div className="support-options">
             <div className="support-option">
-              <h4>📚 Documentation</h4>
+              <h4>Documentation</h4>
               <p>Complete guides and tutorials for all our software tools.</p>
-              <button className="support-btn">View Documentation</button>
+              <a 
+                href="https://drive.google.com/file/d/1muTHjGjXZBBpMzeDBF3mcbxTGWPWf4We/view?ths=true" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="support-btn"
+              >
+                Download Manual
+              </a>
             </div>
             <div className="support-option">
-              <h4>🎥 Video Tutorials</h4>
+              <h4>Video Tutorials (coming soon)</h4>
               <p>Step-by-step video guides to get you started quickly.</p>
               <button className="support-btn">Watch Tutorials</button>
             </div>
             <div className="support-option">
-              <h4>💬 Live Support</h4>
+              <h4>Support</h4>
               <p>Get help from our technical support team during business hours.</p>
-              <button className="support-btn">Contact Support</button>
+              <Link to="/support" className="support-btn">Contact Support</Link>
             </div>
           </div>
         </div>

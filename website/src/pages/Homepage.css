@@ -373,6 +373,10 @@
     grid-template-columns: 1fr;
   }
   
+  .consistent-image {
+    min-height: 345px;
+  }
+
   .consistent-content,
   .founder-content {
     grid-template-columns: 1fr;
@@ -394,5 +398,18 @@
   .subscriptions {
     flex-direction: column;
     padding: 0;
+  }
+
+  .consistent-content {
+    .cta-container {
+      text-align: center;
+    }
+  }
+  .cta-container {
+    text-align: center;
+  }
+
+  .video-placeholder {
+    display: none;
   }
 }

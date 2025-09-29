@@ -186,9 +186,8 @@ export async function sendSubscriptionCancellationEmail({
         <li>You can reactivate anytime to regain premium access.</li>
       `
     : `
-        <li>You retain access to course content until your current period ends.</li>
+        <li>Retain access to course content until your current period ends.</li>
         <li>Download software or materials you need before it expires.</li>
-        <li>Your account will stay ready should you decide to return.</li>
       `;
 
   await sendEmail({
@@ -202,7 +201,7 @@ export async function sendSubscriptionCancellationEmail({
       <ul>
         ${reminders}
       </ul>
-      <p>If we can help tailor a new plan, reply to this email or contact <a href="mailto:info@aomtrading.com">info@aomtrading.com</a>.</p>
+      <p>If we can help tailor a new plan, please contact us at <a href="mailto:info@aomtrading.com">info@aomtrading.com</a>.</p>
       <hr style="border:none; border-top:1px solid #ddd; margin:30px 0;" />
       <p style="text-align:left; margin-top:20px;">
         <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="max-width:150px; height:auto;" />

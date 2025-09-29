@@ -154,7 +154,7 @@
 }
 
 .system-requirements h3 {
-  color: #2c3e50;
+  color: var(--color-blue);
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
   text-align: center;
@@ -240,7 +240,7 @@
 }
 
 .support-btn {
-  background: #92E3A9;
+  background: var(--color-blue);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -249,10 +249,11 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.9rem;
+  text-decoration: none;
 }
 
 .support-btn:hover {
-  background: #7dd699;
+  background: var(--color-dark-blue);
   transform: translateY(-1px);
 }
 

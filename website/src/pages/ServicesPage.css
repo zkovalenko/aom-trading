@@ -386,6 +386,9 @@ input:checked + .slider:before {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .content-section {
+    flex-direction: column;
+  }
 
   .hero-features {
     grid-template-columns: 1fr;
@@ -472,6 +475,6 @@ input:checked + .slider:before {
 
 @media (max-width: 480px) {
   .content-image {
-    display: none;
+    min-height: 345px;
   }
 }
