@@ -16,17 +16,13 @@
 
 /* Brand Colors - CSS Variables */
 :root {
-    --color-blue-purple: #0a0f1c;
-    --color-blue: #2f498b;
-    --color-green: #43db6e;
-    --color-dark-green: #238C41;
+    --color-blue: #341ADE;
+    --color-dark-blue: #0D0063;
+    --color-green: #09E727;
+    --color-dark-green: #01570B;
     --color-light-gray: #ececec;
     --color-gray: #2f2d3c;
-    --bg-color-blue-purple: #1c0e78;
-    --bg-color-blue: #2f498b;
-    --bg-color-green: #43db6e;
-    --bg-color-gray: #2f2d3c;
-    --bg-gradient-blue: linear-gradient(135deg, #341ADE, #0a0f1c);
+    --bg-color-blue: #341ADE;
     --bg-color-light-gray: #ececec;
 }
 
@@ -146,13 +142,13 @@ p, span, div, li, td, th {
 /* ------------- Buttons ------------------*/
 .cta-button {
   display: inline-block;
-  background-color: var(--color-green);
-  color: var(--color-gray);
-  padding: 1.2rem 4rem;
+  background: linear-gradient(179deg, #09E727, #01570B);
+  color: white;
+  padding: 1rem 4rem;
   text-decoration: none;
   border-radius: 40px;
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 500;
   transition: background-color 0.3s ease;
   border-color: transparent;
   margin: 0.5rem auto;
@@ -175,10 +171,11 @@ p, span, div, li, td, th {
 }
 
 .cta-button.secondary {
-  background: white;
-  color: #333;
-  border: 2px solid var(--color-dark-green);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: var(--color-dark-blue);
+  color: white;
+  padding: 0.8rem 3rem;
+  text-align: left;
+  font-weight: 400;
 }
 
 .cta-button.secondary:hover {

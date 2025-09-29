@@ -1,5 +1,6 @@
 .footer {
-  background-color: #0a0f1c;
+  background-color: var(--color-dark-green);
+  /* #0a0f1c; */
   color: white;
   padding: 5rem 0 3rem;
   margin-top: auto;
@@ -32,6 +33,7 @@
 .footer-section h3 {
   font-size: 1.2rem;
   margin-bottom: 1rem;
+  color: var(--color-green);
 }
 
 .footer-section ul {

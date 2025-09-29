@@ -80,7 +80,7 @@ const Header: React.FC = () => {
         
         <nav className={`nav-menu ${isMenuOpen ? 'nav-menu-open' : ''}`}>
           <Link to="/learn-to-trade" className="nav-link" onClick={closeMenu}>Learn to Trade</Link>
-          
+
           {user ? (
             <div className="user-menu">
               {hasActiveSubscription && (
@@ -100,6 +100,8 @@ const Header: React.FC = () => {
             </div>
           ) : (
             <div className="auth-links">
+              <Link to="/contact" className="nav-link" onClick={closeMenu}>Contact Us</Link>
+
               <button
                 type="button"
                 className="nav-link signup-btn"

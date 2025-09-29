@@ -41,6 +41,7 @@
   font-size: 1rem;
   font-weight: 600;
   transition: color 0.3s ease;
+  min-width: 120px;
 }
 
 .nav-link:hover {
@@ -61,7 +62,7 @@
 
 .logout-btn,
 .signup-btn {
-  background: linear-gradient(130deg, #3CF270, #341ADE);
+  background: linear-gradient(179deg, #09E727, #01570B);
   color: white;
   border: none;
   padding: 1rem 3rem;
@@ -75,7 +76,6 @@
 
 .logout-btn:hover,
 .signup-btn:hover {
-  /* background: var(--bg-color-blue-purple); */
   filter: brightness(1.3);
 }
 

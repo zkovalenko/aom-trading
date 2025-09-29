@@ -59,7 +59,7 @@ const Homepage: React.FC = () => {
       </section>
 
       {/* Trusted Resources */}
-      <section className="trusted-resources">
+      {/* <section className="trusted-resources">
         <div className="container">
           <h2>Trusted Partners</h2>
           <div className="resources-logos">
@@ -68,29 +68,7 @@ const Homepage: React.FC = () => {
             <div className="resource-logo">THINKORSWIM</div>
           </div>
         </div>
-      </section>
-      
-      {/* Become Consistent Trader Section */}
-      <section className="consistent-trader">
-        <div className="container">
-          <div className="consistent-content">
-            <div className="consistent-image">&nbsp;
-            </div>
-            <div className="consistent-text">
-              <h2>LEARN FROM THE PROS</h2>
-              <p>
-                Our methodology reduced emotional reaction and provides systematic approach to trading using proven strategies.
-              </p>
-              <p>
-                You will have the flexibility to select the time-frames and set your alert assistance to progress quickly. There is automation in the learning process to assist on chart reading to find winning fast and also to grow.
-              </p>
-              <div className="cta-container">
-                <Link to="/learn-to-trade" className="cta-button">Start Now</Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      </section> */}
 
       {/* Services */}
       <section className="services-description">
@@ -118,10 +96,33 @@ const Homepage: React.FC = () => {
             <div className="desc">Get responsive support from our team whenever you need help along the way.</div>
             </div>
         </div>
-        <div className="cta-container">
+        {/* <div className="cta-container">
                 <Link to="/learn-to-trade" className="cta-button">Start Now</Link>
-              </div>
+              </div> */}
       </section>
+            
+      {/* Become Consistent Trader Section */}
+      <section className="consistent-trader">
+        <div className="container">
+          <div className="consistent-content">
+            <div className="consistent-image">&nbsp;
+            </div>
+            <div className="consistent-text">
+              <h2>Learn Professionally Developed Trading Strategies</h2>
+              <p>
+                Our methodology reduced emotional reaction and provides systematic approach to trading using proven strategies.
+              </p>
+              <p>
+                You will have the flexibility to select the time-frames and set your alert assistance to progress quickly. There is automation in the learning process to assist on chart reading to find winning fast and also to grow.
+              </p>
+              <div className="cta-container">
+                <Link to="/learn-to-trade" className="cta-button secondary">Start Now</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       {/* Founder Section */}
       <section className="founder-section">
@@ -133,12 +134,15 @@ const Homepage: React.FC = () => {
             <p>
               Alex is the CTO and founder of AOM Trading, bringing over 20 years of experience in financial systems and large-scale technology solutions.
             </p>
-            <p>
+            {/* <p>
               Before entering the world of finance, Alex led technology teams for more than two decades, combining technical leadership with deep business expertise.
-            </p>
+            </p> */}
             <p>
               At AOM Trading, his focus is on teaching traders a disciplined, proven approach. With the support of his proprietary software, you’ll gain the tools to trade with confidence, set realistic expectations, and build the consistency needed for lasting success.
             </p>
+            <div className="cta-container">
+                <Link to="/learn-to-trade" className="cta-button secondary">Get In Touch</Link>
+              </div>
             </div>
             <div className="founder-video">
               <div className="video-placeholder">
