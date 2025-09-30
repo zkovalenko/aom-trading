@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from '../config/passport';
 import jwt from 'jsonwebtoken';
-import { register, login, getProfile, updateMethodologyDisclaimer } from '../controllers/authController';
+import { register, login, getProfile, updateMethodologyDisclaimer, forgotPassword, resetPassword } from '../controllers/authController';
 import { authenticateToken } from '../middleware/auth';
 import { loadEnvironmentVariables } from '../config/env';
 
@@ -10,6 +10,8 @@ const router = express.Router();
 // Traditional email/password registration and login
 router.post('/register', register);
 router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 // Get user profile (protected route)
 router.get('/profile', authenticateToken, getProfile);

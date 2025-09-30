@@ -48,6 +48,26 @@
   font-size: 0.9rem;
 }
 
+.auth-success,
+.auth-error {
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.auth-success {
+  background: #edf9f0;
+  border: 1px solid #c6efd3;
+  color: #1f7a42;
+}
+
+.auth-error {
+  background: #fff4f4;
+  border: 1px solid #f7d6d6;
+  color: #b91c1c;
+}
+
 .auth-form {
   text-align: left;
   margin-bottom: 1rem;

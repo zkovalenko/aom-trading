@@ -13,6 +13,8 @@ import QuizPage from './pages/QuizPage';
 import Software from './pages/Software';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import AuthCallback from './pages/AuthCallback';
 import MeetingsPage from './pages/MeetingsPage';
 import TermsOfService from './pages/TermsOfService';
@@ -61,6 +63,8 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
             </Routes>
           </main>

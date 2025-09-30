@@ -212,3 +212,59 @@ export async function sendSubscriptionCancellationEmail({
     `,
   });
 }
+
+export async function sendPasswordResetEmail({
+  email,
+  firstName,
+  resetLink,
+  expiresAt,
+}: {
+  email: string;
+  firstName?: string;
+  resetLink: string;
+  expiresAt: Date;
+}): Promise<void> {
+  const safeName = firstName?.trim() || 'Trader';
+  const expiresFormatted = expiresAt.toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
+  await sendEmail({
+    to: email,
+    subject: 'Reset your AOMTrading password',
+    text: `Hi ${safeName},\n\nWe received a request to reset your AOMTrading password.\n\nReset your password: ${resetLink}\n\nThis link will expire at ${expiresFormatted}. If you did not request a password reset, you can safely ignore this email.\n`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #1f2933; background-color: #f6f9fc; padding: 24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(31, 41, 51, 0.08);">
+          <tr>
+            <td style="padding: 32px 32px 24px;">
+              <h1 style="font-size: 22px; margin: 0 0 12px; color: #2f498b;">Reset your password</h1>
+              <p style="margin: 0 0 16px; line-height: 1.6;">
+                Hi ${safeName},
+              </p>
+              <p style="margin: 0 0 16px; line-height: 1.6;">
+                We received a request to reset your AOMTrading password. Click the button below to choose a new password.
+              </p>
+              <p style="margin: 0 0 16px; line-height: 1.6;">
+                This link will expire at <strong>${expiresFormatted}</strong>.
+              </p>
+              <p style="text-align: center; margin: 28px 0;">
+                <a href="${resetLink}" style="display: inline-block; background: #2f498b; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600;">Reset Password</a>
+              </p>
+              <p style="margin: 0 0 12px; line-height: 1.6; font-size: 14px; color: #445566;">
+                If you did not request a password reset, you can safely ignore this email and your password will remain unchanged.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px 32px; background: #f3f6fb; text-align: center; font-size: 12px; color: #6b7280;">
+              <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="margin-bottom: 12px;" />
+              <div>© ${new Date().getFullYear()} AOMTrading. All rights reserved.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
+  });
+}

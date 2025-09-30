@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import pool from '../config/database';
 import { loadEnvironmentVariables } from '../config/env';
-import { sendWelcomeEmail } from '../services/mailgunService';
+import { sendWelcomeEmail, sendPasswordResetEmail } from '../services/mailgunService';
 
 export interface User {
   id: string;
@@ -230,6 +231,176 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       success: false,
       message: 'Login failed'
     });
+  }
+};
+
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email } = req.body;
+
+    if (typeof email !== 'string' || !email.trim()) {
+      res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+      return;
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const userResult = await pool.query(
+      'SELECT id, first_name FROM users WHERE email = $1',
+      [normalizedEmail]
+    );
+
+    const genericResponse = {
+      success: true,
+      message: 'If an account exists for this email, a reset link has been sent.'
+    } as const;
+
+    if (userResult.rows.length === 0) {
+      res.json(genericResponse);
+      return;
+    }
+
+    const user = userResult.rows[0];
+
+    // Clean up expired tokens before issuing a new one
+    await pool.query(
+      'DELETE FROM password_reset_tokens WHERE user_id = $1 AND (used_at IS NOT NULL OR expires_at < NOW())',
+      [user.id]
+    );
+
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiry
+
+    await pool.query(
+      'INSERT INTO password_reset_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, $3)',
+      [user.id, tokenHash, expiresAt.toISOString()]
+    );
+
+    loadEnvironmentVariables();
+    const frontendBase = process.env.FRONTEND_URL ||
+      (process.env.NODE_ENV === 'production'
+        ? 'https://aom-trading.onrender.com'
+        : 'http://localhost:3000');
+
+    const resetLink = `${frontendBase}/reset-password?token=${rawToken}&email=${encodeURIComponent(normalizedEmail)}`;
+
+    sendPasswordResetEmail({
+      email: normalizedEmail,
+      firstName: user.first_name || 'Trader',
+      resetLink,
+      expiresAt
+    }).catch((emailErr) => {
+      console.error('✉️  Failed to send password reset email:', emailErr);
+    });
+
+    res.json(genericResponse);
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to process password reset request'
+    });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  const client = await pool.connect();
+  let transactionStarted = false;
+
+  try {
+    const { email, token, password } = req.body;
+
+    if (typeof email !== 'string' || typeof token !== 'string' || typeof password !== 'string') {
+      res.status(400).json({
+        success: false,
+        message: 'Email, token, and password are required'
+      });
+      return;
+    }
+
+    const sanitizedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+
+    if (trimmedPassword.length < 8) {
+      res.status(400).json({
+        success: false,
+        message: 'Password must be at least 8 characters long'
+      });
+      return;
+    }
+
+    const userResult = await client.query(
+      'SELECT id FROM users WHERE email = $1',
+      [sanitizedEmail]
+    );
+
+    if (userResult.rows.length === 0) {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid or expired reset token'
+      });
+      return;
+    }
+
+    const userId = userResult.rows[0].id;
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    const tokenResult = await client.query(
+      `SELECT id FROM password_reset_tokens
+       WHERE user_id = $1
+         AND token_hash = $2
+         AND used_at IS NULL
+         AND expires_at >= NOW()
+       ORDER BY created_at DESC
+       LIMIT 1`,
+      [userId, tokenHash]
+    );
+
+    if (tokenResult.rows.length === 0) {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid or expired reset token'
+      });
+      return;
+    }
+
+    const saltRounds = 12;
+    const passwordHash = await bcrypt.hash(trimmedPassword, saltRounds);
+
+    await client.query('BEGIN');
+    transactionStarted = true;
+
+    await client.query(
+      'UPDATE users SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [passwordHash, userId]
+    );
+
+    await client.query(
+      'UPDATE password_reset_tokens SET used_at = CURRENT_TIMESTAMP WHERE id = $1',
+      [tokenResult.rows[0].id]
+    );
+
+    await client.query('COMMIT');
+
+    res.json({
+      success: true,
+      message: 'Password has been reset successfully'
+    });
+  } catch (error) {
+    if (transactionStarted) {
+      await client.query('ROLLBACK');
+    }
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to reset password'
+    });
+  } finally {
+    client.release();
   }
 };
 
