@@ -28,11 +28,10 @@ const Software: React.FC = () => {
           <div className="software-card primary">
             <div className="software-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM5 20V6h14v14H5z"/>
               </svg>
             </div>
-            <h3>AOM Trading Pro</h3>
-            <p>Our flagship trading platform with advanced charting, real-time data, and automated trading capabilities.</p>
+            <h3>Software - Version 1.4.2</h3>
             <div className="software-features">
               <span className="feature">✓ Real-time market data</span>
               <span className="feature">✓ Advanced charting tools</span>
@@ -40,29 +39,8 @@ const Software: React.FC = () => {
               <span className="feature">✓ Risk management</span>
             </div>
             <div className="software-actions">
-              <button className="download-btn primary">Download for Windows</button>
-              <button className="download-btn secondary">Download for Mac</button>
-              <span className="version-info">Version 2.4.1 • Updated Dec 2024</span>
-            </div>
-          </div>
-
-          <div className="software-card">
-            <div className="software-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
-            <h3>Market Scanner</h3>
-            <p>Scan thousands of instruments across multiple markets to find trading opportunities in real-time.</p>
-            <div className="software-features">
-              <span className="feature">✓ Multi-market scanning</span>
-              <span className="feature">✓ Custom criteria</span>
-              <span className="feature">✓ Alert system</span>
-              <span className="feature">✓ Export results</span>
-            </div>
-            <div className="software-actions">
-              <button className="download-btn primary">Download Scanner</button>
-              <span className="version-info">Version 1.8.3 • Updated Nov 2024</span>
+              <button className="feature-access-button">Download</button>
+              <span className="version-info">Version 1.4.2 • Updated Dec 2024</span>
             </div>
           </div>
 
@@ -72,8 +50,7 @@ const Software: React.FC = () => {
                 <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM5 20V6h14v14H5z"/>
               </svg>
             </div>
-            <h3>Portfolio Analyzer</h3>
-            <p>Track and analyze your trading performance with detailed statistics and risk metrics.</p>
+            <h3>Software - Version 1.4.1</h3>
             <div className="software-features">
               <span className="feature">✓ Performance tracking</span>
               <span className="feature">✓ Risk analysis</span>
@@ -81,8 +58,8 @@ const Software: React.FC = () => {
               <span className="feature">✓ Reporting tools</span>
             </div>
             <div className="software-actions">
-              <button className="download-btn primary">Download Analyzer</button>
-              <span className="version-info">Version 1.2.5 • Updated Dec 2024</span>
+              <button className="feature-access-button">Download</button>
+              <span className="version-info">Version 1.4.1 • Updated Jan 2024</span>
             </div>
           </div>
 
@@ -92,8 +69,7 @@ const Software: React.FC = () => {
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
             </div>
-            <h3>Strategy Builder</h3>
-            <p>Create and backtest custom trading strategies with our visual strategy builder tool.</p>
+            <h3>Charts Templates </h3>
             <div className="software-features">
               <span className="feature">✓ Visual strategy builder</span>
               <span className="feature">✓ Backtesting engine</span>
@@ -101,7 +77,7 @@ const Software: React.FC = () => {
               <span className="feature">✓ Live deployment</span>
             </div>
             <div className="software-actions">
-              <button className="download-btn primary">Download Builder</button>
+              <button className="feature-access-button">Download Charts</button>
               <span className="version-info">Version 3.1.2 • Updated Dec 2024</span>
             </div>
           </div>
