@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-gray);
+  background: linear-gradient(145deg,#0d162f,#172c52);
   padding: 2rem 1rem;
 }
 
@@ -13,15 +13,13 @@
 }
 
 .auth-card {
-  background: white;
+  background: #0e1936e6;
+  border: 1px solid #4a70cd40;
   border-radius: 12px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   padding: 3rem 2.5rem;
   text-align: center;
-}
-
-.auth-header {
-  background-color: white;
+  color: white;
 }
 
 .auth-header h1 {
@@ -31,7 +29,7 @@
 .auth-header p {
   font-size: 1.2rem;
   font-weight: 300;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 .error-messages {
@@ -87,6 +85,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 300;
+  color: white;
 }
 
 .form-group input {

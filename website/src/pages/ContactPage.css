@@ -45,7 +45,7 @@
 .form-group label {
   font-weight: 600;
   margin-bottom: 8px;
-  color: #c9d7ff;
+  color: var(--color-gray);
 }
 
 .form-group input,
