@@ -72,7 +72,7 @@ const Software: React.FC = () => {
       document.body.removeChild(tempLink);
       window.URL.revokeObjectURL(downloadUrl);
 
-      toast.success('Your download should start automatically.');
+      toast.success('All set! Your download is ready.');
     } catch (error) {
       const message = error instanceof Error ? error.message : `Failed to download: ${fileName}`;
       toast.error(message);
