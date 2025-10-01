@@ -1,31 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth, apiCall } from '../contexts/AuthContext';
 import { CourseService } from '../services/courseService';
 import { Course } from '../types/course';
 import './StudyCourse.css';
 
 const StudyCourse: React.FC = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [course, setCourse] = useState<Course | null>(null);
   const [activeChapter, setActiveChapter] = useState<string>('');
-  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
-  const [completedQuizzes, setCompletedQuizzes] = useState<string[]>([]);
+  const [lessonProgress, setLessonProgress] = useState<Array<{ chapterId: string; lessonId: string; completedAt: string }>>([]);
+  const [quizProgress, setQuizProgress] = useState<Array<{ chapterId: string; quizId: string; completedAt: string; passed: boolean; score: number | null; attempts: number }>>([]);
 
   useEffect(() => {
     const courseService = CourseService.getInstance();
     const courseData = courseService.getCourse();
     setCourse(courseData);
-    
+
     if (courseData.chapters.length > 0) {
       setActiveChapter(courseData.chapters[0].chapterId);
     }
-
-    // TODO: Load user progress from API
-    // For now, using mock data
-    setCompletedLessons([]);
-    setCompletedQuizzes([]);
   }, []);
+
+  useEffect(() => {
+    if (!token) {
+      setLessonProgress([]);
+      setQuizProgress([]);
+      return;
+    }
+
+    const fetchProgress = async () => {
+      try {
+        const response = await apiCall('/course-progress', { method: 'GET' }, token);
+        if (!response.ok) {
+          throw new Error('Failed to load course progress');
+        }
+
+        const data = await response.json();
+        const lessons = data?.data?.lessons ?? [];
+        const quizzes = data?.data?.quizzes ?? [];
+
+        setLessonProgress(lessons);
+        setQuizProgress(quizzes);
+      } catch (error) {
+        console.error('Failed to load course progress:', error);
+        setLessonProgress([]);
+        setQuizProgress([]);
+      }
+    };
+
+    fetchProgress();
+  }, [token]);
+
+  const courseService = CourseService.getInstance();
+
+  const completedLessonIds = useMemo(() => lessonProgress.map(item => item.lessonId), [lessonProgress]);
+  const completedQuizIds = useMemo(
+    () => quizProgress.filter(item => item.passed).map(item => item.quizId),
+    [quizProgress]
+  );
 
   if (!user) {
     return (
@@ -47,9 +80,18 @@ const StudyCourse: React.FC = () => {
     );
   }
 
-  const courseService = CourseService.getInstance();
-  const overallProgress = courseService.getCourseProgress(completedLessons, completedQuizzes);
+  const overallProgress = courseService.getCourseProgress(completedLessonIds, completedQuizIds);
   const activeChapterData = course.chapters.find(ch => ch.chapterId === activeChapter);
+
+  const getLessonDisplayName = (lessonId: string) => {
+    const result = courseService.findLessonById(lessonId);
+    return result?.lesson.name ?? lessonId;
+  };
+
+  const getQuizDisplayName = (quizId: string) => {
+    const result = courseService.findQuizById(quizId);
+    return result?.quiz.name ?? quizId;
+  };
 
   return (
     <div className="study-course-page">
@@ -64,8 +106,8 @@ const StudyCourse: React.FC = () => {
             {course.chapters.map(chapter => {
               const chapterProgress = courseService.getChapterProgress(
                 chapter.chapterId, 
-                completedLessons, 
-                completedQuizzes
+                completedLessonIds,
+                completedQuizIds
               );
               
               return (
@@ -96,7 +138,7 @@ const StudyCourse: React.FC = () => {
                   {activeChapterData.lessons
                     .sort((a, b) => a.order - b.order)
                     .map(lesson => {
-                      const isCompleted = completedLessons.includes(lesson.lessonId);
+                      const isCompleted = completedLessonIds.includes(lesson.lessonId);
                       
                       return (
                         <div key={lesson.lessonId} className={`lesson-card ${isCompleted ? 'completed' : ''}`}>
@@ -109,7 +151,7 @@ const StudyCourse: React.FC = () => {
                             {lesson.estimatedMinutes && (
                               <span className="duration">{lesson.estimatedMinutes} min</span>
                             )}
-                            <span className="content-type">{lesson.contentType}</span>
+                            {/* <span className="content-type">{lesson.contentType}</span> */}
                           </div>
                           <Link 
                             to={`/my-subscriptions/study-course/${activeChapterData.chapterId}/lesson/${lesson.lessonId}`}
@@ -129,7 +171,7 @@ const StudyCourse: React.FC = () => {
                   {activeChapterData.quizzes
                     .sort((a, b) => a.order - b.order)
                     .map(quiz => {
-                      const isCompleted = completedQuizzes.includes(quiz.quizId);
+                      const isCompleted = completedQuizIds.includes(quiz.quizId);
                       
                       return (
                         <div key={quiz.quizId} className={`quiz-card ${isCompleted ? 'completed' : ''}`}>
@@ -171,24 +213,31 @@ const StudyCourse: React.FC = () => {
           
           <div className="recent-activity">
             <h4>Recent Activity</h4>
-            {completedLessons.length === 0 && completedQuizzes.length === 0 ? (
+            {completedLessonIds.length === 0 && completedQuizIds.length === 0 ? (
               <div className="activity-item">
                 <span className="activity-text">No completed activities yet. Start your first lesson!</span>
               </div>
             ) : (
               <>
-                {completedLessons.slice(0, 2).map(lessonId => (
-                  <div key={lessonId} className="activity-item">
-                    <span className="activity-date">Recent</span>
-                    <span className="activity-text">Completed lesson: {lessonId}</span>
+                {lessonProgress.slice(0, 2).map(progress => (
+                  <div key={`${progress.lessonId}-${progress.completedAt}`} className="activity-item">
+                    <span className="activity-date">
+                      {new Date(progress.completedAt).toLocaleDateString()}
+                    </span>
+                    <span className="activity-text">Completed lesson: {getLessonDisplayName(progress.lessonId)}</span>
                   </div>
                 ))}
-                {completedQuizzes.slice(0, 2).map(quizId => (
-                  <div key={quizId} className="activity-item">
-                    <span className="activity-date">Recent</span>
-                    <span className="activity-text">Completed quiz: {quizId}</span>
-                  </div>
-                ))}
+                {quizProgress
+                  .filter(progress => progress.passed)
+                  .slice(0, 2)
+                  .map(progress => (
+                    <div key={`${progress.quizId}-${progress.completedAt}`} className="activity-item">
+                      <span className="activity-date">
+                        {new Date(progress.completedAt).toLocaleDateString()}
+                      </span>
+                      <span className="activity-text">Passed quiz: {getQuizDisplayName(progress.quizId)}</span>
+                    </div>
+                  ))}
               </>
             )}
           </div>

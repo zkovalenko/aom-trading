@@ -29,9 +29,29 @@ export class CourseService {
     return chapter?.lessons.find(lesson => lesson.lessonId === lessonId);
   }
 
+  public findLessonById(lessonId: string) {
+    for (const chapter of this.course.chapters) {
+      const lesson = chapter.lessons.find(item => item.lessonId === lessonId);
+      if (lesson) {
+        return { chapter, lesson };
+      }
+    }
+    return null;
+  }
+
   public getQuiz(chapterId: string, quizId: string) {
     const chapter = this.getChapter(chapterId);
     return chapter?.quizzes.find(quiz => quiz.quizId === quizId);
+  }
+
+  public findQuizById(quizId: string) {
+    for (const chapter of this.course.chapters) {
+      const quiz = chapter.quizzes.find(item => item.quizId === quizId);
+      if (quiz) {
+        return { chapter, quiz };
+      }
+    }
+    return null;
   }
 
   public getChapterProgress(chapterId: string, completedLessons: string[], completedQuizzes: string[]) {

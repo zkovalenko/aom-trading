@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth, apiCall } from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
 import { CourseService } from '../services/courseService';
 import { CourseQuiz, CourseChapter, CourseQuestion } from '../types/course';
 import './StudyCourse.css';
@@ -14,7 +15,7 @@ interface QuizAttempt {
 
 const QuizPage: React.FC = () => {
   const { chapterId, quizId } = useParams<{ chapterId: string; quizId: string }>();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   
   const [quiz, setQuiz] = useState<CourseQuiz | null>(null);
@@ -48,9 +49,45 @@ const QuizPage: React.FC = () => {
     setQuiz(quizData);
     setLoading(false);
 
-    // TODO: Load user's previous attempts from API
-    setAttemptCount(0);
   }, [chapterId, quizId, navigate]);
+
+  useEffect(() => {
+    if (!token || !quizId) {
+      setAttemptCount(0);
+      return;
+    }
+
+    const fetchProgress = async () => {
+      try {
+        const response = await apiCall('/course-progress', { method: 'GET' }, token);
+        if (!response.ok) {
+          throw new Error('Failed to load quiz progress');
+        }
+
+        const data = await response.json();
+        const quizzes: Array<{ quizId: string; attempts?: number; passed?: boolean; score?: number }> = data?.data?.quizzes ?? [];
+        const progress = quizzes.find(item => item.quizId === quizId);
+
+        if (progress) {
+          setAttemptCount(progress.attempts ?? 1);
+          if (progress.passed) {
+            setCurrentAttempt(prev => ({
+              ...prev,
+              score: typeof progress.score === 'number' ? progress.score : prev.score,
+              passed: true,
+              completed: true,
+            }));
+            setShowResults(true);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load quiz progress:', error);
+        setAttemptCount(0);
+      }
+    };
+
+    fetchProgress();
+  }, [token, quizId]);
 
   const handleAnswerChange = (questionId: string, answer: string) => {
     setCurrentAttempt(prev => ({
@@ -116,13 +153,47 @@ const QuizPage: React.FC = () => {
     }));
 
     setShowResults(true);
-    setAttemptCount(prev => prev + 1);
 
     try {
-      // TODO: API call to save quiz attempt
-      console.log(`Quiz ${quiz.quizId} completed with score: ${score}%`);
+      if (!token) {
+        throw new Error('Please log in to save your progress.');
+      }
+
+      const response = await apiCall(
+        '/course-progress/quizzes/complete',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            chapterId,
+            quizId: quiz.quizId,
+            score,
+            passed,
+          })
+        },
+        token
+      );
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || 'Failed to save quiz attempt');
+      }
+
+      const result = await response.json();
+      const attemptsFromApi = result?.data?.attempts;
+      if (typeof attemptsFromApi === 'number') {
+        setAttemptCount(attemptsFromApi);
+      } else {
+        setAttemptCount(prev => prev + 1);
+      }
+
+      toast.success(passed ? 'Quiz completed!' : 'Attempt recorded. Try again!');
     } catch (error) {
       console.error('Failed to save quiz attempt:', error);
+      setAttemptCount(prev => prev + 1);
+      toast.error(error instanceof Error ? error.message : 'Failed to save quiz attempt.');
     }
   };
 

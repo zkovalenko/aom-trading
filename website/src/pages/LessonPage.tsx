@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
+import { useAuth, apiCall } from '../contexts/AuthContext';
 import { CourseService } from '../services/courseService';
 import { CourseLesson, CourseChapter } from '../types/course';
 import './StudyCourse.css';
 
 const LessonPage: React.FC = () => {
   const { chapterId, lessonId } = useParams<{ chapterId: string; lessonId: string }>();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   
   const [lesson, setLesson] = useState<CourseLesson | null>(null);
@@ -33,24 +34,67 @@ const LessonPage: React.FC = () => {
     setChapter(chapterData);
     setLesson(lessonData);
     setLoading(false);
-
-    // TODO: Check if user has completed this lesson from API
     setCompleted(false);
+
   }, [chapterId, lessonId, navigate]);
+
+  useEffect(() => {
+    if (!token || !lessonId) {
+      setCompleted(false);
+      return;
+    }
+
+    const fetchCompletion = async () => {
+      try {
+        const response = await apiCall('/course-progress', { method: 'GET' }, token);
+        if (!response.ok) {
+          throw new Error('Failed to load course progress');
+        }
+
+        const data = await response.json();
+        const lessons: Array<{ lessonId: string }> = data?.data?.lessons ?? [];
+        const isCompleted = lessons.some((item) => item.lessonId === lessonId);
+        setCompleted(isCompleted);
+      } catch (error) {
+        console.error('Failed to load lesson completion status:', error);
+        setCompleted(false);
+      }
+    };
+
+    fetchCompletion();
+  }, [token, lessonId]);
 
   const handleMarkComplete = async () => {
     if (!lesson || !chapter) return;
 
+    if (!token) {
+      toast.error('Please log in to save your progress.');
+      return;
+    }
+
     try {
-      // TODO: API call to mark lesson as completed
-      console.log(`Marking lesson ${lesson.lessonId} as completed`);
-      
+      const response = await apiCall(
+        '/course-progress/lessons/complete',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ chapterId, lessonId: lesson.lessonId })
+        },
+        token
+      );
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || 'Failed to mark lesson complete');
+      }
+
       setCompleted(true);
-      
-      // Optional: Navigate to next lesson or back to chapter
-      // navigate(`/my-subscriptions/study-course`);
+      toast.success('Lesson marked as complete.');
     } catch (error) {
       console.error('Failed to mark lesson as completed:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to save progress.');
     }
   };
 
@@ -135,7 +179,7 @@ const LessonPage: React.FC = () => {
               {lesson.estimatedMinutes && (
                 <span className="duration">⏱️ {lesson.estimatedMinutes} minutes</span>
               )}
-              <span className="content-type">📄 {lesson.contentType}</span>
+              {/* <span className="content-type">📄 {lesson.contentType}</span> */}
               {completed && (
                 <span className="completion-status">✅ Completed</span>
               )}
