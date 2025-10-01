@@ -20,6 +20,7 @@ import meetingRoutes from './routes/trading-rooms';
 import supportRoutes from './routes/support';
 import contactRoutes from './routes/contact';
 import softwareDownloadRoutes from './routes/softwareDownload';
+import newsletterRoutes from './routes/newsletter';
 
 // Load environment variables using our centralized system
 loadEnvironmentVariables();
@@ -89,6 +90,7 @@ app.use('/api/trading-rooms', meetingRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/download', softwareDownloadRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 
 
 // Health check

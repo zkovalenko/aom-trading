@@ -21,6 +21,7 @@ import TermsOfService from './pages/TermsOfService';
 import SupportPage from './pages/SupportPage';
 import ContactPage from './pages/ContactPage';
 import FAQPage from './pages/FAQPage';
+import NewsletterPage from './pages/NewsletterPage';
 import './App.css';
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
               <Route path="/support" element={<SupportPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/faq" element={<FAQPage />} />
+              <Route path="/newsletter" element={<NewsletterPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
