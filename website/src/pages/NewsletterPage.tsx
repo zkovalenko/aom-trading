@@ -55,7 +55,7 @@ const NewsletterPage: React.FC = () => {
     <div className="newsletter-page">
       <div className="container">
         <header className="newsletter-header">
-          <h1>Join the AOMTrading Newsletter</h1>
+          <h1>Join Our Newsletter</h1>
           <p>
             Stay ahead of new tutorials, live sessions, product updates, and community events. We’ll only
             send actionable insights and important announcements.
@@ -101,7 +101,7 @@ const NewsletterPage: React.FC = () => {
               />
             </div>
 
-            <button type="submit" className="cta-button" disabled={submitting}>
+            <button type="submit" className="cta-button secondary" disabled={submitting}>
               {submitting ? 'Subscribing…' : 'Subscribe'}
             </button>
           </form>

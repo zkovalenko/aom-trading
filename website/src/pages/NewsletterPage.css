@@ -57,7 +57,7 @@
 
 .newsletter-form label {
   font-weight: 600;
-  color: #495057;
+  color: var(--color-gray)!important;
 }
 
 .newsletter-form input {
@@ -73,30 +73,6 @@
   outline: none;
   border-color: #2f498b;
   box-shadow: 0 0 0 3px rgba(47, 73, 139, 0.15);
-}
-
-.cta-button {
-  margin-top: 1.5rem;
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #2f498b, #1f3570);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cta-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 25px rgba(47, 73, 139, 0.25);
-}
-
-.cta-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .newsletter-aside {

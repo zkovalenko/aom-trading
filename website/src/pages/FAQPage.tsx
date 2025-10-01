@@ -1,23 +1,8 @@
 import React from 'react';
 import './FAQPage.css';
+import { Link } from 'react-router-dom';
 
 const faqs = [
-  {
-    question: 'How do I book 1-on-1 time with a coach?',
-    answer: (
-      <>
-        <p>
-          You can schedule a private tutoring session through our online calendar. Just pick your topic
-          and an available time slot here:
-          {' '}
-          <a href="https://aom-trading.onrender.com/book-session" target="_blank" rel="noopener noreferrer">
-            Book a session
-          </a>
-          .
-        </p>
-      </>
-    ),
-  },
   {
     question: 'Where can I get a free Renko Bar?',
     answer: (
@@ -157,10 +142,10 @@ const FAQPage: React.FC = () => {
     <div className="faq-page">
       <div className="container">
         <header className="faq-header">
-          <h1>AOMtrading – Frequently Asked Questions</h1>
+          <h1>AOMTrading – Frequently Asked Questions</h1>
           <p>
             Answers to the questions we hear most from traders getting started with the AOM methodology.
-            Have something else on your mind? Reach out to our team anytime.
+            Have something else on your mind? <Link to="/contact">Reach out</Link> to our team anytime.
           </p>
         </header>
 
