@@ -69,6 +69,10 @@
 .auth-form {
   text-align: left;
   margin-bottom: 1rem;
+
+  .forgot-password.form-group label {
+      color: white;
+    }
 }
 
 .form-row {
@@ -78,14 +82,13 @@
 }
 
 .form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1.2rem !important;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 300;
-  color: white;
 }
 
 .form-group input {
@@ -121,7 +124,6 @@
   font-size: 0.9rem;
   border: none;
   background: transparent;
-  color: white;
 }
 
 .forgot-password:hover {
@@ -185,7 +187,6 @@
 .auth-footer a {
   text-decoration: none;
   font-weight: 500;
-  color: white;
 }
 
 .auth-footer a:hover {

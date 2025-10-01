@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Modal from '../common/Modal';
 
@@ -22,6 +23,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   const [loading, setLoading] = useState(false);
 
   const { login, loginWithGoogle } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -105,8 +107,8 @@ const LoginModal: React.FC<LoginModalProps> = ({
               type="button" 
               className="forgot-password"
               onClick={() => {
-                // Handle forgot password - could open another modal or redirect
-                console.log('Forgot password clicked');
+                onClose();
+                navigate('/forgot-password');
               }}
             >
               Forgot your password?

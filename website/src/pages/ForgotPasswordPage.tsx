@@ -58,7 +58,7 @@ const ForgotPasswordPage: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="auth-form">
-              <div className="form-group">
+              <div className="form-group forgot-password">
                 <label htmlFor="email">Email Address</label>
                 <input
                   id="email"

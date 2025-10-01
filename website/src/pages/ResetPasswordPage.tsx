@@ -86,7 +86,7 @@ const ResetPasswordPage: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="auth-form">
-              <div className="form-group">
+              <div className="form-group forgot-password">
                 <label htmlFor="password">New Password</label>
                 <input
                   id="password"
@@ -99,7 +99,7 @@ const ResetPasswordPage: React.FC = () => {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group forgot-password">
                 <label htmlFor="confirmPassword">Confirm Password</label>
                 <input
                   id="confirmPassword"

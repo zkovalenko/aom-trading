@@ -219,16 +219,22 @@ const Software: React.FC = () => {
           <div className="requirements-grid">
             <div className="req-section">
               <ul>
-                <li>Windows 8, Windows 10, Windows Server 2012</li>
-                <li>1 gigahertz (GHz) or faster 32-bit or 64-bit processor</li>
-                <li>2GB RAM</li>
+                <li>Windows 10, Windows 11, Windows Server 2016 or later</li>
+                <li>2 gigahertz (GHz) or faster 32-bit or 64-bit processor (preferable)</li>
+                <li>16GB RAM (32 GB is recommended)</li>
                 <li>Internet connection required</li>
               </ul>
             </div>
 
             <div className="req-section">
               <ul>
-                <li>Microsoft .NET Framework 4.5 (pre-installed on most PC’s and can be downloaded here: Microsoft .NET Framework)</li>
+                <li>Microsoft .NET Framework 4.8
+                (pre-installed on most PC’s and can be downloaded here: 
+                <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="support-btn">Microsoft .NET Framework</a>
+                )</li>
                 <li>Screen resolution of 1024 x 768</li>
                 <li>DirectX10 compatible graphics card highly recommended</li>
               </ul>
