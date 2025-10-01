@@ -229,14 +229,13 @@ const Software: React.FC = () => {
             <div className="req-section">
               <ul>
                 <li>Microsoft .NET Framework 4.8
-                (pre-installed on most PC’s and can be downloaded here: 
+                (pre-installed on most PC’s and can be downloaded here:  
                 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" 
                 target="_blank" 
-                rel="noopener noreferrer"
-                className="support-btn">Microsoft .NET Framework</a>
+                rel="noopener noreferrer">Microsoft .NET Framework</a>
                 )</li>
                 <li>Screen resolution of 1024 x 768</li>
-                <li>DirectX10 compatible graphics card highly recommended</li>
+                <li>A DirectX10 10-compatible graphics card is highly recommended</li>
               </ul>
             </div>
           </div>
