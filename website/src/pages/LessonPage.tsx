@@ -15,6 +15,9 @@ const LessonPage: React.FC = () => {
   const [chapter, setChapter] = useState<CourseChapter | null>(null);
   const [loading, setLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
+  const [content, setContent] = useState<string>('');
+  const [loadingContent, setLoadingContent] = useState(false);
+  const [contentError, setContentError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!chapterId || !lessonId) {
@@ -35,6 +38,8 @@ const LessonPage: React.FC = () => {
     setLesson(lessonData);
     setLoading(false);
     setCompleted(false);
+    setContent('');
+    setContentError(null);
 
   }, [chapterId, lessonId, navigate]);
 
@@ -63,6 +68,36 @@ const LessonPage: React.FC = () => {
 
     fetchCompletion();
   }, [token, lessonId]);
+
+  useEffect(() => {
+    const loadContent = async () => {
+      if (!lesson?.contentPath) {
+        setContent('');
+        return;
+      }
+
+      setLoadingContent(true);
+      setContentError(null);
+
+      try {
+        const response = await fetch(lesson.contentPath);
+        if (!response.ok) {
+          throw new Error(`Failed to load content (${response.status})`);
+        }
+
+        const text = await response.text();
+        setContent(text);
+      } catch (error) {
+        console.error('Failed to load lesson content:', error);
+        setContentError('We could not load this lesson content right now.');
+        setContent('');
+      } finally {
+        setLoadingContent(false);
+      }
+    };
+
+    loadContent();
+  }, [lesson?.contentPath]);
 
   const handleMarkComplete = async () => {
     if (!lesson || !chapter) return;
@@ -191,31 +226,16 @@ const LessonPage: React.FC = () => {
           <div className="content-area">
             {lesson.contentType === 'text' && (
               <div className="text-content">
-                {/* TODO: Load actual content from lesson.contentPath */}
-                <div className="placeholder-content">
-                  <h2>Lesson Content</h2>
-                  <p>This is where the lesson content would be displayed. The content would be loaded from:</p>
-                  <code>{lesson.contentPath}</code>
-                  
-                  <h3>Sample Content for: {lesson.name}</h3>
-                  <p>This lesson covers the fundamentals of {lesson.name.toLowerCase()}. Here you would find:</p>
-                  <ul>
-                    <li>Key concepts and definitions</li>
-                    <li>Practical examples and case studies</li>
-                    <li>Interactive elements and exercises</li>
-                    <li>Additional resources for further learning</li>
-                  </ul>
-                  
-                  <div className="content-section">
-                    <h4>Learning Objectives</h4>
-                    <p>By the end of this lesson, you will be able to:</p>
-                    <ul>
-                      <li>Understand the core concepts</li>
-                      <li>Apply the knowledge in practical scenarios</li>
-                      <li>Identify key patterns and indicators</li>
-                    </ul>
-                  </div>
-                </div>
+                {loadingContent ? (
+                  <div className="content-loading">Loading lesson content…</div>
+                ) : contentError ? (
+                  <div className="content-error">{contentError}</div>
+                ) : (
+                  <article
+                    className="lesson-html"
+                    dangerouslySetInnerHTML={{ __html: content || '<p>No content available yet.</p>' }}
+                  />
+                )}
               </div>
             )}
             
