@@ -3,9 +3,10 @@ import { apiCall, useAuth } from '../contexts/AuthContext';
 import './Software.css';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { DOWNLOAD_FILES } from '../services/downloads';
 
 const Software: React.FC = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   if (!user) {
     return (
@@ -18,33 +19,34 @@ const Software: React.FC = () => {
   }
 
   const FILES = {
-    "latest": {
-      version: "1.4.2",
-      releaseDate: "Dec 2024",
-      zipFileId: "1VaSEhORTOlpTPcVHzEiHr3sXB6FMn0Cl",
-      zipFilename: "AOMtrading_1.4.2.zip",
-      chartId: "17WO3pH862TPUF4ORVsF2yBi2lsy1TQdz",
-      chartFilename: "Chart_templates_1.4.2.zip"
+    latest: {
+      version: '1.4.2',
+      releaseDate: 'Dec 2024',
+      zipFilename: DOWNLOAD_FILES.latestSoftware.fileName,
+      chartId: DOWNLOAD_FILES.latestCharts.id,
+      chartFilename: DOWNLOAD_FILES.latestCharts.fileName,
     },
-    "previous": {
-      version: "1.4.1",
-      releaseDate: "Jan 2024",
-      zipFileId: "1tM2C5KLcMe_gkXyB_iYtKbdAGL5NdgVY",
-      zipFilename: "AOMtrading_1.4.10.zip",
-      chartId: "1SKzYQuX-YMLtJlaKkT3BipBCt0J9ewA9",
-      chartFilename: "Chart_templates_1.4.1.zip"
-    }
+    previous: {
+      version: '1.4.1',
+      releaseDate: 'Jan 2024',
+      zipFilename: DOWNLOAD_FILES.previousSoftware.fileName,
+      chartId: DOWNLOAD_FILES.previousCharts.id,
+      chartFilename: DOWNLOAD_FILES.previousCharts.fileName,
+    },
   } as const;
   
-  const downloadSoftware = async (fileId: string, fileName: string) => {
+  const downloadSoftware = async (fileName: string) => {
     try {
-      const response = await apiCall('/download', {
-        method: 'POST',
-        body: JSON.stringify({
-          fileId,
-          fileName
-        }),
-      });
+      const response = await apiCall(
+        '/download',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            fileName
+          }),
+        },
+        token
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -155,7 +157,7 @@ const Software: React.FC = () => {
             <div className="software-actions">
               <button
                 className="feature-access-button"
-                onClick={() => downloadSoftware(FILES.latest.zipFileId, FILES.latest.zipFilename)}
+                onClick={() => downloadSoftware(FILES.latest.zipFilename)}
               >
                 Download
               </button>
@@ -164,7 +166,7 @@ const Software: React.FC = () => {
                 type="button"
                 className="download-link"
                 onClick={() => {
-                  downloadSoftware(FILES.latest.chartId, FILES.latest.chartFilename);
+                  downloadSoftware(FILES.latest.chartFilename);
                 }}
               >
                 Download Chart Templates
@@ -195,7 +197,7 @@ const Software: React.FC = () => {
             <div className="software-actions">
             <button
                 className="feature-access-button"
-                onClick={() => downloadSoftware(FILES.previous.zipFileId, FILES.previous.zipFilename)}
+                onClick={() => downloadSoftware(FILES.previous.zipFilename)}
               >
                 Download
               </button>
@@ -204,7 +206,7 @@ const Software: React.FC = () => {
                 type="button"
                 className="download-link"
                 onClick={() => {
-                  downloadSoftware(FILES.previous.chartId, FILES.previous.chartFilename);
+                  downloadSoftware(FILES.previous.chartFilename);
                 }}
               >
                 Download Chart Templates

@@ -1,5 +1,7 @@
 import express from 'express';
 import { download } from '../controllers/softwareDownloadController';
+import { authenticateToken } from '../middleware/auth';
+import { requireActiveSubscription } from '../middleware/subscription';
 
 const router = express.Router();
 
@@ -8,7 +10,7 @@ const router = express.Router();
  * @desc start Software Download
  * @body {fileId, fileName} - fileId is the google drive id
  */
-router.post('/', download);
+router.post('/', authenticateToken, requireActiveSubscription, download);
 
 
 export default router;
