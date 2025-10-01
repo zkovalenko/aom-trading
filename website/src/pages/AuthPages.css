@@ -89,6 +89,12 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 300;
+
+  color: white;
+}
+
+.auth-form--modal .form-group label {
+  color: var(--color-gray);
 }
 
 .form-group input {
@@ -106,8 +112,6 @@
   background-color: white !important;
 }
 
-
-
 .form-group input:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
@@ -124,10 +128,31 @@
   font-size: 0.9rem;
   border: none;
   background: transparent;
+  color: white;
 }
 
 .forgot-password:hover {
   text-decoration: underline;
+}
+
+.auth-form--modal .forgot-password {
+  color: var(--color-gray);
+}
+
+.auth-footer p,
+.auth-footer a {
+  color: white;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.auth-form--modal + .auth-footer p,
+.auth-form--modal + .auth-footer a,
+.auth-modal-content .auth-footer p,
+.auth-modal-content .auth-footer a {
+  color: var(--color-gray);
 }
 
 .auth-button.google {

@@ -77,7 +77,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
           <p>Sign in to access your AOM Trading courses and materials</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form auth-form--modal">
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
             <input

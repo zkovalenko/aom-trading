@@ -137,7 +137,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form auth-form--modal">
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>

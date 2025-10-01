@@ -20,6 +20,7 @@ import MeetingsPage from './pages/MeetingsPage';
 import TermsOfService from './pages/TermsOfService';
 import SupportPage from './pages/SupportPage';
 import ContactPage from './pages/ContactPage';
+import FAQPage from './pages/FAQPage';
 import './App.css';
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/support" element={<SupportPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FAQPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
