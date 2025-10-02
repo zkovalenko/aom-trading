@@ -4,6 +4,9 @@ import './Software.css';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { DOWNLOAD_FILES } from '../services/downloads';
+import aomBBWavesImage from '../assets/aomBBWaves.png';
+import aomSDZonesImage from '../assets/aomSDZones.png';
+import aomManualStrategyImage from '../assets/aomManualStrategy.png';
 
 const Software: React.FC = () => {
   const { user, token } = useAuth();
@@ -86,56 +89,99 @@ const Software: React.FC = () => {
     <div className="software-page">
       <div className="container">
         <div className="software-header">
-          <h1>AOMTrading Software</h1>
-          <p className="software-subtitle">Our Software complements AOMtrading teaching methodology and
-          bridges the gap between instruction and real-time execution. The suite brings together three licensed components plus supporting indicators so you
-            can read structure, locate opportunity, and execute with confidence.
+          <h1>AOMTrading Software Suite</h1>
+          <p className="software-subtitle">Our proprietary Trading Software Suite complements the AOM methodology by turning concepts into practice with real-time market tools. Our subscribers receive a complimentary license that stays active as long as their subscription remains current, ensuring seamless access to the same technology our experts use to analyze, plan, and execute trades with consistency.
           </p>
         </div>
 
         <section className="software-suite">
           <div className="suite-grid">
             <div className="suite-card">
-              <h3>aomBBWaves</h3>
-              <p>
-                aomBBWaves indicators automatically break the chart into bullish and bearish waves,
-                giving you a live map of market structure.
-              </p>
+              <h3>Automatic Drawing of a Wave</h3>
               <ul>
-                <li>Adjust the fractal nature of price movement to match your trading tempo.</li>
+                <li>Clear Wave State Visualization – See the market’s rhythm with instant wave state Descriptor.</li>
                 <li>
-                  Surface three setups: wave formation, wave expansion, and wave reversal moments.
+                Pivot Line Detection – Quickly spot key reversal and continuation areas.
                 </li>
               </ul>
             </div>
 
             <div className="suite-card">
-              <h3>aomSDZones</h3>
-              <p>
-                aomSDZones works alongside aomBBWaves to automatically draw bullish and bearish
-                zone formations that mirror institutional order flow.
-              </p>
+              <h3>Automatic Drawing of the Structure</h3>
               <ul>
-                <li>Optimized for Renko, Range, and Tick charts while flexible on time-based charts.</li>
-                <li>Divides zones into conservative and aggressive entries for clearer decision making.</li>
-                <li>Measures overnight gaps automatically and supports manual zone selection.</li>
-                <li>Built-in sound alerts ensure you never miss a developing setup.</li>
+                <li>Noise Reduction – Focus only on strong market structures by filtering out clutter.</li>
+                <li>Trend State Display – Always know whether the market is trending up, down, or sideways.</li>
               </ul>
             </div>
 
             <div className="suite-card">
-              <h3>aomManualStrategy</h3>
-              <p>
-                aomManualStrategy streamlines semi-automatic order placement using your preferred
-                ATM strategy.
-              </p>
+              <h3>Automatic Support/Resistance Lines</h3>
               <ul>
-                <li>Consolidation (RBR/BBD) signals print as chart dashes to cue structured entries.</li>
-                <li>Adaptive Reversal (ADP) signals render as arrows to highlight turning points.</li>
+                <li>Instantly reveals critical price levels where the market is most likely to react.</li>
+              </ul>
+            </div>
+
+            <div className="suite-card">
+              <h3>Automatic Supply/Demand Zones</h3>
+              <ul>
+                <li>Smart Zone Detection – Automatically highlights high-probability trading zones.</li>
+                <li>Dynamic Updates – Zones adjust in real-time as prices evolve.</li>
+                <li>Strength Ratings – Each zone is ranked for reliability, so you know which levels matter most.</li>
+              </ul>
+            </div>
+
+
+            <div className="suite-card">
+              <h3>Multitime frame analysis configurator</h3>
+              <ul>
+                <li>Boundary Time Frame (For Major Reversal)</li>
+                <li>Analysis Time Frame (Main Focus)</li>
+                <li>Execution Time Frame (For trade Entry)</li>
+                <li>Configuration of Boundary and Analysis Zones Visibility</li>
+                <li>Allows you to watch only one chart where other significant time frame become visible</li>
               </ul>
             </div>
           </div>
         </section>
+
+        <section className="software-suite">
+          <div className="suite-grid hor">
+            <div className="suite-card">
+              <h3>aomBBWaves</h3>
+              <p>
+                aomBBWaves indicator automatically draws Bullish/Bearish Zone formation. 
+                This indicator is optimized to work the best on Renko, Range, and Tick based charts but will work on any other charts. 
+                Zones are divided into Conservative and Aggressive ones Automatic measurement of Overnight Gaps Manual Zone selection Sound Alert
+              </p>
+            </div>
+            <div className="suite-card">
+              <h3>aomSDZones</h3>
+              <p>
+                aomSDZones indicator automatically draws Supply/Demand Zone formation.
+                This indicator is optimized to work the best on Renko, Range, and Tick based charts
+                but will work on any other charts  
+                Zones are divided into Conservative and Aggressive ones 
+                Automatic measurement of Overnight Gaps
+                Manual Zone selection
+                Sound Alert
+              </p>
+              <img src={aomSDZonesImage} alt="aomSDZones indicator"/>
+
+            </div>
+            <div className="suite-card">
+              <h3>aomManualStrategy</h3>
+              <p>
+                This indicator provides semi-automatic order placement based on preconfigured ATM strategy.
+                There are two configurable signals to allow get into the trade:
+                Consolidation (Rbr/Bbd) presented as a Dash on the chart
+                Adaptive Reversal (ADP) presented as an Arrows on the chart
+              </p>
+              <img src={aomManualStrategyImage} alt="aomManualStrategy indicator"/>
+
+            </div>
+          </div>
+        </section>
+
 
         <div className="software-grid">
           <div className="software-card primary">

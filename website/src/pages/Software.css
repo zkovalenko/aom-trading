@@ -12,14 +12,13 @@
 .software-header h1 {
   color: #2c3e50;
   font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 4rem;
 }
 
 .software-subtitle {
-  color: #7f8c8d;
+  color: var(--color-gray);
   font-size: 1.2rem;
-  max-width: 800px;
-  margin: 0 auto;
+  text-align: left;
 }
 
 .software-grid {
@@ -195,6 +194,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 2rem;
+
+  &.hor {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .suite-card {
@@ -205,6 +209,10 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+
+  &.hor {
+    flex-direction: row;
+  }
 }
 
 .suite-card h3 {

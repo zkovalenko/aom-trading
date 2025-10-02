@@ -133,7 +133,7 @@ const StudyCourse: React.FC = () => {
               </div>
 
               <h3>Lessons</h3>
-              <div className="content-section">
+              <div className="content-section-study">
                 <div className="lesson-grid">
                   {activeChapterData.lessons
                     .sort((a, b) => a.order - b.order)
@@ -166,7 +166,7 @@ const StudyCourse: React.FC = () => {
               </div>
 
               <h3>Quizzes</h3>
-              <div className="content-section">
+              <div className="content-section-study">
                 <div className="quiz-grid">
                   {activeChapterData.quizzes
                     .sort((a, b) => a.order - b.order)
