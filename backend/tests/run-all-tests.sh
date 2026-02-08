@@ -7,6 +7,11 @@ echo "========================================"
 ts-node --transpile-only tests/subscriptionRenewal.test.ts
 
 echo ""
+echo "🧪 Running Trial Prevention Tests..."
+echo "========================================"
+ts-node --transpile-only tests/trialPrevention.test.ts
+
+echo ""
 echo "🧪 Running License Management Tests..."
 echo "========================================"
 ts-node --transpile-only tests/license.test.ts

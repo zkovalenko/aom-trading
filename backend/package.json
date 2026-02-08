@@ -14,6 +14,7 @@
     "create-migration": "node scripts/create-migration.js",
     "test": "ts-node --transpile-only tests/licenseValidation.test.ts",
     "test:renewal": "ts-node --transpile-only tests/subscriptionRenewal.test.ts",
+    "test:trial": "ts-node --transpile-only tests/trialPrevention.test.ts",
     "test:license": "ts-node --transpile-only tests/license.test.ts",
     "test:all": "./tests/run-all-tests.sh"
   },

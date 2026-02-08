@@ -186,17 +186,40 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
 
     const product = productResult.rows[0];
 
+    // Check if user has had a previous trial for this product
+    const existingUserSubs = await pool.query(
+      'SELECT * FROM user_subscriptions WHERE user_id = $1',
+      [currentUser.id]
+    );
+
+    let hasHadPreviousTrial = false;
+    if (existingUserSubs.rows.length > 0) {
+      const subscriptions = existingUserSubs.rows[0].subscriptions || [];
+      hasHadPreviousTrial = subscriptions.some((sub: any) =>
+        sub.productId === productId &&
+        (sub.subscriptionStatus === 'trial' || sub.subscriptionStatus === 'cancelled' || sub.subscriptionStatus === 'expired')
+      );
+    }
+
+    console.log(`🔍 User has had previous trial for this product: ${hasHadPreviousTrial}`);
+
     // Calculate subscription dates
     const now = new Date();
 
-    // For monthly subscriptions: 3 months free trial
-    // For annual subscriptions: 3 months free trial
-    let trialMonths = 3;
+    // Only give trial to first-time customers
+    let shouldGiveTrial = !hasHadPreviousTrial;
+    let trialMonths = shouldGiveTrial ? 3 : 0;
     const trialExpiryDate = new Date();
-    trialExpiryDate.setMonth(trialExpiryDate.getMonth() + trialMonths);
+    if (shouldGiveTrial) {
+      trialExpiryDate.setMonth(trialExpiryDate.getMonth() + trialMonths);
+    }
 
-    console.log(`🎁 Setting up ${trialMonths}-month free trial for ${subscriptionType} subscription`);
-    console.log(`📅 Trial expires: ${trialExpiryDate.toISOString()}`);
+    if (shouldGiveTrial) {
+      console.log(`🎁 Setting up ${trialMonths}-month free trial for ${subscriptionType} subscription`);
+      console.log(`📅 Trial expires: ${trialExpiryDate.toISOString()}`);
+    } else {
+      console.log(`💳 No trial - immediate payment required (user had previous trial)`);
+    }
 
     // Create Stripe Price for the subscription
     const amount = product.subscription_types[subscriptionType];
@@ -215,23 +238,30 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
       }
     });
 
-    // Create Stripe subscription with 3-month trial
-    const trialEndTimestamp = Math.floor(trialExpiryDate.getTime() / 1000);
-
-    console.log(`🔄 Creating Stripe subscription with trial end: ${trialEndTimestamp}`);
-
-    const subscription = await stripe.subscriptions.create({
+    // Create Stripe subscription with or without trial
+    const subscriptionParams: any = {
       customer: customerId,
       items: [{
         price: price.id
       }],
-      trial_end: trialEndTimestamp,
       metadata: {
         userId: currentUser.id.toString(),
         productId: productId,
-        subscriptionType: subscriptionType
+        subscriptionType: subscriptionType,
+        isRenewal: hasHadPreviousTrial ? 'true' : 'false'
       }
-    });
+    };
+
+    // Only add trial_end if user gets a trial
+    if (shouldGiveTrial) {
+      const trialEndTimestamp = Math.floor(trialExpiryDate.getTime() / 1000);
+      subscriptionParams.trial_end = trialEndTimestamp;
+      console.log(`🔄 Creating Stripe subscription with trial end: ${trialEndTimestamp}`);
+    } else {
+      console.log(`🔄 Creating Stripe subscription with immediate billing (no trial)`);
+    }
+
+    const subscription = await stripe.subscriptions.create(subscriptionParams);
 
     console.log(`✅ Created Stripe subscription: ${subscription.id}`);
     console.log(`📋 Subscription status: ${subscription.status}`);
@@ -282,24 +312,30 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
       console.log('⚠️  No license template configured for this product');
     }
 
-    // Record initial subscription setup (no payment yet during trial)
+    // Record initial subscription setup
+    const paymentStatus = shouldGiveTrial ? 'trial' : 'active';
     const paymentResult = await pool.query(
       'INSERT INTO payments (user_id, product_id, stripe_payment_id, stripe_payment_intent_id, amount, currency, status, product_type, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP) RETURNING *',
-      [currentUser.id, productId, subscription.id, subscription.id, amount, 'usd', 'trial', 'subscription']
+      [currentUser.id, productId, subscription.id, subscription.id, amount, 'usd', paymentStatus, 'subscription']
     );
 
-    // Create or update user subscription with 3-month free trial
-    console.log(`🎁 Creating subscription with 3-month FREE trial for user ${currentUser.email}`);
-    console.log(`📅 Free trial period: ${now.toISOString()} to ${trialExpiryDate.toISOString()}`);
+    // Create or update user subscription
+    if (shouldGiveTrial) {
+      console.log(`🎁 Creating subscription with 3-month FREE trial for user ${currentUser.email}`);
+      console.log(`📅 Free trial period: ${now.toISOString()} to ${trialExpiryDate.toISOString()}`);
+    } else {
+      console.log(`💳 Creating active subscription for user ${currentUser.email} (renewal - no trial)`);
+      console.log(`📅 Active until: ${subscriptionExpiryDate.toISOString()}`);
+    }
 
     const subscriptionData = {
       stripeCustomerId: customerId,
       stripeSubscriptionId: subscription.id,
       stripePriceId: price.id,
       subscriptionId: paymentResult.rows[0].id,
-      subscriptionStatus: 'trial', // User starts with FREE 3-month trial
+      subscriptionStatus: shouldGiveTrial ? 'trial' : 'active',
       subscriptionType: subscriptionType,
-      subscriptionTrialExpiryDate: trialExpiryDate.toISOString(),
+      subscriptionTrialExpiryDate: shouldGiveTrial ? trialExpiryDate.toISOString() : null,
       subscriptionExpiryDate: subscriptionExpiryDate.toISOString(),
       errorObj: null,
       autoRenewal: true,
