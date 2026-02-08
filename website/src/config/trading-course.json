@@ -12,8 +12,8 @@
       "lessons": [
         {
           "lessonId": "introduction-to-trading",
-          "name": "The Top-Down approach to reading the market",
-          "description": "Fundamental concepts reading the market",
+          "name": "Lesson 1: Introduction to AOM Trading Methodology",
+          "description": "Learn the core principles and methodology behind AOM Trading",
           "order": 0,
           "contentType": "text",
           "contentPath": "/lessons/trading-basics/introduction-to-trading.md",
@@ -21,93 +21,152 @@
         },
         {
           "lessonId": "market-participants",
-          "name": "Market Participants",
-          "description": "Understanding different types of traders and investors",
+          "name": "Lesson 2: Multi-timeframe Analysis",
+          "description": "Understanding how different timeframes interact and special cases for trading",
           "order": 1,
           "contentType": "text",
           "contentPath": "/lessons/trading-basics/market-participants.md",
           "estimatedMinutes": 20
-        },
-        {
-          "lessonId": "trading-platforms",
-          "name": "Trading Platforms and Tools",
-          "description": "Essential tools and platforms for trading",
-          "order": 2,
-          "contentType": "text",
-          "contentPath": "/lessons/trading-basics/trading-platforms.md",
-          "estimatedMinutes": 25
         }
       ],
       "quizzes": [
         {
           "quizId": "trading-basics-quiz-1",
-          "name": "Trading Basics Quiz 1",
-          "description": "Test your knowledge of basic trading concepts",
+          "name": "Chapter 1 Quiz",
+          "description": "Test your understanding of AOM Trading Methodology and Multi-timeframe Analysis",
           "order": 0,
-          "passingScore": 70,
-          "maxAttempts": 3,
-          "questions": [
-            {
-              "questionId": "tb-q1",
-              "text": "What is the primary purpose of financial markets?",
-              "type": "multiple-choice",
-              "order": 0,
-              "points": 1,
-              "options": [
-                {
-                  "optionId": "tb-q1-a",
-                  "text": "To facilitate price discovery and capital allocation",
-                  "isCorrect": true,
-                  "order": 0
-                },
-                {
-                  "optionId": "tb-q1-b",
-                  "text": "To generate profits for banks only",
-                  "isCorrect": false,
-                  "order": 1
-                },
-                {
-                  "optionId": "tb-q1-c",
-                  "text": "To create market volatility",
-                  "isCorrect": false,
-                  "order": 2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "quizId": "trading-basics-quiz-2",
-          "name": "Trading Basics Quiz 2",
-          "description": "Advanced concepts in trading fundamentals",
-          "order": 1,
           "passingScore": 75,
           "maxAttempts": 3,
           "questions": [
             {
-              "questionId": "tb2-q1",
-              "text": "Which type of order guarantees execution but not price?",
+              "questionId": "ch1-q1",
+              "text": "What is the main goal of using a Top-Down Approach in trading? (Select all that apply)",
               "type": "multiple-choice",
               "order": 0,
               "points": 1,
               "options": [
                 {
-                  "optionId": "tb2-q1-a",
-                  "text": "Limit order",
-                  "isCorrect": false,
+                  "optionId": "ch1-q1-a",
+                  "text": "To create a structured and repeatable decision-making process.",
+                  "isCorrect": true,
                   "order": 0
                 },
                 {
-                  "optionId": "tb2-q1-b",
-                  "text": "Market order",
+                  "optionId": "ch1-q1-b",
+                  "text": "To build trader competence and confidence.",
                   "isCorrect": true,
                   "order": 1
                 },
                 {
-                  "optionId": "tb2-q1-c",
-                  "text": "Stop order",
+                  "optionId": "ch1-q1-c",
+                  "text": "To increase the number of trades taken each day.",
                   "isCorrect": false,
                   "order": 2
+                },
+                {
+                  "optionId": "ch1-q1-d",
+                  "text": "To support independent, informed trading decisions.",
+                  "isCorrect": true,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch1-q2",
+              "text": "How do the three timeframes (BTF, ATF, ETF) work together in market analysis? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 1,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch1-q2-a",
+                  "text": "BTF (Boundary Time Frame) defines the large-scale context and major supply/demand zones.",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch1-q2-b",
+                  "text": "ATF (Analysis Time Frame) identifies high-probability zones using wave theory and structure.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch1-q2-c",
+                  "text": "ETF (Execution Time Frame) refines entries for better risk/reward within ATF zones.",
+                  "isCorrect": true,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch1-q2-d",
+                  "text": "All three are used randomly depending on the trader's mood.",
+                  "isCorrect": false,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch1-q3",
+              "text": "Why does analysis typically start with the ATF? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 2,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch1-q3-a",
+                  "text": "It provides the clearest mix of market context and actionable data.",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch1-q3-b",
+                  "text": "It defines the high-probability zones for trade planning.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch1-q3-c",
+                  "text": "It's the smallest timeframe, so it reacts faster to price changes.",
+                  "isCorrect": false,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch1-q3-d",
+                  "text": "It bridges long-term context (BTF) with short-term precision (ETF).",
+                  "isCorrect": true,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch1-q4",
+              "text": "When should a trader use the ETF instead of the full ATF zone? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 3,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch1-q4-a",
+                  "text": "When the trading account is small and risk must be reduced.",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch1-q4-b",
+                  "text": "When the ETF zone aligns with the ATF direction but is narrower in size.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch1-q4-c",
+                  "text": "When the trader wants to gamble on quick trades.",
+                  "isCorrect": false,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch1-q4-d",
+                  "text": "When refining entries to optimize reward-to-risk inside the ATF zone.",
+                  "isCorrect": true,
+                  "order": 3
                 }
               ]
             }

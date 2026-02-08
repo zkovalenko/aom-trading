@@ -348,9 +348,11 @@ const QuizPage: React.FC = () => {
             
             <div className="quiz-info">
               <div className="quiz-stats">
-                <span className="questions-count">📝 {quiz.questions.length} questions</span>
-                <span className="passing-score">🎯 {quiz.passingScore || 70}% to pass</span>
-                <span className="attempts">🔄 Attempt {attemptCount + 1} of {quiz.maxAttempts || 3}</span>
+                <span className="questions-count">{quiz.questions.length} questions</span>
+                <span className="stat-separator">•</span>
+                <span className="passing-score">{quiz.passingScore || 70}% to pass</span>
+                <span className="stat-separator">•</span>
+                <span className="attempts">Attempt {attemptCount + 1} of {quiz.maxAttempts || 3}</span>
               </div>
             </div>
           </div>
@@ -359,7 +361,7 @@ const QuizPage: React.FC = () => {
         {showResults && (
           <div className={`quiz-results ${currentAttempt.passed ? 'passed' : 'failed'}`}>
             <div className="results-header">
-              <h2>{currentAttempt.passed ? '🎉 Congratulations!' : '📚 Keep Learning'}</h2>
+              <h2>{currentAttempt.passed ? 'Congratulations!' : 'Keep Learning'}</h2>
               <div className="score-display">
                 <span className="score">{Math.round(currentAttempt.score)}%</span>
                 <span className="status">{currentAttempt.passed ? 'PASSED' : 'FAILED'}</span>

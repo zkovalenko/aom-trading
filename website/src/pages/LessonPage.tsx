@@ -212,7 +212,7 @@ const LessonPage: React.FC = () => {
             
             <div className="lesson-meta">
               {lesson.estimatedMinutes && (
-                <span className="duration">⏱️ {lesson.estimatedMinutes} minutes</span>
+                <span className="duration">{lesson.estimatedMinutes} minutes</span>
               )}
               {/* <span className="content-type">📄 {lesson.contentType}</span> */}
               {completed && (
@@ -242,7 +242,7 @@ const LessonPage: React.FC = () => {
             {lesson.contentType === 'video' && (
               <div className="video-content">
                 <div className="video-placeholder">
-                  <p>📹 Video content would be loaded here</p>
+                  <p>Video content would be loaded here</p>
                   <p>Content path: {lesson.contentPath}</p>
                 </div>
               </div>
@@ -251,7 +251,7 @@ const LessonPage: React.FC = () => {
             {lesson.contentType === 'interactive' && (
               <div className="interactive-content">
                 <div className="interactive-placeholder">
-                  <p>🎯 Interactive content would be loaded here</p>
+                  <p>Interactive content would be loaded here</p>
                   <p>Content path: {lesson.contentPath}</p>
                 </div>
               </div>
