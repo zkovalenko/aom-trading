@@ -94,7 +94,7 @@
   border: 1px solid #e9ecef;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: space-between;
   flex: 1;
   min-width: 0;
 }
@@ -346,13 +346,20 @@
   background: #f8fff9;
 }
 
-.lesson-header,
-.quiz-header {
+.lesson-card .lesson-header,
+.quiz-card .quiz-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 0.75rem;
+}
+
+.lesson-page .lesson-header,
+.quiz-page .quiz-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .lesson-header h4,
@@ -497,11 +504,18 @@
 }
 
 /* Lesson page specific styles */
+.lesson-title-section,
+.quiz-title-section {
+  width: 100%;
+  max-width: 100%;
+}
+
 .lesson-title-section h1,
 .quiz-title-section h1 {
   font-size: 2.5rem;
   color: #2c3e50;
   margin-bottom: 0.5rem;
+  max-width: 80%;
 }
 
 .lesson-description,

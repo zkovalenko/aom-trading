@@ -1,5 +1,3 @@
-<h1>Lesson 1: Introduction to AOM Trading Methodology</h1>
-
 <h2>Methodology</h2>
 <p>
   Our trading methodology is the result of years of market research, real-time analysis,
