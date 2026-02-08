@@ -166,8 +166,9 @@ describe('Billing Type Preservation', () => {
   });
 
   it('should default to monthly if subscriptionType is missing', () => {
-    const subscriptionType = undefined;
-    const billingType = subscriptionType?.toLowerCase().includes('annual') ? 'annual' : 'monthly';
+    const subscriptionType: string | undefined = undefined;
+    const subscriptionTypeStr = subscriptionType?.toLowerCase() || 'monthly';
+    const billingType = subscriptionTypeStr.includes('annual') ? 'annual' : 'monthly';
 
     expect(billingType).toBe('monthly');
   });
