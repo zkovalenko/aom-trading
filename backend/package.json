@@ -12,7 +12,10 @@
     "init-db": "node scripts/init-db.js",
     "migrate": "node scripts/migrate.js",
     "create-migration": "node scripts/create-migration.js",
-    "test": "ts-node --transpile-only tests/licenseValidation.test.ts"
+    "test": "ts-node --transpile-only tests/licenseValidation.test.ts",
+    "test:renewal": "ts-node --transpile-only tests/subscriptionRenewal.test.ts",
+    "test:license": "ts-node --transpile-only tests/license.test.ts",
+    "test:all": "./tests/run-all-tests.sh"
   },
   "dependencies": {
     "@types/bcrypt": "^6.0.0",

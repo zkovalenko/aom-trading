@@ -140,6 +140,9 @@ const ServicesPage: React.FC = () => {
         console.error('Failed to reload subscriptions:', error);
       }
     }
+
+    // Redirect to My Subscriptions page after successful purchase
+    window.location.href = '/my-subscriptions';
   };
 
   const handleSubscriptionCancel = () => {

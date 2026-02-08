@@ -37,6 +37,9 @@ const Software: React.FC = () => {
       chartFilename: DOWNLOAD_FILES.previousCharts.fileName,
     },
   } as const;
+
+  // TODO: Add subscriptionAccess to User type
+  const isPremiumUser = false; // user.subscriptionAccess?.hasPremiumAccess;
   
   const downloadSoftware = async (fileName: string) => {
     try {
@@ -95,29 +98,27 @@ const Software: React.FC = () => {
         </div>
 
         <section className="software-suite">
+          <h2>Included Tools</h2>
           <div className="suite-grid">
             <div className="suite-card">
-              <h3>Automatic Drawing of a Wave</h3>
+              <h3>Wave Analyzer</h3>
+              <p></p>
               <ul>
-                <li>Clear Wave State Visualization – See the market’s rhythm with instant wave state Descriptor.</li>
-                <li>
-                Pivot Line Detection – Quickly spot key reversal and continuation areas.
-                </li>
+                <li>Automatically detects market waves and identifies bullish or bearish phases.</li>
               </ul>
             </div>
 
             <div className="suite-card">
               <h3>Automatic Drawing of the Structure</h3>
               <ul>
-                <li>Noise Reduction – Focus only on strong market structures by filtering out clutter.</li>
-                <li>Trend State Display – Always know whether the market is trending up, down, or sideways.</li>
+                <li>Plots key pivots, trend lines, and state boxes to reveal directional bias.</li>
               </ul>
             </div>
 
             <div className="suite-card">
-              <h3>Automatic Support/Resistance Lines</h3>
+              <h3>Support & Resistance Engine</h3>
               <ul>
-                <li>Instantly reveals critical price levels where the market is most likely to react.</li>
+                <li>Plots key pivots, trend lines, and state boxes to reveal directional bias.</li>
               </ul>
             </div>
 

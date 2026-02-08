@@ -321,18 +321,28 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     console.log(`🔍 Existing user subscriptions found: ${existingUserSub.rows.length}`);
 
     if (existingUserSub.rows.length > 0) {
-      // Update existing subscriptions
+      // Check if user has an existing subscription for this product
       const currentSubscriptions = existingUserSub.rows[0].subscriptions || [];
-      currentSubscriptions.push(subscriptionData);
-      
+      const existingSubIndex = currentSubscriptions.findIndex((sub: any) => sub.productId === productId);
+
+      if (existingSubIndex !== -1) {
+        // Update existing subscription (renewal/reactivation)
+        console.log('🔄 Renewing existing subscription for product:', productId);
+        currentSubscriptions[existingSubIndex] = subscriptionData;
+      } else {
+        // Add new subscription for different product
+        console.log('➕ Adding new subscription for product:', productId);
+        currentSubscriptions.push(subscriptionData);
+      }
+
       console.log('📝 Updating existing user subscriptions record');
       console.log('📝 Total subscriptions after update:', currentSubscriptions.length);
-      
+
       await pool.query(
         'UPDATE user_subscriptions SET subscriptions = $1, licensee_number = $2, license_number = $3, updated_at = CURRENT_TIMESTAMP WHERE user_id = $4',
         [JSON.stringify(currentSubscriptions), licenseeNumber, licenseNumber, currentUser.id]
       );
-      
+
       console.log('✅ Successfully updated user subscriptions record');
     } else {
       // Create new user subscription record

@@ -22,6 +22,7 @@ import SupportPage from './pages/SupportPage';
 import ContactPage from './pages/ContactPage';
 import FAQPage from './pages/FAQPage';
 import NewsletterPage from './pages/NewsletterPage';
+import SoftwarePublic from './pages/SoftwarePublic';
 import './App.css';
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
               <Route path="/my-subscriptions/study-course/:chapterId/lesson/:lessonId" element={<LessonPage />} />
               <Route path="/my-subscriptions/study-course/:chapterId/quiz/:quizId" element={<QuizPage />} />
               <Route path="/my-subscriptions/software" element={<Software />} />
+              <Route path="/software" element={<SoftwarePublic />} />
               <Route path="/trading-rooms" element={<MeetingsPage />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/support" element={<SupportPage />} />

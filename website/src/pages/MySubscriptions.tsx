@@ -206,6 +206,54 @@ const MySubscriptions: React.FC = () => {
     setShowCancelModal(false);
   };
 
+  // Handle purchase (for expired trials)
+  const handlePurchase = () => {
+    const subscription = getActiveSubscription();
+    if (subscription?.productId) {
+      // Get the subscription type they had (basic, premium, etc.)
+      const subscriptionType = subscription.subscriptionType?.toLowerCase() || 'monthly';
+      // Determine if it was monthly or annual billing
+      const billingType = subscriptionType.includes('annual') ? 'annual' : 'monthly';
+
+      // Redirect directly to checkout with their previous product and billing type
+      window.location.href = `/learn-to-trade?redirect=subscribe-direct&product=${subscription.productId}&type=${billingType}`;
+    } else {
+      // Fallback to subscription plans page
+      window.location.href = '/learn-to-trade';
+    }
+  };
+
+  // Handle renew (for expired subscriptions)
+  const handleRenew = () => {
+    const subscription = getActiveSubscription();
+    if (subscription?.productId) {
+      // Get the subscription type they had (basic, premium, etc.)
+      const subscriptionType = subscription.subscriptionType?.toLowerCase() || 'monthly';
+      // Determine if it was monthly or annual billing
+      const billingType = subscriptionType.includes('annual') ? 'annual' : 'monthly';
+
+      // Redirect directly to checkout with their previous product and billing type
+      window.location.href = `/learn-to-trade?redirect=subscribe-direct&product=${subscription.productId}&type=${billingType}`;
+    } else {
+      // Fallback to subscription plans page
+      window.location.href = '/learn-to-trade';
+    }
+  };
+
+  // Check if trial has ended
+  const isTrialExpired = (subscription: UserSubscription) => {
+    if (subscription.subscriptionStatus !== 'trial') return false;
+    const trialEndDate = new Date(subscription.subscriptionTrialExpiryDate);
+    return trialEndDate < new Date();
+  };
+
+  // Check if subscription has expired
+  const isSubscriptionExpired = (subscription: UserSubscription) => {
+    if (subscription.subscriptionStatus === 'expired') return true;
+    const expiryDate = new Date(subscription.subscriptionExpiryDate);
+    return expiryDate < new Date();
+  };
+
   // Handle escape key press
   useEffect(() => {
     const handleEscapePress = (event: KeyboardEvent) => {
@@ -306,10 +354,27 @@ const MySubscriptions: React.FC = () => {
                   <button className="upgrade-button">Upgrade</button>
                 )}
 
-                {activeSubscription?.subscriptionStatus === 'trial' && 
+                {activeSubscription?.subscriptionStatus === 'trial' &&
                   activeSubscription?.subscriptionTrialExpiryDate && (
                     <div className="trial-end-date">
-                      Trial ends: {new Date(activeSubscription.subscriptionTrialExpiryDate).toLocaleDateString()}
+                      {isTrialExpired(activeSubscription) ? (
+                        <>
+                          <span>Trial ended: {new Date(activeSubscription.subscriptionTrialExpiryDate).toLocaleDateString()}</span>
+                          <button className="purchase-button" onClick={handlePurchase}>Purchase</button>
+                        </>
+                      ) : (
+                        <span>Trial ends: {new Date(activeSubscription.subscriptionTrialExpiryDate).toLocaleDateString()}</span>
+                      )}
+                    </div>
+                  )
+                }
+
+                {activeSubscription &&
+                  isSubscriptionExpired(activeSubscription) &&
+                  activeSubscription.subscriptionStatus !== 'trial' && (
+                    <div className="subscription-expired">
+                      <span>Expired: {new Date(activeSubscription.subscriptionExpiryDate).toLocaleDateString()}</span>
+                      <button className="renew-button" onClick={handleRenew}>Renew</button>
                     </div>
                   )
                 }
