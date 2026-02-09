@@ -136,17 +136,8 @@
           "description": "Identifying key price levels",
           "order": 1,
           "contentType": "text",
-          "contentPath": "/lessons/technical-analysis/support-resistance.md",
+          "contentPath": "/lessons/technical-analysis/consolidation-patterns.md",
           "estimatedMinutes": 25
-        },
-        {
-          "lessonId": "technical-indicators",
-          "name": "Technical Indicators",
-          "description": "Moving averages, RSI, MACD, and other indicators",
-          "order": 2,
-          "contentType": "text",
-          "contentPath": "/lessons/technical-analysis/technical-indicators.md",
-          "estimatedMinutes": 35
         }
       ],
       "quizzes": [

@@ -182,102 +182,161 @@
       "lessons": [
         {
           "lessonId": "reading-charts",
-          "name": "Reading Charts",
-          "description": "Understanding candlesticks, bar charts, and line charts",
+          "name": "Lesson 1: Introduction to Supply and Demand",
+          "description": "Learn the core market forces and how supply and demand zones work",
           "order": 0,
           "contentType": "text",
           "contentPath": "/lessons/technical-analysis/reading-charts.md",
-          "estimatedMinutes": 30
-        },
-        {
-          "lessonId": "support-resistance",
-          "name": "Support and Resistance",
-          "description": "Identifying key price levels",
-          "order": 1,
-          "contentType": "text",
-          "contentPath": "/lessons/technical-analysis/support-resistance.md",
           "estimatedMinutes": 25
         },
         {
-          "lessonId": "technical-indicators",
-          "name": "Technical Indicators",
-          "description": "Moving averages, RSI, MACD, and other indicators",
-          "order": 2,
+          "lessonId": "support-resistance",
+          "name": "Lesson 2: Consolidation Patterns",
+          "description": "Understanding consolidation patterns and breakout direction",
+          "order": 1,
           "contentType": "text",
-          "contentPath": "/lessons/technical-analysis/technical-indicators.md",
-          "estimatedMinutes": 35
+          "contentPath": "/lessons/technical-analysis/support-resistance.md",
+          "estimatedMinutes": 30
         }
       ],
       "quizzes": [
         {
           "quizId": "technical-analysis-quiz-1",
-          "name": "Technical Analysis Quiz 1",
-          "description": "Chart reading and basic technical analysis",
+          "name": "Chapter 2 Quiz",
+          "description": "Test your understanding of Supply and Demand and Consolidation Patterns",
           "order": 0,
-          "passingScore": 70,
-          "maxAttempts": 3,
-          "questions": [
-            {
-              "questionId": "ta-q1",
-              "text": "What does a long upper shadow on a candlestick typically indicate?",
-              "type": "multiple-choice",
-              "order": 0,
-              "points": 1,
-              "options": [
-                {
-                  "optionId": "ta-q1-a",
-                  "text": "Strong buying pressure",
-                  "isCorrect": false,
-                  "order": 0
-                },
-                {
-                  "optionId": "ta-q1-b",
-                  "text": "Sellers rejected higher prices",
-                  "isCorrect": true,
-                  "order": 1
-                },
-                {
-                  "optionId": "ta-q1-c",
-                  "text": "No significant price movement",
-                  "isCorrect": false,
-                  "order": 2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "quizId": "technical-analysis-quiz-2",
-          "name": "Technical Analysis Quiz 2",
-          "description": "Advanced technical indicators and patterns",
-          "order": 1,
           "passingScore": 75,
           "maxAttempts": 3,
           "questions": [
             {
-              "questionId": "ta2-q1",
-              "text": "What does RSI measure?",
+              "questionId": "ch2-q1",
+              "text": "What does a Supply Zone represent in market structure? (Select all that apply)",
               "type": "multiple-choice",
               "order": 0,
               "points": 1,
               "options": [
                 {
-                  "optionId": "ta2-q1-a",
-                  "text": "Price momentum and overbought/oversold conditions",
+                  "optionId": "ch2-q1-a",
+                  "text": "An area where institutional traders accumulate long positions.",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch2-q1-b",
+                  "text": "A price region where selling pressure exceeds buying interest.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch2-q1-c",
+                  "text": "A location where price often reverses after a rally.",
+                  "isCorrect": true,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch2-q1-d",
+                  "text": "A consolidation area before a bullish breakout.",
+                  "isCorrect": false,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch2-q2",
+              "text": "Which statement best describes an Imbalance in price action? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 1,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch2-q2-a",
+                  "text": "It occurs when #Buyers = #Sellers.",
+                  "isCorrect": false,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch2-q2-b",
+                  "text": "It drives rapid price movement in the dominant direction.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch2-q2-c",
+                  "text": "It represents a state of equilibrium.",
+                  "isCorrect": false,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch2-q2-d",
+                  "text": "It happens when one side temporarily overpowers the other.",
+                  "isCorrect": true,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch2-q3",
+              "text": "Which pattern category is considered a Trend Continuation pattern? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 2,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch2-q3-a",
+                  "text": "RBR (Rally–Base–Rally)",
                   "isCorrect": true,
                   "order": 0
                 },
                 {
-                  "optionId": "ta2-q1-b",
-                  "text": "Volume trends",
-                  "isCorrect": false,
+                  "optionId": "ch2-q3-b",
+                  "text": "DBD (Drop–Base–Drop)",
+                  "isCorrect": true,
                   "order": 1
                 },
                 {
-                  "optionId": "ta2-q1-c",
-                  "text": "Market sentiment only",
+                  "optionId": "ch2-q3-c",
+                  "text": "DBR (Drop–Base–Rally)",
                   "isCorrect": false,
                   "order": 2
+                },
+                {
+                  "optionId": "ch2-q3-d",
+                  "text": "RBD (Rally–Base–Drop)",
+                  "isCorrect": false,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch2-q4",
+              "text": "Why is it important to consider broader market structure when using Supply and Demand Zones? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 3,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch2-q4-a",
+                  "text": "It helps align trades with overall market direction.",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch2-q4-b",
+                  "text": "It prevents counter-trend entries.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch2-q4-c",
+                  "text": "It determines whether the zone is fresh or weak.",
+                  "isCorrect": true,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch2-q4-d",
+                  "text": "It guarantees higher profits.",
+                  "isCorrect": false,
+                  "order": 3
                 }
               ]
             }
@@ -293,102 +352,170 @@
       "lessons": [
         {
           "lessonId": "trend-following",
-          "name": "Trend Following Strategies",
-          "description": "Strategies that capitalize on market trends",
+          "name": "Lesson 1: Introduction to AOM Trading Methodology",
+          "description": "Learn the AOM Top-Down approach and multi-timeframe alignment",
           "order": 0,
           "contentType": "text",
           "contentPath": "/lessons/trading-strategies/trend-following.md",
-          "estimatedMinutes": 40
+          "estimatedMinutes": 20
         },
         {
           "lessonId": "range-trading",
-          "name": "Range Trading Strategies",
-          "description": "Trading in sideways markets",
+          "name": "Lesson 2: Tool Box",
+          "description": "Learn the AOM Tool Box and its integrated analytical and execution tools",
           "order": 1,
           "contentType": "text",
           "contentPath": "/lessons/trading-strategies/range-trading.md",
-          "estimatedMinutes": 35
+          "estimatedMinutes": 40
         },
         {
           "lessonId": "breakout-strategies",
-          "name": "Breakout Strategies",
-          "description": "Capturing momentum from price breakouts",
+          "name": "Lesson 3: Real Time Examples",
+          "description": "Apply the AOM methodology in real-world market scenarios",
           "order": 2,
           "contentType": "text",
           "contentPath": "/lessons/trading-strategies/breakout-strategies.md",
-          "estimatedMinutes": 30
+          "estimatedMinutes": 35
         }
       ],
       "quizzes": [
         {
           "quizId": "trading-strategies-quiz-1",
-          "name": "Trading Strategies Quiz 1",
-          "description": "Understanding different trading strategies",
+          "name": "Chapter 3 Quiz",
+          "description": "Test your understanding of AOM Trading Methodology and Tool Box",
           "order": 0,
-          "passingScore": 70,
-          "maxAttempts": 3,
-          "questions": [
-            {
-              "questionId": "ts-q1",
-              "text": "What is the main goal of trend following strategies?",
-              "type": "multiple-choice",
-              "order": 0,
-              "points": 1,
-              "options": [
-                {
-                  "optionId": "ts-q1-a",
-                  "text": "To catch market reversals",
-                  "isCorrect": false,
-                  "order": 0
-                },
-                {
-                  "optionId": "ts-q1-b",
-                  "text": "To ride existing market trends for profits",
-                  "isCorrect": true,
-                  "order": 1
-                },
-                {
-                  "optionId": "ts-q1-c",
-                  "text": "To trade against the trend",
-                  "isCorrect": false,
-                  "order": 2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "quizId": "trading-strategies-quiz-2",
-          "name": "Trading Strategies Quiz 2",
-          "description": "Strategy implementation and optimization",
-          "order": 1,
           "passingScore": 75,
           "maxAttempts": 3,
           "questions": [
             {
-              "questionId": "ts2-q1",
-              "text": "When is range trading most effective?",
+              "questionId": "ch3-q1",
+              "text": "What is the main advantage of using the AOM Top-Down Trading Methodology? (Select all that apply)",
               "type": "multiple-choice",
               "order": 0,
               "points": 1,
               "options": [
                 {
-                  "optionId": "ts2-q1-a",
-                  "text": "During strong trending markets",
-                  "isCorrect": false,
+                  "optionId": "ch3-q1-a",
+                  "text": "It allows traders to analyze multiple timeframes in a synchronized structure.",
+                  "isCorrect": true,
                   "order": 0
                 },
                 {
-                  "optionId": "ts2-q1-b",
-                  "text": "In sideways or consolidating markets",
+                  "optionId": "ch3-q1-b",
+                  "text": "It helps identify institutional trend direction before execution.",
                   "isCorrect": true,
                   "order": 1
                 },
                 {
-                  "optionId": "ts2-q1-c",
-                  "text": "Only during market crashes",
+                  "optionId": "ch3-q1-c",
+                  "text": "It eliminates the need for Supply and Demand zones.",
                   "isCorrect": false,
                   "order": 2
+                },
+                {
+                  "optionId": "ch3-q1-d",
+                  "text": "It focuses only on lower timeframe entries.",
+                  "isCorrect": false,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch3-q2",
+              "text": "What does the Market Structure Tool (MST) help traders identify? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 1,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch3-q2-a",
+                  "text": "The relationship between micro moves (structure) and macro moves (waves).",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch3-q2-b",
+                  "text": "The key swing highs and lows that define trend continuity.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch3-q2-c",
+                  "text": "Entry signals based on volume indicators.",
+                  "isCorrect": false,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch3-q2-d",
+                  "text": "Random price fluctuations unrelated to wave formation.",
+                  "isCorrect": false,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch3-q3",
+              "text": "In a \"New Wave Expansion\" setup, what sequence correctly describes the confirmation process? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 2,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch3-q3-a",
+                  "text": "Price completes the previous wave and breaks the Wave.",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch3-q3-b",
+                  "text": "Price pulls back to a Demand or Supply zone aligned with trend direction.",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch3-q3-c",
+                  "text": "Price reverses before breaking the pivot.",
+                  "isCorrect": false,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch3-q3-d",
+                  "text": "Entry is triggered before the wave is confirmed.",
+                  "isCorrect": false,
+                  "order": 3
+                }
+              ]
+            },
+            {
+              "questionId": "ch3-q4",
+              "text": "Which components are primarily responsible for trade execution and management in the AOM Trading System? (Select all that apply)",
+              "type": "multiple-choice",
+              "order": 3,
+              "points": 1,
+              "options": [
+                {
+                  "optionId": "ch3-q4-a",
+                  "text": "ATM (Automated Trade Management).",
+                  "isCorrect": true,
+                  "order": 0
+                },
+                {
+                  "optionId": "ch3-q4-b",
+                  "text": "OEP (Order Entry Panel).",
+                  "isCorrect": true,
+                  "order": 1
+                },
+                {
+                  "optionId": "ch3-q4-c",
+                  "text": "Wave Analyzer.",
+                  "isCorrect": false,
+                  "order": 2
+                },
+                {
+                  "optionId": "ch3-q4-d",
+                  "text": "Multi-Timeframe Synchronization Engine.",
+                  "isCorrect": false,
+                  "order": 3
                 }
               ]
             }
