@@ -193,21 +193,59 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     );
 
     let hasHadPreviousTrial = false;
+    let isUpgradingFromBasicTrial = false;
+    let activeBasicTrialSubscription: any = null;
+
     if (existingUserSubs.rows.length > 0) {
       const subscriptions = existingUserSubs.rows[0].subscriptions || [];
+
+      // Check if user has had previous trial for THIS product
       hasHadPreviousTrial = subscriptions.some((sub: any) =>
         sub.productId === productId &&
         (sub.subscriptionStatus === 'trial' || sub.subscriptionStatus === 'cancelled' || sub.subscriptionStatus === 'expired')
       );
+
+      // Check if user is upgrading from Basic trial to Premium
+      const isPremiumProduct = product.name?.toLowerCase().includes('premium') ||
+                              product.product_template_id === 'premium-trading-plan';
+
+      if (isPremiumProduct) {
+        activeBasicTrialSubscription = subscriptions.find((sub: any) => {
+          const isBasic = sub.productName?.toLowerCase().includes('basic') ||
+                         (sub.product?.product_template_id === 'basic-trading-plan');
+          const isActiveTrial = sub.subscriptionStatus === 'trial';
+          return isBasic && isActiveTrial;
+        });
+
+        if (activeBasicTrialSubscription) {
+          isUpgradingFromBasicTrial = true;
+          console.log(`🔄 User is upgrading from Basic trial to Premium`);
+          console.log(`📋 Existing Basic trial subscription:`, activeBasicTrialSubscription.stripeSubscriptionId);
+        }
+      }
     }
 
     console.log(`🔍 User has had previous trial for this product: ${hasHadPreviousTrial}`);
+    console.log(`🔍 Is upgrading from Basic trial: ${isUpgradingFromBasicTrial}`);
+
+    // If upgrading from Basic trial to Premium, cancel the Basic trial first
+    if (isUpgradingFromBasicTrial && activeBasicTrialSubscription?.stripeSubscriptionId) {
+      console.log(`🗑️ Cancelling Basic trial subscription: ${activeBasicTrialSubscription.stripeSubscriptionId}`);
+      try {
+        await stripe.subscriptions.cancel(activeBasicTrialSubscription.stripeSubscriptionId);
+        console.log(`✅ Basic trial subscription cancelled successfully`);
+      } catch (cancelError) {
+        console.error(`⚠️ Failed to cancel Basic trial subscription:`, cancelError);
+        // Continue with Premium subscription creation even if cancellation fails
+      }
+    }
 
     // Calculate subscription dates
     const now = new Date();
 
     // Only give trial to first-time customers
-    let shouldGiveTrial = !hasHadPreviousTrial;
+    // Premium upgrades from Basic trial do NOT get a trial
+    let shouldGiveTrial = !hasHadPreviousTrial && !isUpgradingFromBasicTrial;
     let trialMonths = shouldGiveTrial ? 3 : 0;
     const trialExpiryDate = new Date();
     if (shouldGiveTrial) {
@@ -217,6 +255,8 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     if (shouldGiveTrial) {
       console.log(`🎁 Setting up ${trialMonths}-month free trial for ${subscriptionType} subscription`);
       console.log(`📅 Trial expires: ${trialExpiryDate.toISOString()}`);
+    } else if (isUpgradingFromBasicTrial) {
+      console.log(`💳 Premium upgrade - no trial, immediate payment (upgrading from Basic trial)`);
     } else {
       console.log(`💳 No trial - immediate payment required (user had previous trial)`);
     }
@@ -361,6 +401,26 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
       const currentSubscriptions = existingUserSub.rows[0].subscriptions || [];
       const existingSubIndex = currentSubscriptions.findIndex((sub: any) => sub.productId === productId);
 
+      // If upgrading from Basic trial, mark the Basic trial as cancelled
+      if (isUpgradingFromBasicTrial && activeBasicTrialSubscription) {
+        console.log('🔄 Marking Basic trial subscription as cancelled in database');
+        const basicTrialIndex = currentSubscriptions.findIndex((sub: any) =>
+          sub.subscriptionId === activeBasicTrialSubscription.subscriptionId ||
+          sub.stripeSubscriptionId === activeBasicTrialSubscription.stripeSubscriptionId
+        );
+
+        if (basicTrialIndex !== -1) {
+          currentSubscriptions[basicTrialIndex] = {
+            ...currentSubscriptions[basicTrialIndex],
+            subscriptionStatus: 'cancelled',
+            autoRenewal: false,
+            cancelledAt: new Date().toISOString(),
+            upgradeReason: 'Upgraded to Premium'
+          };
+          console.log('✅ Basic trial marked as cancelled');
+        }
+      }
+
       if (existingSubIndex !== -1) {
         // Update existing subscription (renewal/reactivation)
         console.log('🔄 Renewing existing subscription for product:', productId);
@@ -409,35 +469,63 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
       console.error('❌ Verification failed - no user subscription record found after creation/update');
     }
 
+    // Prepare response message based on subscription type
+    let responseMessage = 'Subscription created successfully';
+    if (shouldGiveTrial) {
+      responseMessage = 'Subscription created successfully with 3-month FREE trial';
+    } else if (isUpgradingFromBasicTrial) {
+      responseMessage = 'Successfully upgraded to Premium! Your Basic trial has been cancelled and Premium subscription is now active.';
+    } else {
+      responseMessage = 'Subscription activated successfully';
+    }
+
+    const responseData: any = {
+      payment: paymentResult.rows[0],
+      subscription: subscriptionData,
+      stripe: {
+        customerId: customerId,
+        subscriptionId: subscription.id,
+        priceId: price.id,
+        status: subscription.status
+      }
+    };
+
+    // Only include trial info if trial was given
+    if (shouldGiveTrial && subscription.trial_end) {
+      responseData.stripe.trialEnd = new Date(subscription.trial_end * 1000).toISOString();
+      responseData.trial = {
+        isActive: true,
+        endsAt: trialExpiryDate.toISOString(),
+        daysRemaining: Math.ceil((trialExpiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+      };
+    }
+
+    // Include upgrade info if applicable
+    if (isUpgradingFromBasicTrial) {
+      responseData.upgrade = {
+        fromProduct: 'Basic Trading Plan',
+        toProduct: product.name,
+        previousSubscription: activeBasicTrialSubscription.subscriptionId
+      };
+    }
+
     res.json({
       success: true,
-      message: 'Subscription created successfully with 3-month FREE trial',
-      data: {
-        payment: paymentResult.rows[0],
-        subscription: subscriptionData,
-        stripe: {
-          customerId: customerId,
-          subscriptionId: subscription.id,
-          priceId: price.id,
-          status: subscription.status,
-          trialEnd: new Date(subscription.trial_end! * 1000).toISOString()
-        },
-        trial: {
-          isActive: true,
-          endsAt: trialExpiryDate.toISOString(),
-          daysRemaining: Math.ceil((trialExpiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-        }
-      }
+      message: responseMessage,
+      data: responseData
     });
 
-    sendSubscriptionEmail({
-      email: currentUser.email,
-      firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
-      tier: product.name.toLowerCase().includes('premium') ? 'premium' : 'basic',
-      trialEndsAt: trialExpiryDate.toISOString(),
-    }).catch((emailErr) => {
-      console.error('✉️  Failed to send subscription email:', emailErr);
-    });
+    // Send appropriate email notification
+    if (shouldGiveTrial || isUpgradingFromBasicTrial) {
+      sendSubscriptionEmail({
+        email: currentUser.email,
+        firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
+        tier: product.name.toLowerCase().includes('premium') ? 'premium' : 'basic',
+        trialEndsAt: shouldGiveTrial ? trialExpiryDate.toISOString() : subscriptionExpiryDate.toISOString()
+      }).catch((emailErr) => {
+        console.error('✉️  Failed to send subscription email:', emailErr);
+      });
+    }
   } catch (error) {
     console.error('Confirm subscription error:', error);
     res.status(500).json({
@@ -538,26 +626,42 @@ export const cancelSubscription = async (req: Request, res: Response): Promise<v
 
     // Cancel the subscription in Stripe if it has a Stripe subscription ID
     const stripe = getStripe();
+    let cancelAtPeriodEnd = false;
+    let periodEnd: Date | null = null;
+
     if (subscriptionToCancel.stripeSubscriptionId) {
-      console.log(`🗑️ Cancelling Stripe subscription: ${subscriptionToCancel.stripeSubscriptionId}`);
+      console.log(`🗑️ Scheduling Stripe subscription cancellation at period end: ${subscriptionToCancel.stripeSubscriptionId}`);
 
       try {
-        const stripeSubscription = await stripe.subscriptions.cancel(subscriptionToCancel.stripeSubscriptionId);
-        console.log(`✅ Stripe subscription cancelled: ${stripeSubscription.id}, status: ${stripeSubscription.status}`);
+        // Update subscription to cancel at the end of the billing period
+        const stripeSubscription = await stripe.subscriptions.update(
+          subscriptionToCancel.stripeSubscriptionId,
+          {
+            cancel_at_period_end: true
+          }
+        );
+
+        cancelAtPeriodEnd = stripeSubscription.cancel_at_period_end;
+        periodEnd = new Date(stripeSubscription.current_period_end * 1000);
+
+        console.log(`✅ Stripe subscription will cancel at period end: ${periodEnd.toISOString()}`);
+        console.log(`📋 Current status: ${stripeSubscription.status}, cancel_at_period_end: ${cancelAtPeriodEnd}`);
       } catch (stripeError) {
-        console.error('❌ Failed to cancel Stripe subscription:', stripeError);
+        console.error('❌ Failed to update Stripe subscription:', stripeError);
         // Continue with local cancellation even if Stripe fails
       }
     }
 
     // Update subscription status in database
+    // Keep status as active/trial but mark for cancellation
     const updatedSubscriptions = subscriptions.map((sub: any) => {
       if (sub.subscriptionId === subscriptionId || sub.stripeSubscriptionId === subscriptionId) {
         return {
           ...sub,
-          subscriptionStatus: 'cancelled',
           autoRenewal: false,
-          cancelledAt: new Date().toISOString()
+          cancelAtPeriodEnd: true,
+          cancelledAt: new Date().toISOString(),
+          periodEndDate: periodEnd ? periodEnd.toISOString() : sub.subscriptionExpiryDate
         };
       }
       return sub;
@@ -568,18 +672,20 @@ export const cancelSubscription = async (req: Request, res: Response): Promise<v
       [JSON.stringify(updatedSubscriptions), currentUser.id]
     );
 
-    console.log(`✅ Subscription cancelled successfully for user ${currentUser.email}`);
+    console.log(`✅ Subscription will cancel at period end for user ${currentUser.email}`);
+
+    const cancelledSubscription = updatedSubscriptions.find((sub: any) =>
+      sub.subscriptionId === subscriptionId || sub.stripeSubscriptionId === subscriptionId
+    );
 
     res.json({
       success: true,
-      message: 'Subscription cancelled successfully',
+      message: periodEnd
+        ? `Subscription will remain active until ${periodEnd.toLocaleDateString()}`
+        : 'Subscription cancellation scheduled',
       data: {
-        cancelledSubscription: {
-          ...subscriptionToCancel,
-          subscriptionStatus: 'cancelled',
-          autoRenewal: false,
-          cancelledAt: new Date().toISOString()
-        }
+        cancelledSubscription: cancelledSubscription,
+        remainsActiveUntil: periodEnd ? periodEnd.toISOString() : null
       }
     });
 

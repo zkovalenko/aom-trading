@@ -223,6 +223,51 @@ export const handleStripeWebhook = async (req: Request, res: Response): Promise<
         console.log('🎁 Trial ends:', createdSubscription.trial_end ? new Date(createdSubscription.trial_end * 1000).toISOString() : 'No trial');
         break;
 
+      case 'customer.subscription.updated':
+        const updatedSubscription = event.data.object;
+        console.log('🔄 Subscription updated:', updatedSubscription.id);
+        console.log('📋 Status:', updatedSubscription.status);
+        console.log('🗓️ Cancel at period end:', updatedSubscription.cancel_at_period_end);
+
+        if (updatedSubscription.cancel_at_period_end) {
+          const periodEnd = new Date(updatedSubscription.current_period_end * 1000);
+          console.log(`⚠️ Subscription scheduled for cancellation at: ${periodEnd.toISOString()}`);
+
+          // Update the local database to reflect cancel_at_period_end status
+          const updateSubResult = await pool.query(
+            `SELECT user_id, subscriptions
+             FROM user_subscriptions
+             WHERE subscriptions::text LIKE $1`,
+            [`%"stripeSubscriptionId":"${updatedSubscription.id}"%`]
+          );
+
+          if (updateSubResult.rows.length > 0) {
+            const { user_id, subscriptions } = updateSubResult.rows[0];
+
+            const updatedSubs = subscriptions.map((sub: any) => {
+              if (sub.stripeSubscriptionId === updatedSubscription.id) {
+                return {
+                  ...sub,
+                  autoRenewal: false,
+                  cancelAtPeriodEnd: true,
+                  periodEndDate: periodEnd.toISOString()
+                };
+              }
+              return sub;
+            });
+
+            await pool.query(
+              `UPDATE user_subscriptions
+               SET subscriptions = $1, updated_at = CURRENT_TIMESTAMP
+               WHERE user_id = $2`,
+              [JSON.stringify(updatedSubs), user_id]
+            );
+
+            console.log('✅ Updated subscription with cancel_at_period_end flag');
+          }
+        }
+        break;
+
       case 'customer.subscription.trial_will_end':
         const trialEndingSubscription = event.data.object;
         console.log('⚠️ Trial ending soon for subscription:', trialEndingSubscription.id);
@@ -279,21 +324,45 @@ export const handleStripeWebhook = async (req: Request, res: Response): Promise<
 
       case 'customer.subscription.deleted':
         const deletedSubscription = event.data.object;
-        console.log('🗑️ Subscription cancelled:', deletedSubscription.id);
+        console.log('🗑️ Subscription deleted at period end:', deletedSubscription.id);
+        console.log('📋 Cancellation reason:', deletedSubscription.cancellation_details?.reason);
 
-        // Update subscription status to cancelled
-        await pool.query(
-          `UPDATE user_subscriptions
-           SET subscriptions = jsonb_set(
-             subscriptions::jsonb,
-             '{0,subscriptionStatus}',
-             '"cancelled"'::jsonb
-           )
+        // Find the user and their subscriptions
+        const deleteSubResult = await pool.query(
+          `SELECT user_id, subscriptions
+           FROM user_subscriptions
            WHERE subscriptions::text LIKE $1`,
           [`%"stripeSubscriptionId":"${deletedSubscription.id}"%`]
         );
 
-        console.log('✅ Updated subscription status to cancelled');
+        if (deleteSubResult.rows.length > 0) {
+          const { user_id, subscriptions } = deleteSubResult.rows[0];
+
+          // Update the specific subscription status to cancelled
+          const updatedSubs = subscriptions.map((sub: any) => {
+            if (sub.stripeSubscriptionId === deletedSubscription.id) {
+              return {
+                ...sub,
+                subscriptionStatus: 'cancelled',
+                autoRenewal: false,
+                cancelAtPeriodEnd: false,
+                actualCancelledAt: new Date().toISOString()
+              };
+            }
+            return sub;
+          });
+
+          await pool.query(
+            `UPDATE user_subscriptions
+             SET subscriptions = $1, updated_at = CURRENT_TIMESTAMP
+             WHERE user_id = $2`,
+            [JSON.stringify(updatedSubs), user_id]
+          );
+
+          console.log('✅ Updated subscription status to cancelled');
+        } else {
+          console.log('⚠️ No subscription found for deleted subscription ID');
+        }
         break;
 
       default:

@@ -35,6 +35,7 @@ const MySubscriptions: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showMethodologyModal, setShowMethodologyModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [cancellingSubscription, setCancellingSubscription] = useState(false);
 
   useEffect(() => {
@@ -254,12 +255,37 @@ const MySubscriptions: React.FC = () => {
     return expiryDate < new Date();
   };
 
+  // Handle access premium tools click
+  const handleAccessPremiumTools = () => {
+    const tier = getSubscriptionTier();
+    if (tier === 'basic') {
+      setShowUpgradeModal(true);
+    } else if (tier === 'premium') {
+      // Navigate to premium tools page (or implement premium tools access)
+      // For now, just alert
+      alert('Premium tools access - Feature coming soon!');
+    }
+  };
+
+  // Hide upgrade modal
+  const hideUpgradeModal = () => {
+    setShowUpgradeModal(false);
+  };
+
+  // Handle upgrade to premium
+  const handleUpgradeToPremium = () => {
+    // Redirect to subscription page to upgrade
+    window.location.href = '/learn-to-trade?upgrade=premium';
+  };
+
   // Handle escape key press
   useEffect(() => {
     const handleEscapePress = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (showCancelModal) {
           hideCancelConfirmation();
+        } else if (showUpgradeModal) {
+          hideUpgradeModal();
         } else if (showMethodologyModal) {
           handleMethodologyDisclaimerDismiss();
         }
@@ -270,7 +296,7 @@ const MySubscriptions: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleEscapePress);
     };
-  }, [showMethodologyModal, showCancelModal]);
+  }, [showMethodologyModal, showCancelModal, showUpgradeModal]);
 
   if (loading) {
     return (
@@ -412,7 +438,12 @@ const MySubscriptions: React.FC = () => {
               <div className="protected-feature-item premium-feature">
                 <h3>Semi-Automated Trading</h3>
                 <p>Access our advanced semi-automated trading features with preset strategies and risk management.</p>
-                <button className="feature-access-button premium">Access Premium Tools</button>
+                <button
+                  className={`feature-access-button ${getSubscriptionTier() === 'premium' ? 'premium' : ''}`}
+                  onClick={handleAccessPremiumTools}
+                >
+                  {getSubscriptionTier() === 'premium' ? 'Access Premium Tools' : 'Upgrade to Premium'}
+                </button>
               </div>
             )}
           </div>
@@ -513,6 +544,59 @@ const MySubscriptions: React.FC = () => {
                   disabled={cancellingSubscription}
                 >
                   {cancellingSubscription ? 'Cancelling...' : 'Yes, Cancel Subscription'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade to Premium Modal */}
+        {showUpgradeModal && (
+          <div className="modal-overlay" onClick={hideUpgradeModal}>
+            <div className="modal-content upgrade-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Upgrade to Premium</h2>
+                <button
+                  className="modal-close-btn"
+                  onClick={hideUpgradeModal}
+                  aria-label="Close modal"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="upgrade-info">
+                  <p className="upgrade-message">
+                    This feature is available exclusively for Premium subscribers.
+                  </p>
+                  <div className="premium-benefits">
+                    <h3>Premium Benefits Include:</h3>
+                    <ul>
+                      <li>✨ Semi-automated trading with preset strategies</li>
+                      <li>📊 Advanced risk management tools</li>
+                      <li>🎯 Custom trading alerts and notifications</li>
+                      <li>📈 Priority access to new features</li>
+                      <li>👨‍🏫 Extended one-on-one coaching sessions</li>
+                      <li>🔒 Exclusive premium trading strategies</li>
+                    </ul>
+                  </div>
+                  <p className="upgrade-cta">
+                    Upgrade now to unlock all premium features and take your trading to the next level.
+                  </p>
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button
+                  className="modal-btn secondary"
+                  onClick={hideUpgradeModal}
+                >
+                  Maybe Later
+                </button>
+                <button
+                  className="modal-btn primary"
+                  onClick={handleUpgradeToPremium}
+                >
+                  Upgrade to Premium
                 </button>
               </div>
             </div>
