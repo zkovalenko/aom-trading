@@ -90,16 +90,16 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #fff;
-}
-
-.tier-basic {
   background: var(--color-blue);
   border: 1px solid rgba(74, 144, 226, 0.6);
 }
 
+.tier-basic {
+  /* Same as default tier-badge styles */
+}
+
 .tier-premium {
-  background: rgba(236, 72, 153, 0.35);
-  border: 1px solid rgba(236, 72, 153, 0.6);
+  /* Same as default tier-badge styles - both use blue */
 }
 
 .subscription-details {

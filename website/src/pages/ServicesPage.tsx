@@ -69,10 +69,32 @@ const ServicesPage: React.FC = () => {
     const redirect = urlParams.get('redirect');
     const productId = urlParams.get('product');
     const type = urlParams.get('type');
+    const upgrade = urlParams.get('upgrade');
 
     console.log("~~~~user", user);
 
-    if ((redirect === 'subscribe' || redirect === 'subscribe-direct') && productId && user && products.length > 0) {
+    // Handle upgrade to premium
+    if (upgrade === 'premium' && user && products.length > 0) {
+      console.log("🔄 Handling upgrade to premium");
+      // Find the premium product
+      const premiumProduct = products.find(p =>
+        p.name?.toLowerCase().includes('premium') ||
+        p.product_template_id === 'premium-trading-plan'
+      );
+
+      if (premiumProduct) {
+        console.log("✅ Found premium product:", premiumProduct.name);
+        setSelectedProduct(premiumProduct);
+        setSelectedType('annual'); // Default to annual for upgrades
+        setBillingType('annual');
+        // Clear URL parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        console.error("❌ Premium product not found");
+      }
+    }
+    // Handle regular subscription redirects
+    else if ((redirect === 'subscribe' || redirect === 'subscribe-direct') && productId && user && products.length > 0) {
       const product = products.find(p => p.id === productId);
       if (product) {
         setSelectedProduct(product);
@@ -80,7 +102,7 @@ const ServicesPage: React.FC = () => {
         setBillingType((type as 'monthly' | 'annual') || 'annual');
         // Clear URL parameters
         window.history.replaceState({}, document.title, window.location.pathname);
-        
+
         // If it's subscribe-direct (from learn-to-trade), immediately show payment form
         if (redirect === 'subscribe-direct') {
           // The payment form will show automatically because selectedProduct is set

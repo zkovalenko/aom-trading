@@ -104,11 +104,11 @@ const MySubscriptions: React.FC = () => {
     const activeSubscription = getActiveSubscription();
     if (!activeSubscription) return null;
 
-    // Check if it's premium based on subscription type or product name
-    const subscriptionType = activeSubscription.subscriptionType?.toLowerCase() || '';
-    const productName = activeSubscription.product?.name?.toLowerCase() || '';
+    // Check if it's premium based on product name (stored in subscription data)
+    const productName = (activeSubscription as any).productName?.toLowerCase() ||
+                       activeSubscription.product?.name?.toLowerCase() || '';
 
-    if (subscriptionType.includes('premium') || productName.includes('premium')) {
+    if (productName.includes('premium')) {
       return 'premium';
     }
 
@@ -434,15 +434,15 @@ const MySubscriptions: React.FC = () => {
               <Link to="/trading-rooms" className="feature-access-button">Enter Trading Room</Link>
             </div>
             
-            {getActiveSubscription()?.productId && (
+            {getActiveSubscription()?.productId && getSubscriptionTier() === 'basic' && (
               <div className="protected-feature-item premium-feature">
                 <h3>Semi-Automated Trading</h3>
                 <p>Access our advanced semi-automated trading features with preset strategies and risk management.</p>
                 <button
-                  className={`feature-access-button ${getSubscriptionTier() === 'premium' ? 'premium' : ''}`}
+                  className="feature-access-button"
                   onClick={handleAccessPremiumTools}
                 >
-                  {getSubscriptionTier() === 'premium' ? 'Access Premium Tools' : 'Upgrade to Premium'}
+                  Upgrade to Premium
                 </button>
               </div>
             )}

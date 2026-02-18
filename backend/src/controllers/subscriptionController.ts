@@ -228,16 +228,15 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     console.log(`🔍 User has had previous trial for this product: ${hasHadPreviousTrial}`);
     console.log(`🔍 Is upgrading from Basic trial: ${isUpgradingFromBasicTrial}`);
 
-    // If upgrading from Basic trial to Premium, cancel the Basic trial first
+    // Track if we're doing an upgrade (will update existing subscription instead of creating new)
+    let isSubscriptionUpgrade = false;
+    let existingStripeSubscriptionId: string | null = null;
+
     if (isUpgradingFromBasicTrial && activeBasicTrialSubscription?.stripeSubscriptionId) {
-      console.log(`🗑️ Cancelling Basic trial subscription: ${activeBasicTrialSubscription.stripeSubscriptionId}`);
-      try {
-        await stripe.subscriptions.cancel(activeBasicTrialSubscription.stripeSubscriptionId);
-        console.log(`✅ Basic trial subscription cancelled successfully`);
-      } catch (cancelError) {
-        console.error(`⚠️ Failed to cancel Basic trial subscription:`, cancelError);
-        // Continue with Premium subscription creation even if cancellation fails
-      }
+      isSubscriptionUpgrade = true;
+      existingStripeSubscriptionId = activeBasicTrialSubscription.stripeSubscriptionId;
+      console.log(`🔄 Will upgrade existing subscription: ${existingStripeSubscriptionId}`);
+      console.log(`📊 Stripe will calculate prorated charges automatically`);
     }
 
     // Calculate subscription dates
@@ -278,33 +277,65 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
       }
     });
 
-    // Create Stripe subscription with or without trial
-    const subscriptionParams: any = {
-      customer: customerId,
-      items: [{
-        price: price.id
-      }],
-      metadata: {
-        userId: currentUser.id.toString(),
-        productId: productId,
-        subscriptionType: subscriptionType,
-        isRenewal: hasHadPreviousTrial ? 'true' : 'false'
-      }
-    };
+    // Create or update Stripe subscription
+    let subscription: any;
 
-    // Only add trial_end if user gets a trial
-    if (shouldGiveTrial) {
-      const trialEndTimestamp = Math.floor(trialExpiryDate.getTime() / 1000);
-      subscriptionParams.trial_end = trialEndTimestamp;
-      console.log(`🔄 Creating Stripe subscription with trial end: ${trialEndTimestamp}`);
+    if (isSubscriptionUpgrade && existingStripeSubscriptionId) {
+      // Upgrade existing subscription
+      console.log(`🔄 Upgrading existing subscription to Premium with proration`);
+
+      // Get the existing subscription to find the item ID
+      const existingSub = await stripe.subscriptions.retrieve(existingStripeSubscriptionId);
+      const existingItemId = existingSub.items.data[0].id;
+
+      subscription = await stripe.subscriptions.update(existingStripeSubscriptionId, {
+        items: [{
+          id: existingItemId,
+          price: price.id
+        }],
+        proration_behavior: 'always_invoice', // Charge prorated amount immediately
+        metadata: {
+          userId: currentUser.id.toString(),
+          productId: productId,
+          subscriptionType: subscriptionType,
+          isUpgrade: 'true',
+          upgradedFrom: 'basic-trial'
+        },
+        trial_end: 'now' // End trial immediately when upgrading
+      });
+
+      console.log(`✅ Upgraded Stripe subscription: ${subscription.id}`);
+      console.log(`📋 Subscription status: ${subscription.status}`);
+      console.log(`💰 Proration will be charged on next invoice`);
     } else {
-      console.log(`🔄 Creating Stripe subscription with immediate billing (no trial)`);
+      // Create new subscription
+      const subscriptionParams: any = {
+        customer: customerId,
+        items: [{
+          price: price.id
+        }],
+        metadata: {
+          userId: currentUser.id.toString(),
+          productId: productId,
+          subscriptionType: subscriptionType,
+          isRenewal: hasHadPreviousTrial ? 'true' : 'false'
+        }
+      };
+
+      // Only add trial_end if user gets a trial
+      if (shouldGiveTrial) {
+        const trialEndTimestamp = Math.floor(trialExpiryDate.getTime() / 1000);
+        subscriptionParams.trial_end = trialEndTimestamp;
+        console.log(`🔄 Creating Stripe subscription with trial end: ${trialEndTimestamp}`);
+      } else {
+        console.log(`🔄 Creating Stripe subscription with immediate billing (no trial)`);
+      }
+
+      subscription = await stripe.subscriptions.create(subscriptionParams);
+
+      console.log(`✅ Created Stripe subscription: ${subscription.id}`);
+      console.log(`📋 Subscription status: ${subscription.status}`);
     }
-
-    const subscription = await stripe.subscriptions.create(subscriptionParams);
-
-    console.log(`✅ Created Stripe subscription: ${subscription.id}`);
-    console.log(`📋 Subscription status: ${subscription.status}`);
 
     // Set actual subscription expiry after trial
     let subscriptionExpiryDate = new Date(trialExpiryDate);
