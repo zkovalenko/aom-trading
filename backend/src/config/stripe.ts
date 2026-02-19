@@ -19,6 +19,9 @@ export function getStripe(): Stripe {
     stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2023-08-16',
       typescript: true,
+      maxNetworkRetries: 2, // Limit network retries (default is 3)
+      // Only retry on network errors, not on card errors
+      // Card errors (4xx) will not be retried automatically
     });
   }
   

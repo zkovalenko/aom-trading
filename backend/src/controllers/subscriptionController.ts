@@ -159,16 +159,43 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
 
     // Attach payment method to customer
     console.log(`💳 Attaching payment method ${paymentMethodId} to customer ${customerId}`);
-    await stripe.paymentMethods.attach(paymentMethodId, {
-      customer: customerId
-    });
+    try {
+      await stripe.paymentMethods.attach(paymentMethodId, {
+        customer: customerId
+      });
 
-    // Set as default payment method
-    await stripe.customers.update(customerId, {
-      invoice_settings: {
-        default_payment_method: paymentMethodId
+      // Set as default payment method
+      await stripe.customers.update(customerId, {
+        invoice_settings: {
+          default_payment_method: paymentMethodId
+        }
+      });
+    } catch (attachError: any) {
+      console.error('❌ Failed to attach payment method:', attachError);
+
+      // Handle card errors during payment method attachment
+      if (attachError.type === 'StripeCardError') {
+        const declineCode = attachError.decline_code;
+        let userMessage = attachError.message || 'Payment method validation failed';
+
+        if (declineCode === 'invalid_cvc' || declineCode === 'incorrect_cvc') {
+          userMessage = 'The card verification code (CVC) is invalid. Please check your card and try again.';
+        } else if (declineCode === 'expired_card') {
+          userMessage = 'Your card has expired. Please use a different payment method.';
+        } else if (declineCode === 'card_declined') {
+          userMessage = 'Your card was declined. Please contact your bank or use a different payment method.';
+        }
+
+        res.status(402).json({
+          success: false,
+          message: userMessage,
+          declineCode: declineCode
+        });
+        return;
       }
-    });
+
+      throw attachError; // Re-throw if not a card error
+    }
 
     // Get product details including license template
     const productResult = await pool.query(
@@ -193,8 +220,8 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     );
 
     let hasHadPreviousTrial = false;
-    let isUpgradingFromBasicTrial = false;
-    let activeBasicTrialSubscription: any = null;
+    let isUpgradingFromBasic = false;
+    let activeBasicSubscription: any = null;
 
     if (existingUserSubs.rows.length > 0) {
       const subscriptions = existingUserSubs.rows[0].subscriptions || [];
@@ -205,36 +232,36 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
         (sub.subscriptionStatus === 'trial' || sub.subscriptionStatus === 'cancelled' || sub.subscriptionStatus === 'expired')
       );
 
-      // Check if user is upgrading from Basic trial to Premium
+      // Check if user is upgrading from Basic (trial or active) to Premium
       const isPremiumProduct = product.name?.toLowerCase().includes('premium') ||
                               product.product_template_id === 'premium-trading-plan';
 
       if (isPremiumProduct) {
-        activeBasicTrialSubscription = subscriptions.find((sub: any) => {
+        activeBasicSubscription = subscriptions.find((sub: any) => {
           const isBasic = sub.productName?.toLowerCase().includes('basic') ||
                          (sub.product?.product_template_id === 'basic-trading-plan');
-          const isActiveTrial = sub.subscriptionStatus === 'trial';
-          return isBasic && isActiveTrial;
+          const isActiveOrTrial = sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial';
+          return isBasic && isActiveOrTrial;
         });
 
-        if (activeBasicTrialSubscription) {
-          isUpgradingFromBasicTrial = true;
-          console.log(`🔄 User is upgrading from Basic trial to Premium`);
-          console.log(`📋 Existing Basic trial subscription:`, activeBasicTrialSubscription.stripeSubscriptionId);
+        if (activeBasicSubscription) {
+          isUpgradingFromBasic = true;
+          console.log(`🔄 User is upgrading from Basic (${activeBasicSubscription.subscriptionStatus}) to Premium`);
+          console.log(`📋 Existing Basic subscription:`, activeBasicSubscription.stripeSubscriptionId);
         }
       }
     }
 
     console.log(`🔍 User has had previous trial for this product: ${hasHadPreviousTrial}`);
-    console.log(`🔍 Is upgrading from Basic trial: ${isUpgradingFromBasicTrial}`);
+    console.log(`🔍 Is upgrading from Basic: ${isUpgradingFromBasic}`);
 
     // Track if we're doing an upgrade (will update existing subscription instead of creating new)
     let isSubscriptionUpgrade = false;
     let existingStripeSubscriptionId: string | null = null;
 
-    if (isUpgradingFromBasicTrial && activeBasicTrialSubscription?.stripeSubscriptionId) {
+    if (isUpgradingFromBasic && activeBasicSubscription?.stripeSubscriptionId) {
       isSubscriptionUpgrade = true;
-      existingStripeSubscriptionId = activeBasicTrialSubscription.stripeSubscriptionId;
+      existingStripeSubscriptionId = activeBasicSubscription.stripeSubscriptionId;
       console.log(`🔄 Will upgrade existing subscription: ${existingStripeSubscriptionId}`);
       console.log(`📊 Stripe will calculate prorated charges automatically`);
     }
@@ -243,8 +270,8 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     const now = new Date();
 
     // Only give trial to first-time customers
-    // Premium upgrades from Basic trial do NOT get a trial
-    let shouldGiveTrial = !hasHadPreviousTrial && !isUpgradingFromBasicTrial;
+    // Premium upgrades from Basic do NOT get a trial
+    let shouldGiveTrial = !hasHadPreviousTrial && !isUpgradingFromBasic;
     let trialMonths = shouldGiveTrial ? 3 : 0;
     const trialExpiryDate = new Date();
     if (shouldGiveTrial) {
@@ -254,8 +281,8 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     if (shouldGiveTrial) {
       console.log(`🎁 Setting up ${trialMonths}-month free trial for ${subscriptionType} subscription`);
       console.log(`📅 Trial expires: ${trialExpiryDate.toISOString()}`);
-    } else if (isUpgradingFromBasicTrial) {
-      console.log(`💳 Premium upgrade - no trial, immediate payment (upgrading from Basic trial)`);
+    } else if (isUpgradingFromBasic) {
+      console.log(`💳 Premium upgrade - no trial, immediate payment (upgrading from Basic)`);
     } else {
       console.log(`💳 No trial - immediate payment required (user had previous trial)`);
     }
@@ -280,62 +307,92 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     // Create or update Stripe subscription
     let subscription: any;
 
-    if (isSubscriptionUpgrade && existingStripeSubscriptionId) {
-      // Upgrade existing subscription
-      console.log(`🔄 Upgrading existing subscription to Premium with proration`);
+    try {
+      if (isSubscriptionUpgrade && existingStripeSubscriptionId) {
+        // Upgrade existing subscription
+        console.log(`🔄 Upgrading existing subscription to Premium with proration`);
 
-      // Get the existing subscription to find the item ID
-      const existingSub = await stripe.subscriptions.retrieve(existingStripeSubscriptionId);
-      const existingItemId = existingSub.items.data[0].id;
+        // Get the existing subscription to find the item ID
+        const existingSub = await stripe.subscriptions.retrieve(existingStripeSubscriptionId);
+        const existingItemId = existingSub.items.data[0].id;
 
-      subscription = await stripe.subscriptions.update(existingStripeSubscriptionId, {
-        items: [{
-          id: existingItemId,
-          price: price.id
-        }],
-        proration_behavior: 'always_invoice', // Charge prorated amount immediately
-        billing_cycle_anchor: 'unchanged', // Keep current billing cycle
-        metadata: {
-          userId: currentUser.id.toString(),
-          productId: productId,
-          subscriptionType: subscriptionType,
-          isUpgrade: 'true',
-          upgradedFrom: 'basic-trial'
-        },
-        trial_end: 'now' // End trial immediately when upgrading
-      });
+        subscription = await stripe.subscriptions.update(existingStripeSubscriptionId, {
+          items: [{
+            id: existingItemId,
+            price: price.id
+          }],
+          proration_behavior: 'always_invoice', // Charge prorated amount immediately
+          billing_cycle_anchor: 'unchanged', // Keep current billing cycle
+          metadata: {
+            userId: currentUser.id.toString(),
+            productId: productId,
+            subscriptionType: subscriptionType,
+            isUpgrade: 'true',
+            upgradedFrom: 'basic'
+          },
+          trial_end: 'now' // End trial immediately when upgrading
+        });
 
-      console.log(`✅ Upgraded Stripe subscription immediately: ${subscription.id}`);
-      console.log(`📋 Subscription status: ${subscription.status}`);
-      console.log(`💰 Prorated charge invoiced and charged immediately (mid-cycle upgrade)`);
-    } else {
-      // Create new subscription
-      const subscriptionParams: any = {
-        customer: customerId,
-        items: [{
-          price: price.id
-        }],
-        metadata: {
-          userId: currentUser.id.toString(),
-          productId: productId,
-          subscriptionType: subscriptionType,
-          isRenewal: hasHadPreviousTrial ? 'true' : 'false'
-        }
-      };
-
-      // Only add trial_end if user gets a trial
-      if (shouldGiveTrial) {
-        const trialEndTimestamp = Math.floor(trialExpiryDate.getTime() / 1000);
-        subscriptionParams.trial_end = trialEndTimestamp;
-        console.log(`🔄 Creating Stripe subscription with trial end: ${trialEndTimestamp}`);
+        console.log(`✅ Upgraded Stripe subscription immediately: ${subscription.id}`);
+        console.log(`📋 Subscription status: ${subscription.status}`);
+        console.log(`💰 Prorated charge invoiced and charged immediately (mid-cycle upgrade)`);
       } else {
-        console.log(`🔄 Creating Stripe subscription with immediate billing (no trial)`);
+        // Create new subscription
+        const subscriptionParams: any = {
+          customer: customerId,
+          items: [{
+            price: price.id
+          }],
+          metadata: {
+            userId: currentUser.id.toString(),
+            productId: productId,
+            subscriptionType: subscriptionType,
+            isRenewal: hasHadPreviousTrial ? 'true' : 'false'
+          }
+        };
+
+        // Only add trial_end if user gets a trial
+        if (shouldGiveTrial) {
+          const trialEndTimestamp = Math.floor(trialExpiryDate.getTime() / 1000);
+          subscriptionParams.trial_end = trialEndTimestamp;
+          console.log(`🔄 Creating Stripe subscription with trial end: ${trialEndTimestamp}`);
+        } else {
+          console.log(`🔄 Creating Stripe subscription with immediate billing (no trial)`);
+        }
+
+        subscription = await stripe.subscriptions.create(subscriptionParams);
+
+        console.log(`✅ Created Stripe subscription: ${subscription.id}`);
+        console.log(`📋 Subscription status: ${subscription.status}`);
+      }
+    } catch (subscriptionError: any) {
+      console.error('❌ Failed to create/update subscription:', subscriptionError);
+
+      // Handle card errors during subscription creation/update
+      if (subscriptionError.type === 'StripeCardError') {
+        const declineCode = subscriptionError.decline_code;
+        let userMessage = subscriptionError.message || 'Payment failed';
+
+        if (declineCode === 'invalid_cvc' || declineCode === 'incorrect_cvc') {
+          userMessage = 'The card verification code (CVC) is invalid. Please check your card and try again.';
+        } else if (declineCode === 'expired_card') {
+          userMessage = 'Your card has expired. Please use a different payment method.';
+        } else if (declineCode === 'insufficient_funds') {
+          userMessage = 'Your card has insufficient funds. Please use a different payment method.';
+        } else if (declineCode === 'card_declined') {
+          userMessage = 'Your card was declined. Please contact your bank or use a different payment method.';
+        }
+
+        res.status(402).json({
+          success: false,
+          message: userMessage,
+          declineCode: declineCode
+        });
+        return;
       }
 
-      subscription = await stripe.subscriptions.create(subscriptionParams);
-
-      console.log(`✅ Created Stripe subscription: ${subscription.id}`);
-      console.log(`📋 Subscription status: ${subscription.status}`);
+      // Re-throw other errors to be caught by outer catch
+      throw subscriptionError;
     }
 
     // Set actual subscription expiry after trial
@@ -395,7 +452,7 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     if (shouldGiveTrial) {
       console.log(`🎁 Creating subscription with 3-month FREE trial for user ${currentUser.email}`);
       console.log(`📅 Free trial period: ${now.toISOString()} to ${trialExpiryDate.toISOString()}`);
-    } else if (isUpgradingFromBasicTrial) {
+    } else if (isUpgradingFromBasic) {
       console.log(`⚡ IMMEDIATE UPGRADE: Premium subscription activated for user ${currentUser.email}`);
       console.log(`💳 Prorated charge applied immediately (mid-cycle upgrade from Basic trial)`);
       console.log(`📅 Active until: ${subscriptionExpiryDate.toISOString()}`);
@@ -438,11 +495,11 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
       const existingSubIndex = currentSubscriptions.findIndex((sub: any) => sub.productId === productId);
 
       // If upgrading from Basic trial, mark the Basic trial as cancelled
-      if (isUpgradingFromBasicTrial && activeBasicTrialSubscription) {
+      if (isUpgradingFromBasic && activeBasicSubscription) {
         console.log('🔄 Marking Basic trial subscription as cancelled in database');
         const basicTrialIndex = currentSubscriptions.findIndex((sub: any) =>
-          sub.subscriptionId === activeBasicTrialSubscription.subscriptionId ||
-          sub.stripeSubscriptionId === activeBasicTrialSubscription.stripeSubscriptionId
+          sub.subscriptionId === activeBasicSubscription.subscriptionId ||
+          sub.stripeSubscriptionId === activeBasicSubscription.stripeSubscriptionId
         );
 
         if (basicTrialIndex !== -1) {
@@ -509,7 +566,7 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     let responseMessage = 'Subscription created successfully';
     if (shouldGiveTrial) {
       responseMessage = 'Subscription created successfully with 3-month FREE trial';
-    } else if (isUpgradingFromBasicTrial) {
+    } else if (isUpgradingFromBasic) {
       responseMessage = 'Successfully upgraded to Premium! Your Basic trial has been cancelled and Premium subscription is now active.';
     } else {
       responseMessage = 'Subscription activated successfully';
@@ -537,11 +594,11 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     }
 
     // Include upgrade info if applicable
-    if (isUpgradingFromBasicTrial) {
+    if (isUpgradingFromBasic) {
       responseData.upgrade = {
         fromProduct: 'Basic Trading Plan',
         toProduct: product.name,
-        previousSubscription: activeBasicTrialSubscription.subscriptionId
+        previousSubscription: activeBasicSubscription.subscriptionId
       };
     }
 
@@ -552,7 +609,7 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     });
 
     // Send appropriate email notification
-    if (shouldGiveTrial || isUpgradingFromBasicTrial) {
+    if (shouldGiveTrial || isUpgradingFromBasic) {
       sendSubscriptionEmail({
         email: currentUser.email,
         firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
@@ -562,11 +619,48 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
         console.error('✉️  Failed to send subscription email:', emailErr);
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Confirm subscription error:', error);
+
+    // Handle Stripe-specific errors
+    if (error.type === 'StripeCardError') {
+      const declineCode = error.decline_code;
+      const message = error.message || 'Payment failed';
+
+      let userMessage = message;
+
+      // Provide user-friendly messages for common decline codes
+      if (declineCode === 'invalid_cvc' || declineCode === 'incorrect_cvc') {
+        userMessage = 'The card verification code (CVC) is invalid. Please check your card and try again.';
+      } else if (declineCode === 'expired_card') {
+        userMessage = 'Your card has expired. Please use a different payment method.';
+      } else if (declineCode === 'insufficient_funds') {
+        userMessage = 'Your card has insufficient funds. Please use a different payment method.';
+      } else if (declineCode === 'card_declined') {
+        userMessage = 'Your card was declined. Please contact your bank or use a different payment method.';
+      }
+
+      res.status(402).json({
+        success: false,
+        message: userMessage,
+        declineCode: declineCode
+      });
+      return;
+    }
+
+    // Handle other Stripe errors
+    if (error.type?.startsWith('Stripe')) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Payment processing failed. Please try again.'
+      });
+      return;
+    }
+
+    // Generic error
     res.status(500).json({
       success: false,
-      message: 'Failed to confirm subscription'
+      message: 'Failed to confirm subscription. Please try again or contact support.'
     });
   }
 };

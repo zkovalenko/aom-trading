@@ -27,6 +27,7 @@ interface UserSubscription {
   autoRenewal?: boolean;
   purchaseDate?: string;
   product?: Product;
+  cancelAtPeriodEnd?: boolean;
 }
 
 const MySubscriptions: React.FC = () => {
@@ -377,12 +378,17 @@ const MySubscriptions: React.FC = () => {
                 {activeSubscription?.autoRenewal !== false ? 'On' : 'Off'}
               </span>
             </div>
-            <div className="subscription-detail-item">
-              <span className="detail-label">Next renewal Date:</span>
-              <span className="detail-value">
-                {new Date(activeSubscription?.subscriptionExpiryDate || '').toLocaleDateString()}
-              </span>
-            </div>
+            {/* Only show Next renewal Date if subscription is not cancelled and not set to cancel at period end */}
+            {activeSubscription?.subscriptionStatus !== 'cancelled' &&
+             activeSubscription?.subscriptionStatus !== 'canceled' &&
+             !activeSubscription?.cancelAtPeriodEnd && (
+              <div className="subscription-detail-item">
+                <span className="detail-label">Next renewal Date:</span>
+                <span className="detail-value">
+                  {new Date(activeSubscription?.subscriptionExpiryDate || '').toLocaleDateString()}
+                </span>
+              </div>
+            )}
             <div className="subscription-detail-item">
               <span className="detail-label">Purchased:</span>
               <span className="detail-value">
@@ -478,9 +484,14 @@ const MySubscriptions: React.FC = () => {
               </div>
             )}
           </div>
-          <button className="cancel-btn" onClick={showCancelConfirmation}>
-            Cancel Subscription
-          </button>
+          {/* Only show cancel button if subscription is not cancelled and not set to cancel at period end */}
+          {activeSubscription?.subscriptionStatus !== 'cancelled' &&
+           activeSubscription?.subscriptionStatus !== 'canceled' &&
+           !activeSubscription?.cancelAtPeriodEnd && (
+            <button className="cancel-btn" onClick={showCancelConfirmation}>
+              Cancel Subscription
+            </button>
+          )}
 
         </div>
 
