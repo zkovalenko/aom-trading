@@ -294,6 +294,7 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
           price: price.id
         }],
         proration_behavior: 'always_invoice', // Charge prorated amount immediately
+        billing_cycle_anchor: 'unchanged', // Keep current billing cycle
         metadata: {
           userId: currentUser.id.toString(),
           productId: productId,
@@ -304,9 +305,9 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
         trial_end: 'now' // End trial immediately when upgrading
       });
 
-      console.log(`✅ Upgraded Stripe subscription: ${subscription.id}`);
+      console.log(`✅ Upgraded Stripe subscription immediately: ${subscription.id}`);
       console.log(`📋 Subscription status: ${subscription.status}`);
-      console.log(`💰 Proration will be charged on next invoice`);
+      console.log(`💰 Prorated charge invoiced and charged immediately (mid-cycle upgrade)`);
     } else {
       // Create new subscription
       const subscriptionParams: any = {
@@ -394,6 +395,10 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     if (shouldGiveTrial) {
       console.log(`🎁 Creating subscription with 3-month FREE trial for user ${currentUser.email}`);
       console.log(`📅 Free trial period: ${now.toISOString()} to ${trialExpiryDate.toISOString()}`);
+    } else if (isUpgradingFromBasicTrial) {
+      console.log(`⚡ IMMEDIATE UPGRADE: Premium subscription activated for user ${currentUser.email}`);
+      console.log(`💳 Prorated charge applied immediately (mid-cycle upgrade from Basic trial)`);
+      console.log(`📅 Active until: ${subscriptionExpiryDate.toISOString()}`);
     } else {
       console.log(`💳 Creating active subscription for user ${currentUser.email} (renewal - no trial)`);
       console.log(`📅 Active until: ${subscriptionExpiryDate.toISOString()}`);

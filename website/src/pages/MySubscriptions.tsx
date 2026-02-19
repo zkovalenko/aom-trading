@@ -44,11 +44,11 @@ const MySubscriptions: React.FC = () => {
         console.log('⏳ Waiting for token - user:', !!user, 'token:', !!token);
         return;
       }
-      
+
       console.log('✅ Loading subscriptions for authenticated user');
       console.log('🔍 Token value:', token ? 'Token exists' : 'No token');
       console.log('🔍 Token length:', token ? token.length : 0);
-      
+
       try {
         const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
         if (response.ok) {
@@ -65,6 +65,20 @@ const MySubscriptions: React.FC = () => {
     };
 
     loadUserSubscriptions();
+
+    // Refetch when page becomes visible (e.g., after switching tabs or completing payment)
+    const handleVisibilityChange = () => {
+      if (!document.hidden && token) {
+        console.log('📱 Page visible, refreshing subscriptions...');
+        loadUserSubscriptions();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [token]);
 
   useEffect(() => {
@@ -91,12 +105,21 @@ const MySubscriptions: React.FC = () => {
 
   // Helper function to check if user has active subscription
   const hasActiveSubscription = () => {
-    return userSubscriptions.some(sub => sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial');
+    return userSubscriptions.some(sub =>
+      sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial'
+    );
   };
 
-  // Helper function to get active subscription
+  // Helper function to get active subscription (prioritize active over trial, exclude cancelled)
   const getActiveSubscription = () => {
-    return userSubscriptions.find(sub => sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial');
+    // Filter only active or trial subscriptions (this automatically excludes cancelled)
+    const validSubscriptions = userSubscriptions.filter(sub =>
+      sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial'
+    );
+
+    // Prioritize active subscriptions over trial
+    const activeSubscription = validSubscriptions.find(sub => sub.subscriptionStatus === 'active');
+    return activeSubscription || validSubscriptions.find(sub => sub.subscriptionStatus === 'trial');
   };
 
   // Helper function to determine user's subscription tier
@@ -422,11 +445,19 @@ const MySubscriptions: React.FC = () => {
               <Link to="/my-subscriptions/study-course" className="feature-access-button">Access Materials</Link>
             </div>
             
-            <div className="protected-feature-item">
-              <h3>Trading Software</h3>
-              <p>Download and access our proprietary trading software with real-time market data and analysis tools.</p>
-              <Link to="/my-subscriptions/software" className="feature-access-button">Download Software</Link>
-            </div>
+            {getSubscriptionTier() === 'premium' ? (
+              <div className="protected-feature-item">
+                <h3>Premium Trading Software</h3>
+                <p>Download our advanced proprietary trading software with premium features, real-time market data, semi-automated trading tools, and enhanced analysis capabilities.</p>
+                <Link to="/my-subscriptions/software" className="feature-access-button premium">Download Premium Software</Link>
+              </div>
+            ) : (
+              <div className="protected-feature-item">
+                <h3>Trading Software</h3>
+                <p>Download and access our proprietary trading software with real-time market data and analysis tools.</p>
+                <Link to="/my-subscriptions/software" className="feature-access-button">Download Software</Link>
+              </div>
+            )}
             
             <div className="protected-feature-item">
               <h3>Live Trading Rooms</h3>

@@ -156,6 +156,13 @@ const ServicesPage: React.FC = () => {
           if (data.success) {
             console.log("~~~~setUserSubscriptions", data.data.subscriptions);
             setUserSubscriptions(data.data.subscriptions);
+
+            // If user already had subscriptions, this was an upgrade - redirect to My Subscriptions
+            if (userSubscriptions.length > 0) {
+              setTimeout(() => {
+                window.location.href = '/my-subscriptions';
+              }, 1500); // Small delay to show success toast
+            }
           }
         }
       } catch (error) {

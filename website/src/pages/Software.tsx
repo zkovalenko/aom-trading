@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { apiCall, useAuth } from '../contexts/AuthContext';
 import './Software.css';
 import { Link } from 'react-router-dom';
@@ -10,36 +10,58 @@ import aomManualStrategyImage from '../assets/aomManualStrategy.png';
 
 const Software: React.FC = () => {
   const { user, token } = useAuth();
+  const [userSubscriptions, setUserSubscriptions] = useState<any[]>([]);
+  const [isPremiumUser, setIsPremiumUser] = useState(false);
 
-  if (!user) {
-    return (
-      <div className="software-page">
-        <div className="container">
-          <div className="no-access">Please log in to access the trading software.</div>
-        </div>
-      </div>
-    );
-  }
+  // Fetch user subscriptions to determine if premium
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      if (!user || !token) return;
 
-  const FILES = {
+      try {
+        const response = await apiCall('/subscriptions/my-subscriptions', { method: 'GET' }, token);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setUserSubscriptions(data.data.subscriptions);
+
+            // Check if user has active premium subscription
+            const activeSubscription = data.data.subscriptions.find((sub: any) =>
+              sub.subscriptionStatus === 'active' || sub.subscriptionStatus === 'trial'
+            );
+
+            if (activeSubscription) {
+              const productName = activeSubscription.productName?.toLowerCase() || '';
+              setIsPremiumUser(productName.includes('premium'));
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch subscriptions:', error);
+      }
+    };
+
+    fetchSubscriptions();
+  }, [user, token]);
+
+  const FILES = useMemo(() => ({
     latest: {
       version: '1.4.2',
       releaseDate: 'Dec 2024',
-      zipFilename: DOWNLOAD_FILES.latestSoftware.fileName,
+      zipFilename: isPremiumUser ? DOWNLOAD_FILES.latestPremiumSoftware.fileName : DOWNLOAD_FILES.latestSoftware.fileName,
       chartId: DOWNLOAD_FILES.latestCharts.id,
       chartFilename: DOWNLOAD_FILES.latestCharts.fileName,
+      buttonLabel: isPremiumUser ? 'Premium Download' : 'Download',
     },
     previous: {
-      version: '1.4.1',
+      version: '1.4.10',
       releaseDate: 'Jan 2024',
-      zipFilename: DOWNLOAD_FILES.previousSoftware.fileName,
+      zipFilename: isPremiumUser ? DOWNLOAD_FILES.previousPremiumSoftware.fileName : DOWNLOAD_FILES.previousSoftware.fileName,
       chartId: DOWNLOAD_FILES.previousCharts.id,
       chartFilename: DOWNLOAD_FILES.previousCharts.fileName,
+      buttonLabel: isPremiumUser ? 'Premium Download' : 'Download',
     },
-  } as const;
-
-  // TODO: Add subscriptionAccess to User type
-  const isPremiumUser = false; // user.subscriptionAccess?.hasPremiumAccess;
+  }), [isPremiumUser]);
   
   const downloadSoftware = async (fileName: string) => {
     try {
@@ -87,12 +109,21 @@ const Software: React.FC = () => {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="software-page">
+        <div className="container">
+          <div className="no-access">Please log in to access the trading software.</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="software-page">
       <div className="container">
         <div className="software-header">
-          <h1>AOMTrading Software Suite</h1>
+          <h1>{isPremiumUser ? 'Premium AOMTrading Software Suite' : 'AOMTrading Software Suite'}</h1>
           <p className="software-subtitle">Our proprietary Trading Software Suite complements the AOM methodology by turning concepts into practice with real-time market tools. Our subscribers receive a complimentary license that stays active as long as their subscription remains current, ensuring seamless access to the same technology our experts use to analyze, plan, and execute trades with consistency.
           </p>
         </div>
@@ -203,10 +234,10 @@ const Software: React.FC = () => {
             </div>
             <div className="software-actions">
               <button
-                className="feature-access-button"
+                className={`feature-access-button ${isPremiumUser ? 'premium' : ''}`}
                 onClick={() => downloadSoftware(FILES.latest.zipFilename)}
               >
-                Download
+                {FILES.latest.buttonLabel}
               </button>
               <span className="version-info">Version {FILES.latest.version} • Updated {FILES.latest.releaseDate}</span>
               <button
@@ -243,10 +274,10 @@ const Software: React.FC = () => {
             </div>
             <div className="software-actions">
             <button
-                className="feature-access-button"
+                className={`feature-access-button ${isPremiumUser ? 'premium' : ''}`}
                 onClick={() => downloadSoftware(FILES.previous.zipFilename)}
               >
-                Download
+                {FILES.previous.buttonLabel}
               </button>
               <span className="version-info">Version {FILES.previous.version} • Updated {FILES.previous.releaseDate}</span>
               <button
