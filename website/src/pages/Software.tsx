@@ -45,22 +45,12 @@ const Software: React.FC = () => {
   }, [user, token]);
 
   const FILES = useMemo(() => ({
-    latest: {
-      version: '1.4.2',
-      releaseDate: 'Dec 2024',
-      zipFilename: isPremiumUser ? DOWNLOAD_FILES.latestPremiumSoftware.fileName : DOWNLOAD_FILES.latestSoftware.fileName,
-      chartId: DOWNLOAD_FILES.latestCharts.id,
-      chartFilename: DOWNLOAD_FILES.latestCharts.fileName,
-      buttonLabel: isPremiumUser ? 'Premium Download' : 'Download',
-    },
-    previous: {
-      version: '1.4.10',
-      releaseDate: 'Jan 2024',
-      zipFilename: isPremiumUser ? DOWNLOAD_FILES.previousPremiumSoftware.fileName : DOWNLOAD_FILES.previousSoftware.fileName,
-      chartId: DOWNLOAD_FILES.previousCharts.id,
-      chartFilename: DOWNLOAD_FILES.previousCharts.fileName,
-      buttonLabel: isPremiumUser ? 'Premium Download' : 'Download',
-    },
+    version: '1.4.3',
+    releaseDate: 'Feb 2026',
+    zipFilename: isPremiumUser ? DOWNLOAD_FILES.latestPremiumSoftware.fileName : DOWNLOAD_FILES.latestSoftware.fileName,
+    chartId: DOWNLOAD_FILES.latestCharts.id,
+    chartFilename: DOWNLOAD_FILES.latestCharts.fileName,
+    buttonLabel: isPremiumUser ? 'Premium Download' : 'Download',
   }), [isPremiumUser]);
   
   const downloadSoftware = async (fileName: string) => {
@@ -222,7 +212,7 @@ const Software: React.FC = () => {
                 <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM5 20V6h14v14H5z"/>
               </svg>
             </div>
-            <h3>Software - Version {FILES.latest.version}</h3>
+            <h3>Software - Version {FILES.version}</h3>
             <div className="software-features">
               <span className="feature"><b>Release Notes:</b></span>
               <span className="feature">✓ Improved structure formation for greater accuracy</span>
@@ -235,59 +225,19 @@ const Software: React.FC = () => {
             <div className="software-actions">
               <button
                 className={`feature-access-button ${isPremiumUser ? 'premium' : ''}`}
-                onClick={() => downloadSoftware(FILES.latest.zipFilename)}
+                onClick={() => downloadSoftware(FILES.zipFilename)}
               >
-                {FILES.latest.buttonLabel}
+                {FILES.buttonLabel}
               </button>
-              <span className="version-info">Version {FILES.latest.version} • Updated {FILES.latest.releaseDate}</span>
+              <span className="version-info">Version {FILES.version} • Updated {FILES.releaseDate}</span>
               <button
                 type="button"
                 className="download-link"
                 onClick={() => {
-                  downloadSoftware(FILES.latest.chartFilename);
+                  downloadSoftware(FILES.chartFilename);
                 }}
               >
-                Download Chart Templates
-              </button>
-            </div>
-          </div>
-
-          <div className="software-card">
-            <div className="software-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM5 20V6h14v14H5z"/>
-              </svg>
-            </div>
-            <h3>Software - Version {FILES.previous.version}</h3>
-            <div className="software-features">
-            <span className="feature"><b>Release Notes:</b></span>
-            <span className="feature">✓ Added Select–Unselect Zones in aomSDZones</span>
-            <span className="feature">✓ Introduced Trigger Line in aomManualStrategy</span>
-            <span className="feature">✓ Added Dynamic Zone Adjustment in aomSDZones</span>
-            <span className="feature">✓ Added Support/Resistance Lines in aomStrAndBBWaves</span>
-            <span className="feature">✓ Enhanced aomSDZones with opacity control for selected zones</span>
-            <span className="feature">✓ Enhanced aomSDZones with option to make current zones global</span>
-            {/* <span className="feature">✓ Improved algorithm for zone duplication</span>
-            <span className="feature">✓ Redesigned wave formation algorithm using structural pivots</span>
-            <span className="feature">✓ Added Order Type Protection in aomManualStrategy (prevents mismatches between signals and order types)</span> */}
-
-            </div>
-            <div className="software-actions">
-            <button
-                className={`feature-access-button ${isPremiumUser ? 'premium' : ''}`}
-                onClick={() => downloadSoftware(FILES.previous.zipFilename)}
-              >
-                {FILES.previous.buttonLabel}
-              </button>
-              <span className="version-info">Version {FILES.previous.version} • Updated {FILES.previous.releaseDate}</span>
-              <button
-                type="button"
-                className="download-link"
-                onClick={() => {
-                  downloadSoftware(FILES.previous.chartFilename);
-                }}
-              >
-                Download Chart Templates
+                Download Complimentary Material
               </button>
             </div>
           </div>

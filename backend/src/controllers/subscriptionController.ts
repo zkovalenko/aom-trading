@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { getStripe } from '../config/stripe';
 import pool from '../config/database';
 import netLicensingService from '../services/netLicensingService';
-import { sendSubscriptionEmail, sendSubscriptionCancellationEmail } from '../services/mailgunService';
+import { sendSubscriptionEmail, sendSubscriptionUpgradeEmail, sendSubscriptionCancellationEmail } from '../services/mailgunService';
 
 export const getProducts = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -609,12 +609,27 @@ export const confirmSubscription = async (req: Request, res: Response): Promise<
     });
 
     // Send appropriate email notification
-    if (shouldGiveTrial || isUpgradingFromBasic) {
+    if (isUpgradingFromBasic) {
+      // Send upgrade email for Premium upgrades
+      sendSubscriptionUpgradeEmail({
+        email: currentUser.email,
+        firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
+        subscriptionType: subscriptionType as 'monthly' | 'annual',
+        billingAmount: amount,
+        upgradeDate: new Date().toISOString(),
+        billingNote: 'Your billing has been prorated, and your new billing cycle has been adjusted accordingly.',
+      }).catch((emailErr) => {
+        console.error('✉️  Failed to send upgrade email:', emailErr);
+      });
+    } else if (shouldGiveTrial) {
+      // Send regular subscription email for new subscriptions with trial
       sendSubscriptionEmail({
         email: currentUser.email,
         firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
         tier: product.name.toLowerCase().includes('premium') ? 'premium' : 'basic',
-        trialEndsAt: shouldGiveTrial ? trialExpiryDate.toISOString() : subscriptionExpiryDate.toISOString()
+        subscriptionType: subscriptionType as 'monthly' | 'annual',
+        billingAmount: amount,
+        trialEndsAt: trialExpiryDate.toISOString()
       }).catch((emailErr) => {
         console.error('✉️  Failed to send subscription email:', emailErr);
       });
@@ -819,10 +834,23 @@ export const cancelSubscription = async (req: Request, res: Response): Promise<v
       }
     });
 
+    // Get billing amount from Stripe subscription
+    let billingAmount = 0;
+    if (subscriptionToCancel.stripeSubscriptionId) {
+      try {
+        const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionToCancel.stripeSubscriptionId);
+        billingAmount = stripeSubscription.items.data[0]?.price.unit_amount || 0;
+      } catch (error) {
+        console.error('Failed to get billing amount from Stripe:', error);
+      }
+    }
+
     sendSubscriptionCancellationEmail({
       email: currentUser.email,
       firstName: currentUser.first_name || currentUser.firstName || currentUser.email,
       tier: subscriptionToCancel.productName?.toLowerCase().includes('premium') ? 'premium' : 'basic',
+      subscriptionType: subscriptionToCancel.subscriptionType || 'monthly',
+      billingAmount: billingAmount,
       cancelledAt: new Date().toISOString(),
     }).catch((emailErr) => {
       console.error('✉️  Failed to send cancellation email:', emailErr);

@@ -200,55 +200,309 @@ export async function sendSubscriptionEmail({
   email,
   firstName,
   tier,
+  subscriptionType,
+  billingAmount,
   trialEndsAt,
 }: {
   email: string;
   firstName: string;
   tier: 'basic' | 'premium';
+  subscriptionType: 'monthly' | 'annual';
+  billingAmount: number;
   trialEndsAt?: string;
 }): Promise<void> {
-  const safeName = firstName?.trim() || 'Trader';
+  const safeName = firstName?.trim() || 'Customer';
   const normalizedTier = tier === 'premium' ? 'Premium' : 'Basic';
+  const planName = `AOM Trading ${normalizedTier}`;
+  const subType = subscriptionType === 'monthly' ? 'Monthly' : 'Annual';
+  const amount = `$${(billingAmount / 100).toFixed(2)}`;
+  const hasTrial = !!trialEndsAt;
+  const trialEndDate = trialEndsAt ? new Date(trialEndsAt).toLocaleDateString() : '';
+  const trialStartDate = new Date().toLocaleDateString();
+
   const listItems = tier === 'premium'
     ? [
-        'Unlimited access to premium trading rooms and advanced mentorship.',
-        'Full study-course library, quizzes, and software updates.',
-        'Priority support whenever you need assistance.',
+        'Unlimited access to premium trading rooms and advanced mentorship',
+        'Full study-course library, quizzes, and software updates',
+        'Priority support whenever you need assistance',
       ]
     : [
-        'Full access to the basic live trading room experience.',
-        'Study-course library, quizzes, and software updates.',
-        'Community support whenever you need a hand.',
+        'Full access to the basic live trading rooms',
+        'Study-course library, quizzes, and software updates',
+        'Community support',
       ];
 
   const textLines = [
     `Hi ${safeName},`,
     '',
-    `Your ${normalizedTier} subscription is active. Welcome aboard!`,
-    '',
-    'What you can access:',
-    ...listItems.map((item) => `- ${item}`),
+    `Welcome to the AOM Trading ${normalizedTier} — your subscription is now active and ready to use.`,
   ];
 
-  if (trialEndsAt) {
-    textLines.push('', `Free trial access runs through ${new Date(trialEndsAt).toLocaleDateString()}.`);
+  if (hasTrial) {
+    textLines.push('', `As part of your signup, your ${normalizedTier} Plan includes a 3-month free trial.`);
   }
 
-  textLines.push('', 'See you in the trading room,', 'The AOMTrading Team');
+  textLines.push(
+    '',
+    'Subscription Details',
+    `Plan: ${planName}`,
+    `Subscription Type: ${subType}`,
+    `Billing Amount: ${amount}`,
+  );
+
+  if (hasTrial) {
+    textLines.push(
+      `Free Trial Start Date: ${trialStartDate}`,
+      `Free Trial End Date: ${trialEndDate}`,
+    );
+  }
+
+  textLines.push('', 'Billing & Cancellation');
+
+  if (hasTrial) {
+    textLines.push(
+      'You may cancel anytime during the trial period — no questions asked.',
+      '',
+      `If your subscription is not canceled before the trial ends, your credit card will be automatically charged ${amount} for the ${subType} ${normalizedTier} Subscription you selected.`,
+      '',
+      'After the trial, you may still cancel anytime, and your access will continue through the end of your current billing period.',
+    );
+  } else {
+    textLines.push(
+      'You may cancel anytime, and your access will continue through the end of your current billing period.',
+    );
+  }
+
+  textLines.push(
+    '',
+    `Here's what you can access`,
+    ...listItems.map((item) => `- ${item}`),
+  );
+
+  if (hasTrial) {
+    textLines.push('', `Once again, your free trial access runs through ${trialEndDate}.`);
+  }
+
+  textLines.push(
+    '',
+    'If you need support, contact us at info@aomtrading.com.',
+    '',
+    'Welcome aboard,',
+    'AOM Trading',
+  );
+
+  const subscriptionDetailsHtml = `
+    <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 16px 0;">
+      <h3 style="margin: 0 0 12px; color: #2f498b; font-size: 16px;">Subscription Details</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Plan:</strong></td><td style="padding: 4px 0; color: #1f2933;">${planName}</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Subscription Type:</strong></td><td style="padding: 4px 0; color: #1f2933;">${subType}</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Billing Amount:</strong></td><td style="padding: 4px 0; color: #1f2933;">${amount}</td></tr>
+        ${hasTrial ? `<tr><td style="padding: 4px 0; color: #6b7280;"><strong>Free Trial Start Date:</strong></td><td style="padding: 4px 0; color: #1f2933;">${trialStartDate}</td></tr>` : ''}
+        ${hasTrial ? `<tr><td style="padding: 4px 0; color: #6b7280;"><strong>Free Trial End Date:</strong></td><td style="padding: 4px 0; color: #1f2933;">${trialEndDate}</td></tr>` : ''}
+      </table>
+    </div>`;
+
+  const billingCancellationHtml = hasTrial
+    ? `
+      <h3 style="margin: 24px 0 12px; color: #2f498b; font-size: 16px;">Billing & Cancellation</h3>
+      <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+        You may cancel anytime during the trial period — no questions asked.
+      </p>
+      <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+        If your subscription is not canceled before the trial ends, your credit card will be automatically charged ${amount} for the ${subType} ${normalizedTier} Subscription you selected.
+      </p>
+      <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+        After the trial, you may still cancel anytime, and your access will continue through the end of your current billing period.
+      </p>`
+    : `
+      <h3 style="margin: 24px 0 12px; color: #2f498b; font-size: 16px;">Billing & Cancellation</h3>
+      <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+        You may cancel anytime, and your access will continue through the end of your current billing period.
+      </p>`;
 
   await sendEmail({
     to: email,
-    subject: `Your ${normalizedTier} AOMTrading subscription is active`,
+    subject: `Welcome to AOM Trading ${normalizedTier} — Your subscription is active`,
     text: textLines.join('\n'),
-    html: renderEmailLayout({
-      heading: `Welcome to the ${normalizedTier} Plan`,
-      greeting: safeName,
-      intro: `Your ${normalizedTier.toLowerCase()} subscription is active and ready to use.`,
-      listHeading: 'Here’s what you can access:',
-      listItems,
-      metaNote: trialEndsAt ? `Free trial access runs through ${new Date(trialEndsAt).toLocaleDateString()}.` : undefined,
-      footerNote: 'Need support? Reply to this email or contact <a href="mailto:info@aomtrading.com" style="color:#2f498b;">info@aomtrading.com</a>.',
-    }),
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #1f2933; background-color: #f6f9fc; padding: 24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(31, 41, 51, 0.08);">
+          <tr>
+            <td style="padding: 32px 32px 24px;">
+              <p style="margin: 0 0 16px; line-height: 1.6;">Hi ${safeName},</p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                Welcome to the AOM Trading ${normalizedTier} — your subscription is now active and ready to use.
+              </p>
+              ${hasTrial ? `<p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">As part of your signup, your ${normalizedTier} Plan includes a 3-month free trial.</p>` : ''}
+
+              ${subscriptionDetailsHtml}
+
+              ${billingCancellationHtml}
+
+              <h3 style="margin: 24px 0 12px; color: #2f498b; font-size: 16px;">Here's what you can access</h3>
+              <ul style="margin: 0 0 16px; padding-left: 20px; color: #1f2933; line-height: 1.6;">
+                ${listItems.map((item) => `<li style="margin-bottom: 8px;">${item}</li>`).join('')}
+              </ul>
+
+              ${hasTrial ? `<p style="margin: 16px 0; line-height: 1.6; color: #1f2933;">Once again, your free trial access runs through ${trialEndDate}.</p>` : ''}
+
+              <p style="margin: 24px 0 0; line-height: 1.6; color: #445566; font-size: 14px;">
+                If you need support, contact us at <a href="mailto:info@aomtrading.com" style="color:#2f498b;">info@aomtrading.com</a>.
+              </p>
+              <p style="margin: 16px 0 0; line-height: 1.6; color: #1f2933;">
+                Welcome aboard,<br/>
+                AOM Trading
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px 32px; background: #f3f6fb; text-align: center; font-size: 12px; color: #6b7280;">
+              <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="margin-bottom: 12px;" />
+              <div>© ${new Date().getFullYear()} AOMTrading. All rights reserved.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
+  });
+}
+
+export async function sendSubscriptionUpgradeEmail({
+  email,
+  firstName,
+  subscriptionType,
+  billingAmount,
+  upgradeDate,
+  billingNote,
+}: {
+  email: string;
+  firstName: string;
+  subscriptionType: 'monthly' | 'annual';
+  billingAmount: number;
+  upgradeDate?: string;
+  billingNote?: string;
+}): Promise<void> {
+  const safeName = firstName?.trim() || 'Customer';
+  const subType = subscriptionType === 'monthly' ? 'Monthly' : 'Annual';
+  const amount = `$${(billingAmount / 100).toFixed(2)}`;
+  const effectiveDate = upgradeDate
+    ? new Date(upgradeDate).toLocaleDateString()
+    : new Date().toLocaleDateString();
+
+  const defaultBillingNote = billingNote || `Your billing has been prorated, and your new billing cycle begins on ${effectiveDate}.`;
+
+  const premiumFeatures = [
+    'Everything in the Basic Plan',
+    'Premium trading tools and advanced features',
+    'Ongoing course content, software updates, and support',
+    'Expanded functionality to help you trade with more confidence, precision, and control',
+  ];
+
+  const textBody = [
+    `Hi ${safeName},`,
+    '',
+    `Your upgrade from AOM Trading Basic to AOM Trading Premium has been successfully processed — welcome to Premium.`,
+    '',
+    `You now have access to the full AOM Trading experience, including all Basic features plus Premium tools and advanced functionality designed to support a more structured path from analysis to execution.`,
+    '',
+    'Subscription Details',
+    'Plan: AOM Trading Premium',
+    `Subscription Type: ${subType}`,
+    `Billing Amount: ${amount}`,
+    `Upgrade Effective Date: ${effectiveDate}`,
+    '',
+    'Billing & Cancellation',
+    `Your Premium ${subType} Subscription is now active as of ${effectiveDate}.`,
+    '',
+    `Billing Note: ${defaultBillingNote}`,
+    '',
+    `Please note: Premium subscriptions do not include a free trial period.`,
+    '',
+    `You may cancel anytime, and your access will continue through the end of your current billing period.`,
+    '',
+    'What your Premium access now includes',
+    ...premiumFeatures.map((item) => `- ${item}`),
+    '',
+    `We're excited to have you in Premium and look forward to supporting your continued progress.`,
+    '',
+    'If you need support, contact us at info@aomtrading.com.',
+    '',
+    'Welcome to Premium,',
+    'AOM Trading',
+  ].join('\n');
+
+  const subscriptionDetailsHtml = `
+    <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 16px 0;">
+      <h3 style="margin: 0 0 12px; color: #2f498b; font-size: 16px;">Subscription Details</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Plan:</strong></td><td style="padding: 4px 0; color: #1f2933;">AOM Trading Premium</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Subscription Type:</strong></td><td style="padding: 4px 0; color: #1f2933;">${subType}</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Billing Amount:</strong></td><td style="padding: 4px 0; color: #1f2933;">${amount}</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Upgrade Effective Date:</strong></td><td style="padding: 4px 0; color: #1f2933;">${effectiveDate}</td></tr>
+      </table>
+    </div>`;
+
+  await sendEmail({
+    to: email,
+    subject: 'Welcome to AOM Trading Premium — Your upgrade is complete',
+    text: textBody,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #1f2933; background-color: #f6f9fc; padding: 24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(31, 41, 51, 0.08);">
+          <tr>
+            <td style="padding: 32px 32px 24px;">
+              <p style="margin: 0 0 16px; line-height: 1.6;">Hi ${safeName},</p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                Your upgrade from AOM Trading Basic to AOM Trading Premium has been successfully processed — welcome to Premium.
+              </p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                You now have access to the full AOM Trading experience, including all Basic features plus Premium tools and advanced functionality designed to support a more structured path from analysis to execution.
+              </p>
+
+              ${subscriptionDetailsHtml}
+
+              <h3 style="margin: 24px 0 12px; color: #2f498b; font-size: 16px;">Billing & Cancellation</h3>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                Your Premium ${subType} Subscription is now active as of ${effectiveDate}.
+              </p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #445566; font-size: 14px;">
+                <strong>Billing Note:</strong> ${defaultBillingNote}
+              </p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                Please note: Premium subscriptions do not include a free trial period.
+              </p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                You may cancel anytime, and your access will continue through the end of your current billing period.
+              </p>
+
+              <h3 style="margin: 24px 0 12px; color: #2f498b; font-size: 16px;">What your Premium access now includes</h3>
+              <ul style="margin: 0 0 16px; padding-left: 20px; color: #1f2933; line-height: 1.6;">
+                ${premiumFeatures.map((item) => `<li style="margin-bottom: 8px;">${item}</li>`).join('')}
+              </ul>
+
+              <p style="margin: 16px 0; line-height: 1.6; color: #1f2933;">
+                We're excited to have you in Premium and look forward to supporting your continued progress.
+              </p>
+
+              <p style="margin: 24px 0 0; line-height: 1.6; color: #445566; font-size: 14px;">
+                If you need support, contact us at <a href="mailto:info@aomtrading.com" style="color:#2f498b;">info@aomtrading.com</a>.
+              </p>
+              <p style="margin: 16px 0 0; line-height: 1.6; color: #1f2933;">
+                Welcome to Premium,<br/>
+                AOM Trading
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px 32px; background: #f3f6fb; text-align: center; font-size: 12px; color: #6b7280;">
+              <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="margin-bottom: 12px;" />
+              <div>© ${new Date().getFullYear()} AOMTrading. All rights reserved.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
   });
 }
 
@@ -256,57 +510,114 @@ export async function sendSubscriptionCancellationEmail({
   email,
   firstName,
   tier,
+  subscriptionType,
+  billingAmount,
   cancelledAt,
 }: {
   email: string;
   firstName: string;
   tier: 'basic' | 'premium';
+  subscriptionType: 'monthly' | 'annual';
+  billingAmount: number;
   cancelledAt?: string;
 }): Promise<void> {
-  const safeName = firstName?.trim() || 'Trader';
+  const safeName = firstName?.trim() || 'Customer';
   const normalizedTier = tier === 'premium' ? 'Premium' : 'Basic';
+  const planName = `AOM Trading ${normalizedTier}`;
+  const subType = subscriptionType === 'monthly' ? 'Monthly' : 'Annual';
   const cancelDate = cancelledAt
     ? new Date(cancelledAt).toLocaleDateString()
     : new Date().toLocaleDateString();
-
-  const listItems = tier === 'premium'
-    ? [
-        'Premium trading rooms remain open until your billing cycle ends.',
-        'Download any resources you need before your end date.',
-        'You can reactivate anytime to regain premium access.',
-      ]
-    : [
-        'Retain access to course content until your current period ends.',
-        'Download software or materials you need before it expires.',
-      ];
+  const amount = `$${(billingAmount / 100).toFixed(2)}`;
 
   const textBody = [
     `Hi ${safeName},`,
     '',
-    `We’ve processed your ${normalizedTier} plan cancellation effective ${cancelDate}.`,
-    'You’ll keep access until the end of your current billing period.',
+    `We've processed your ${normalizedTier} Subscription cancellation, effective ${cancelDate}.`,
     '',
-    'Before then consider:',
-    ...listItems.map((item) => `- ${item}`),
+    'Subscription Details',
+    `Plan: ${planName}`,
+    `Subscription Type: ${subType}`,
+    `Billing Amount: ${amount}`,
+    `Cancellation Effective Date: ${cancelDate}`,
     '',
-    'If we can help tailor a new plan, reply to this email or contact info@aomtrading.com.',
+    'Access & Cancellation',
+    `You'll still have full access through the end of your current billing period.`,
     '',
-    'Thank you for being part of the community,',
-    'The AOMTrading Team'
+    `Until then, you'll have time to:`,
+    '- Continue using your course content until your subscription ends',
+    '- Download any software or materials you may want before access expires',
+    '',
+    'No further charges will be made after your current billing period ends, unless you choose to resubscribe.',
+    '',
+    `We appreciate the time you spent with AOM Trading, and we're glad to have been part of your trading journey.`,
+    '',
+    `If there's anything we can do to help, or if you'd like help finding a plan that fits better in the future, just contact us at info@aomtrading.com.`,
+    '',
+    'Wishing you all the best,',
+    'AOM Trading'
   ].join('\n');
+
+  const subscriptionDetailsHtml = `
+    <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 16px 0;">
+      <h3 style="margin: 0 0 12px; color: #2f498b; font-size: 16px;">Subscription Details</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Plan:</strong></td><td style="padding: 4px 0; color: #1f2933;">${planName}</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Subscription Type:</strong></td><td style="padding: 4px 0; color: #1f2933;">${subType}</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Billing Amount:</strong></td><td style="padding: 4px 0; color: #1f2933;">${amount}</td></tr>
+        <tr><td style="padding: 4px 0; color: #6b7280;"><strong>Cancellation Effective Date:</strong></td><td style="padding: 4px 0; color: #1f2933;">${cancelDate}</td></tr>
+      </table>
+    </div>`;
 
   await sendEmail({
     to: email,
     subject: `Your ${normalizedTier} subscription has been cancelled`,
     text: textBody,
-    html: renderEmailLayout({
-      heading: `${normalizedTier} Subscription Cancellation`,
-      greeting: safeName,
-      intro: `We’ve processed your ${normalizedTier.toLowerCase()} subscription cancellation effective ${cancelDate}.`,
-      paragraphs: ['You’ll keep access until the end of your current billing period. Before then you can:'],
-      listItems,
-      footerNote: 'If we can help build a plan that fits better, reply to this email or contact <a href="mailto:info@aomtrading.com" style="color:#2f498b;">info@aomtrading.com</a>.',
-    }),
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #1f2933; background-color: #f6f9fc; padding: 24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(31, 41, 51, 0.08);">
+          <tr>
+            <td style="padding: 32px 32px 24px;">
+              <p style="margin: 0 0 16px; line-height: 1.6;">Hi ${safeName},</p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                We've processed your ${normalizedTier} Subscription cancellation, effective ${cancelDate}.
+              </p>
+
+              ${subscriptionDetailsHtml}
+
+              <h3 style="margin: 24px 0 12px; color: #2f498b; font-size: 16px;">Access & Cancellation</h3>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                You'll still have full access through the end of your current billing period.
+              </p>
+              <p style="margin: 0 0 12px; line-height: 1.6; color: #1f2933;">Until then, you'll have time to:</p>
+              <ul style="margin: 0 0 16px; padding-left: 20px; color: #1f2933; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">Continue using your course content until your subscription ends</li>
+                <li style="margin-bottom: 8px;">Download any software or materials you may want before access expires</li>
+              </ul>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                No further charges will be made after your current billing period ends, unless you choose to resubscribe.
+              </p>
+              <p style="margin: 0 0 16px; line-height: 1.6; color: #1f2933;">
+                We appreciate the time you spent with AOM Trading, and we're glad to have been part of your trading journey.
+              </p>
+              <p style="margin: 24px 0 0; line-height: 1.6; color: #445566; font-size: 14px;">
+                If there's anything we can do to help, or if you'd like help finding a plan that fits better in the future, just contact us at <a href="mailto:info@aomtrading.com" style="color:#2f498b;">info@aomtrading.com</a>.
+              </p>
+              <p style="margin: 16px 0 0; line-height: 1.6; color: #1f2933;">
+                Wishing you all the best,<br/>
+                AOM Trading
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px 32px; background: #f3f6fb; text-align: center; font-size: 12px; color: #6b7280;">
+              <img src="${LOGO_URL}" alt="AOMTrading" width="120" style="margin-bottom: 12px;" />
+              <div>© ${new Date().getFullYear()} AOMTrading. All rights reserved.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
   });
 }
 

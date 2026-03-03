@@ -6,8 +6,8 @@ export interface DownloadOption {
 
 export const DOWNLOAD_FILES: Record<string, DownloadOption> = {
   latestSoftware: {
-    id: 'software-142',
-    fileName: 'AOMtrading_1.4.2.zip',
+    id: 'software-143',
+    fileName: 'AOMtrading_1.4.3.zip',
     label: 'Download',
   },
   previousSoftware: {
@@ -16,8 +16,8 @@ export const DOWNLOAD_FILES: Record<string, DownloadOption> = {
     label: 'Download',
   },
   latestPremiumSoftware: {
-    id: 'software-premium-142',
-    fileName: 'AOMTrading_premium_1.4.2.zip',
+    id: 'software-premium-143',
+    fileName: 'AOMtrading_premium_1.4.3.zip',
     label: 'Premium Download',
   },
   previousPremiumSoftware: {
@@ -26,9 +26,9 @@ export const DOWNLOAD_FILES: Record<string, DownloadOption> = {
     label: 'Premium Download',
   },
   latestCharts: {
-    id: 'charts-142',
-    fileName: 'Chart_templates_1.4.2.zip',
-    label: 'Download Chart Templates',
+    id: 'complementary-material',
+    fileName: 'ComplementaryStuff.zip',
+    label: 'Download Complimentary Material',
   },
   previousCharts: {
     id: 'charts-141',
