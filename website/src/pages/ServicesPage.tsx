@@ -33,8 +33,8 @@ const ServicesPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedType, setSelectedType] = useState<'monthly' | 'annual'>('annual');
-  const [billingType, setBillingType] = useState<'monthly' | 'annual'>('annual');
+  const [selectedType, setSelectedType] = useState<'monthly' | 'annual'>('monthly');
+  const [billingType, setBillingType] = useState<'monthly' | 'annual'>('monthly');
   const [userSubscriptions, setUserSubscriptions] = useState<UserSubscription[]>([]);
 
   useEffect(() => {
@@ -70,11 +70,36 @@ const ServicesPage: React.FC = () => {
     const productId = urlParams.get('product');
     const type = urlParams.get('type');
     const upgrade = urlParams.get('upgrade');
+    const plan = urlParams.get('plan');
 
     console.log("~~~~user", user);
 
+    // Handle plan parameter (basic or premium with type)
+    if (plan && products.length > 0) {
+      console.log(`🔄 Handling plan parameter: ${plan}`);
+      const targetProduct = products.find(p => {
+        if (plan === 'basic') {
+          return p.name?.toLowerCase().includes('basic') || p.product_template_id === 'basic-trading-plan';
+        } else if (plan === 'premium') {
+          return p.name?.toLowerCase().includes('premium') || p.product_template_id === 'premium-trading-plan';
+        }
+        return false;
+      });
+
+      if (targetProduct) {
+        console.log(`✅ Found ${plan} product:`, targetProduct.name);
+        setSelectedProduct(targetProduct);
+        const billingType = (type as 'monthly' | 'annual') || 'monthly';
+        setSelectedType(billingType);
+        setBillingType(billingType);
+        // Clear URL parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        console.error(`❌ ${plan} product not found`);
+      }
+    }
     // Handle upgrade to premium
-    if (upgrade === 'premium' && user && products.length > 0) {
+    else if (upgrade === 'premium' && user && products.length > 0) {
       console.log("🔄 Handling upgrade to premium");
       // Find the premium product
       const premiumProduct = products.find(p =>
@@ -85,8 +110,8 @@ const ServicesPage: React.FC = () => {
       if (premiumProduct) {
         console.log("✅ Found premium product:", premiumProduct.name);
         setSelectedProduct(premiumProduct);
-        setSelectedType('annual'); // Default to annual for upgrades
-        setBillingType('annual');
+        setSelectedType('monthly'); // Default to monthly
+        setBillingType('monthly');
         // Clear URL parameters
         window.history.replaceState({}, document.title, window.location.pathname);
       } else {
@@ -98,8 +123,8 @@ const ServicesPage: React.FC = () => {
       const product = products.find(p => p.id === productId);
       if (product) {
         setSelectedProduct(product);
-        setSelectedType((type as 'monthly' | 'annual') || 'annual');
-        setBillingType((type as 'monthly' | 'annual') || 'annual');
+        setSelectedType((type as 'monthly' | 'annual') || 'monthly');
+        setBillingType((type as 'monthly' | 'annual') || 'monthly');
         // Clear URL parameters
         window.history.replaceState({}, document.title, window.location.pathname);
 

@@ -9,6 +9,21 @@ export interface LocalDownload {
 const baseDownloadDir = path.resolve(process.cwd(), 'downloads');
 
 const downloads: LocalDownload[] = [
+  // Latest version (1.4.3)
+  {
+    fileName: 'AOMtrading_1.4.3.zip',
+    filePath: path.join(baseDownloadDir, 'AOMtrading_1.4.3.zip'),
+  },
+  {
+    fileName: 'AOMtrading_premium_1.4.3.zip',
+    filePath: path.join(baseDownloadDir, 'AOMtrading_premium_1.4.3.zip'),
+    requiresPremium: true,
+  },
+  {
+    fileName: 'ComplementaryStuff.zip',
+    filePath: path.join(baseDownloadDir, 'ComplementaryStuff.zip'),
+  },
+  // Previous versions
   {
     fileName: 'AOMtrading_1.4.2.zip',
     filePath: path.join(baseDownloadDir, 'AOMtrading_1.4.2.zip'),

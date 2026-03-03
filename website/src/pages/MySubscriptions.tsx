@@ -347,9 +347,22 @@ const MySubscriptions: React.FC = () => {
       <div className="my-subscriptions-page">
         <div className="container">
           <div className="no-subscription">
-            <h2>No Active Subscription</h2>
-            <p>You don't have an active subscription yet. Subscribe to access our premium trading resources.</p>
-            <a href="/learn-to-trade" className="subscribe-button">View Subscription Plans</a>
+            <h2>Start Your Trading Journey</h2>
+            <p>Subscribe to AOM Trading to unlock exclusive trading resources, live trading rooms, educational content, and professional-grade software.</p>
+            <div className="subscription-benefits">
+              <h3>What You'll Get:</h3>
+              <ul>
+                <li>✓ Access to live trading rooms</li>
+                <li>✓ Complete study-course library with quizzes</li>
+                <li>✓ Professional trading software and tools</li>
+                <li>✓ Regular software updates and support</li>
+                <li>✓ 3-month free trial to get started</li>
+              </ul>
+            </div>
+            <a href="/services?plan=basic&type=monthly" className="subscribe-button primary">
+              Start Your Free Trial
+            </a>
+            <p className="subscription-note">No credit card required for trial • Cancel anytime</p>
           </div>
         </div>
       </div>

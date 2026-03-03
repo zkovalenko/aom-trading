@@ -208,25 +208,18 @@
   text-decoration: underline;
 }
 
-.founder-video {
+.founder-photo {
   display: flex;
   justify-content: center;
-}
-
-.video-placeholder {
-  width: 300px;
-  height: 200px;
-  background-color: #333;
-  border-radius: 10px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
 }
 
-.play-button {
-  color: white;
-  font-size: 3rem;
+.founder-photo img {
+  width: 400px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Trusted Resources */
@@ -409,7 +402,12 @@
     text-align: center;
   }
 
-  .video-placeholder {
-    display: none;
+  .founder-photo {
+    margin-top: 2rem;
+  }
+
+  .founder-photo img {
+    width: 300px;
+    height: 225px;
   }
 }

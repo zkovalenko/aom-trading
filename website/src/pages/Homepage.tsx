@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import founderPhoto from '../assets/founder_photo.png';
 
 const Homepage: React.FC = () => {
   return (
@@ -144,10 +145,8 @@ const Homepage: React.FC = () => {
                 <Link to="/learn-to-trade" className="cta-button secondary">Get In Touch</Link>
               </div>
             </div>
-            <div className="founder-video">
-              <div className="video-placeholder">
-                <div className="play-button">▶</div>
-              </div>
+            <div className="founder-photo">
+              <img src={founderPhoto} alt="Alex - Founder of AOM Trading" />
             </div>
           </div>
         </div>

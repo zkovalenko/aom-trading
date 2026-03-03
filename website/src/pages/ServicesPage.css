@@ -97,14 +97,14 @@
 
 .save-badge {
   display: inline;
-  background: #92E3A9;
+  background: var(--bg-color-blue);
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-size: 0.75rem !important;
   font-weight: 600;
+  color: #f1f1f1;
   animation: pulse 2s infinite;
   margin: 0 0.5rem;
-  color: white;
 }
 
 @keyframes pulse {
@@ -420,7 +420,8 @@ input:checked + .slider:before {
     display: block;
     margin-top: 0.25rem;
     margin-left: 0;
-    color: #666;
+    background: var(--bg-color-blue);
+    color: #f1f1f1;
     span {
       font-size: 0.5rem;
     }
